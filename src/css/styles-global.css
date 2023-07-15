@@ -1,0 +1,95 @@
+body {
+    margin: 4px;
+}
+
+.border-col {
+    margin-top: 10px !important;
+    margin-left: 4px !important;
+}
+
+.border-col-filter {
+    padding: 10px !important;
+    text-align: center;
+}
+
+.ant-modal-content {
+    padding: 4px !important;
+}
+
+.row-title {
+    font-size: 14px !important;
+    justify-content: center !important;
+}
+
+.filter-tags {
+    font-size: 20px !important;
+}
+
+.col-search {
+    padding-top: 4px;
+    margin: 4px !important;
+}
+
+.filter-search {
+    width: 100% !important;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-layout-header {
+    padding-inline: 0px !important;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-card .ant-card-body {
+    padding-top: 6px !important;
+}
+
+:where(.css-1vtf12y).ant-card .ant-card-body {
+    padding-top: 6px !important;
+}
+
+:where(.css-1vtf12y).ant-card-hoverable {
+    width: 100% !important;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-image {
+    display: block;
+    padding: 2px;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-col {
+    position: inherit;
+    width: 95% !important;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-float-btn {
+    inset-inline-end: 5px !important;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-rate {
+    color: #91caff !important;
+}
+
+.component-midia {
+    min-height: 360px !important;
+    margin: 0px 15px 0px 0px !important;
+}
+
+.modal-midia {
+    padding: 2px !important;
+}
+
+.table-modal {
+    overflow-x: auto !important;
+}
+
+.image-modal-col {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-list .ant-list-pagination {
+    margin-block-start: 0px !important;
+    margin: 0px 20px !important;
+}

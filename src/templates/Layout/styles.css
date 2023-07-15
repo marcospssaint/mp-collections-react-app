@@ -1,0 +1,9 @@
+.site-layout {
+    min-height: 100vh;
+}
+
+.layout-content {
+    margin: 14px 10px !important;
+    padding: 8px !important;
+    min-height: 280px !important;
+}
