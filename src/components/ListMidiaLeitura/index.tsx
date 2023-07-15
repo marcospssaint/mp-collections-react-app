@@ -79,7 +79,7 @@ export const ListMidiaLeitura = ({
                 locale={{ emptyText: emptyMessage }}
                 rowKey={(item) => item.key.id}
                 grid={{
-                    gutter: 2,
+                    gutter: 4,
                     xs: 2,
                     sm: 3,
                     md: 4,

@@ -64,7 +64,7 @@ export const MidiaLeituraSubComponent = () => {
                         dataSource={midiaLeitura.value}
                         rowKey={(item) => item.id}
                         grid={{
-                            gutter: 2,
+                            gutter: 4,
                             xs: 2,
                             sm: 3,
                             md: 4,
