@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/mp-collections-react-app/static/css/main.de002d0c.css",
+    "main.js": "/mp-collections-react-app/static/js/main.07e4f186.js",
+    "index.html": "/mp-collections-react-app/index.html",
+    "main.de002d0c.css.map": "/mp-collections-react-app/static/css/main.de002d0c.css.map",
+    "main.07e4f186.js.map": "/mp-collections-react-app/static/js/main.07e4f186.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.de002d0c.css",
+    "static/js/main.07e4f186.js"
+  ]
+}
