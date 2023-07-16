@@ -67,7 +67,7 @@ export const ListMidiaVideo = ({
                 locale={{ emptyText: emptyMessage }}
                 rowKey={(item) => item.key.id}
                 grid={{
-                    gutter: 4,
+                    gutter: 2,
                     xs: 2,
                     sm: 3,
                     md: 4,

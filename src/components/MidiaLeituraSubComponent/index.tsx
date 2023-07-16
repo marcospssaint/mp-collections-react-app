@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Col, List, Row } from "antd";
+import { Row } from "antd";
 
 import { Breadcrumb } from '../antd';
 
 import { NavLink, useLocation, useParams } from 'react-router-dom';
 import { IMidiaLeituraKV } from "../../entities";
-import { createIMidiaLeituraKV, textByTYPE } from "../../entities/midia-leitura";
+import { textByTYPE } from "../../entities/midia-leitura";
 import { ModalMidiaLeitura } from "../ModalMidiaLeitura";
-import { ListItem } from "../antd";
+
+import { ListMidiaLeituraSub } from '../ListMidiaLeituraSub';
 
 export const MidiaLeituraSubComponent = () => {
     let { id } = useParams();
@@ -58,40 +59,9 @@ export const MidiaLeituraSubComponent = () => {
                     ]}
                 />
 
-                <Col span={24} className='component-midia'>
-                    <List
-                        itemLayout='vertical'
-                        dataSource={midiaLeitura.value}
-                        rowKey={(item) => item.id}
-                        grid={{
-                            gutter: 4,
-                            xs: 2,
-                            sm: 3,
-                            md: 4,
-                            lg: 5,
-                            xl: 5,
-                            xxl: 8,
-                        }}
-                        pagination={{
-                            defaultPageSize: 100,
-                            position: 'both',
-                            disabled: true,
-                            showTotal: (total) => `Total ${total} items`,
-                        }}
-                        renderItem={(item) => (
-                            <ListItem
-                                id={item.id}
-                                midia={item}
-                                handlerClick={() => handlerClick(
-                                    createIMidiaLeituraKV({
-                                        key: item,
-                                        value: []
-                                    })
-                                )
-                            } />
-                        )}
-                    />
-                </Col>
+                <ListMidiaLeituraSub
+                    data={midiaLeitura.value}
+                    onClick={handlerClick} />
 
                 <ModalMidiaLeitura midiaLeitura={midiaLeituraSelected} isModalOpen={isModalOpen} hideModal={hideModal}  />
             </Row>

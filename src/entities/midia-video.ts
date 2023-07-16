@@ -55,6 +55,8 @@ export function createIMidiaVideoKV(options?: Partial<IMidiaVideoKV>): IMidiaVid
 }
 
 export const createMidiaVideoKV = (data: IMidiaVideo[], type: string) => {
+    data.forEach((d) => d.typeMidia = VIDEO);
+
     // Group by media title
     const midiaVideoGrouped = groupByToMap(data, (e) => e.title);
 
@@ -66,7 +68,7 @@ export const createMidiaVideoKV = (data: IMidiaVideo[], type: string) => {
         midiaVideoArray.push(
             createIMidiaVideo({
                 ...firstObject,
-                typeMidiaVideo: type
+                typeMidiaVideo: type,
             })
         );
     }

@@ -97,7 +97,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 
                             <Descriptions.Item label="N° of editions" span={3}>
                                 <NOfEditionsComponent
-                                    key={`${midiaLeituraK?.id}_owneds`}
+                                    key={`${indexCurrent}_neditions`}
                                     midiaLeitura={midiaLeitura}
                                     isVisibledTable={isVisibledTable}
                                     setImage={setImage}
@@ -129,7 +129,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                             <Descriptions.Item label="Year" span={3}>{midiaLeituraK?.year}</Descriptions.Item>
                             <Descriptions.Item label="N° of editions" span={3}>
                                 <NOfEditionsComponent
-                                    key={`${midiaLeituraK?.id}_owneds`}
+                                    key={`${indexCurrent}_neditions`}
                                     midiaLeitura={midiaLeitura}
                                     isVisibledTable={isVisibledTable}
                                     setImage={setImage}

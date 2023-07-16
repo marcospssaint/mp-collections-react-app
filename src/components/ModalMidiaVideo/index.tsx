@@ -5,7 +5,7 @@ import './styles.css';
 import { Badge, Button, Col, Descriptions, Space, Table, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IMidiaVideoKV } from '../../entities';
-import { ANIMES, IMidiaVideo, MOVIES, TV_SHOWS, TYPE_MOVIE } from "../../entities/midia-video";
+import { ANIMES, IMidiaVideo, MOVIES, TV_SHOWS, TYPE_MOVIE, TYPE_OVA, TYPE_TV_SHOW } from "../../entities/midia-video";
 import { isNotNull, isNotNullArray, range, rangeBySeparator, squash } from "../../utils/utils";
 import { Modal, Tag } from "../antd";
 
@@ -76,25 +76,46 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             .replaceAll('<<>>', 'Directors: ');
     }
 
+    const isTypeTvShow = (midiaVideo: IMidiaVideo) => {
+        return midiaVideo?.type === TYPE_TV_SHOW || isTvShow;
+    }
+
+    const isTypeMovie = (midiaVideos: IMidiaVideo[] | undefined) => {
+        return midiaVideos?.some((mv) => mv.type === TYPE_MOVIE);
+    }
+
+    const isTypeOVA = (midiaVideos: IMidiaVideo[] | undefined) => {
+        return midiaVideos?.some((mv) => mv.type === TYPE_OVA);
+    }
+
     const nOfSeason = () => {
-        return midiaVideo?.value?.length;
+        return midiaVideo?.value?.filter((mv) =>isTypeTvShow(mv)).length;
+    }
+
+    const nOfMovies = () => {
+        return midiaVideo?.value?.filter((mv) => mv.type === TYPE_MOVIE).length;
+    }
+
+    const nOfOVAs = () => {
+        return midiaVideo?.value?.filter((mv) => mv.type === TYPE_OVA).length;
     }
 
     const nOfEpisodes = () => {
-        return midiaVideoV?.map(md => md.episodes).map((e) => {
-            var episode = String(e);
-            if (episode === undefined) {
+        return midiaVideoV?.filter((mv) => isTypeTvShow(mv))
+            .map(md => md.episodes).map((e) => {
+                var episode = String(e);
+                if (episode === undefined) {
+                    return 0;
+                } else  if (episode != null && episode.includes('|')) {
+                    return Number(episode.substring(episode.indexOf('|')+2));
+                }
+                return Number(episode);
+            }).reduce((a, c) => {
+                if (a != null && c != null) {
+                    return a + c;
+                }
                 return 0;
-            } else  if (episode != null && episode.includes('|')) {
-                return Number(episode.substring(episode.indexOf('|')+2));
-            }
-            return Number(episode);
-        }).reduce((a, c) => {
-            if (a != null && c != null) {
-                return a + c;
-            }
-            return 0;
-        }, 0);
+            }, 0);
     }
 
     const columns: ColumnsType<IMidiaVideo> = [
@@ -223,10 +244,24 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                             </Descriptions.Item>
 
                             {
-                                !!midiaVideoSelected &&
+                                isTypeMovie(midiaVideo?.value) &&
+                                    <Descriptions.Item label="No. of movies" span={3} style={{ textAlign: 'center' }}>
+                                        {nOfMovies()}
+                                    </Descriptions.Item>
+                            }
+
+                            {
+                                isTypeOVA(midiaVideo?.value) &&
+                                    <Descriptions.Item label="No. of OVAs" span={3} style={{ textAlign: 'center' }}>
+                                        {nOfOVAs()}
+                                    </Descriptions.Item>
+                            }
+
+                            {
+                                (!!midiaVideoSelected && isTypeTvShow(midiaVideoSelected)) &&
                                 <Descriptions.Item label={`Season ${midiaVideoSelected.season} - List of episodes`} span={3}>
                                     <NOfEpisodesWatchedComponent
-                                        key={`${midiaVideoK?.id}_owneds`}
+                                        key={`${midiaVideoSelected?.id}_nepisodes`}
                                         midiaVideo={midiaVideoSelected} />
                                 </Descriptions.Item>
                             }
@@ -234,26 +269,24 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                     }
                     {
                         isValidType &&
-                        <Descriptions.Item label="Types" span={2}>
-                            <div style={{ textAlign: 'center' }}>
-                                { type?.map((type, index) => <Tag color="blue" label={type} key={index} />) }
-                            </div>
+                        <Descriptions.Item label="Types" span={3} style={{ textAlign: 'center' }}>
+                            { type?.map((type, index) => <Tag color="blue" label={type} key={index} />) }
                         </Descriptions.Item>
                     }
                     
                     {
-                        isNotNull(midiaVideoK?.synopsis) &&
+                        (isNotNull(midiaVideoSelected?.synopsis) || !isVisibledTable) &&
                         <Descriptions.Item label="Synopsis" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }} style={{ textAlign: 'justify' }}>
-                                {midiaVideoK?.synopsis}
+                                {isVisibledTable ? midiaVideoSelected?.synopsis : midiaVideoK?.synopsis}
                             </Paragraph>
                         </Descriptions.Item>
                     }
                     {
-                        isNotNull(midiaVideoK?.cast) &&
+                        (isNotNull(midiaVideoSelected?.cast) || !isVisibledTable) &&
                         <Descriptions.Item label="Cast" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }}>
-                                {casts(midiaVideoK?.cast)}
+                                {isVisibledTable ? casts(midiaVideoSelected?.cast) : casts(midiaVideoK?.cast)}
                             </Paragraph>
                         </Descriptions.Item>
                     }

@@ -23,6 +23,8 @@ export const TVTokusatsu = () => {
         <MidiaVideoComponent
             title='TV Tokusatsu'
             type={TV_TOKUSATSU}
+            isWatcher={true}
+            isOwned={true}
             onClickMore={onClickMore}
         />
 

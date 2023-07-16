@@ -9,7 +9,7 @@ body {
 
 .border-col-filter {
     padding: 10px !important;
-    text-align: center;
+    text-align: center !important;
 }
 
 .ant-modal-content {
@@ -26,7 +26,7 @@ body {
 }
 
 .col-search {
-    padding-top: 4px;
+    padding-top: 4px !important;
     margin: 4px !important;
 }
 
@@ -38,7 +38,15 @@ body {
     padding-inline: 0px !important;
 }
 
+:where(.css-1vtf12y).ant-layout-header {
+    padding-inline: 0px !important;
+}
+
 :where(.css-dev-only-do-not-override-1vtf12y).ant-card .ant-card-body {
+    padding-top: 6px !important;
+}
+
+:where(.css-1vtf12y).ant-card .ant-card-body {
     padding-top: 6px !important;
 }
 
@@ -55,8 +63,18 @@ body {
     padding: 2px;
 }
 
+:where(.css-1vtf12y).ant-image {
+    display: block;
+    padding: 2px;
+}
+
 :where(.css-dev-only-do-not-override-1vtf12y).ant-col {
-    position: inherit;
+    position: inherit !important;
+    width: 95% !important;
+}
+
+:where(.css-1vtf12y).ant-col {
+    position: inherit !important;
     width: 95% !important;
 }
 
@@ -64,8 +82,26 @@ body {
     inset-inline-end: 5px !important;
 }
 
+:where(.css-1vtf12y).ant-col.ant-float-btn {
+    inset-inline-end: 5px !important;
+}
+
 :where(.css-dev-only-do-not-override-1vtf12y).ant-rate {
     color: #91caff !important;
+}
+
+:where(.css-1vtf12y).ant-rate {
+    color: #91caff !important;
+}
+
+:where(.css-dev-only-do-not-override-1vtf12y).ant-list .ant-list-pagination {
+    margin-block-start: 0px !important;
+    margin: 0px 20px !important;
+}
+
+:where(.css-1vtf12y).ant-list .ant-list-pagination {
+    margin-block-start: 0px !important;
+    margin: 0px 20px !important;
 }
 
 .component-midia {
@@ -87,9 +123,4 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 10px;
-}
-
-:where(.css-dev-only-do-not-override-1vtf12y).ant-list .ant-list-pagination {
-    margin-block-start: 0px !important;
-    margin: 0px 20px !important;
 }

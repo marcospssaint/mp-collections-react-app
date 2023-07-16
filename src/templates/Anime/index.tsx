@@ -22,6 +22,8 @@ export const Anime = () => {
         <MidiaVideoComponent
             title='Animes'
             type={ANIMES}
+            isWatcher={true}
+            isOwned={true}
             onClickMore={onClickMore}
         />
 

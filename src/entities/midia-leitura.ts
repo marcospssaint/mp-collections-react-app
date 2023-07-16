@@ -49,6 +49,8 @@ export function createIMidiaLeituraKV(options?: Partial<IMidiaLeituraKV>): IMidi
 }
 
 export const createMidiaLeituraKV = (data: IMidiaLeitura[], type: string) => {
+    data.forEach((d) => d.typeMidia = LEITURA);
+
     const midiaLeituraGrouped = groupByToMap(data, (d) => d.title);
 
     const midiaLeituraArray = [] as IMidiaLeitura[];
@@ -60,6 +62,7 @@ export const createMidiaLeituraKV = (data: IMidiaLeitura[], type: string) => {
             createIIMidiaLeitura({
                 ...firstObject,
                 typeMidiaLeitura: type,
+                typeMidia: LEITURA,
             })
         );
     }
