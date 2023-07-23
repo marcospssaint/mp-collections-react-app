@@ -9,6 +9,7 @@ import { BaseOptionType } from 'antd/es/select';
 import { ThemeContext } from '../../contexts/theme-context';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidiaLeitura } from '../ListMidiaLeitura';
+import { createOptionsYears } from '../../entities/midia';
 
 interface MidiaLeituraComponentProps {
     title: string;
@@ -24,10 +25,12 @@ export const MidiaLeituraComponent = ({
     const [midiaLeituraKVArray, setMidiaLeituraKVArray] = useState<IMidiaLeituraKV[]>([]);
 
     const [optionsPublisher, setOptionsPublisher] = useState<BaseOptionType[]>([]);
+    const [optionsYears, setOptionsYears] = useState<BaseOptionType[]>([]);
 
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
     const [search, setSearch] = useState('');
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
+    const [searchYears, setSearchYears] = useState<string[]>([]);
     const [searchPublishers, setSearchPublishers] = useState<string[]>([]);
     const [searchRead, setSearchRead] = useState<string>();
 
@@ -37,6 +40,7 @@ export const MidiaLeituraComponent = ({
         const dataLoaded = await loadMidiaLeitura(type);
 
         setOptionsPublisher(createOptionsPublisher(dataLoaded));
+        setOptionsYears(createOptionsYears(dataLoaded));
         setMidiaLeituraKVArray(createMidiaLeituraKV(dataLoaded, type));
     }, [type]);
 
@@ -65,6 +69,10 @@ export const MidiaLeituraComponent = ({
         setSearchGenres(value);
     };
 
+    const handleChangeYears = (value: string[]) => {
+        setSearchYears(value);
+    };
+
     const handleChangeRead = (value: string) => {
         setSearchRead(value);
     };
@@ -74,6 +82,7 @@ export const MidiaLeituraComponent = ({
             <Row className='component-midia'>
                 <FilterMidia
                     optionsPublisher={optionsPublisher}
+                    optionsYears={optionsYears}
                     selectedAlphabets={selectedAlphabets}
                     isPublisher={true}
                     isRead={true}
@@ -82,6 +91,7 @@ export const MidiaLeituraComponent = ({
                     handleChangeSearch={handleChangeSearch}
 
                     handleChangeGenres={handleChangeGenres}
+                    handleChangeYears={handleChangeYears}
                     handleChangePublisher={handleChangePublishers}
                     handleChangeRead={handleChangeRead} />
 
@@ -92,6 +102,7 @@ export const MidiaLeituraComponent = ({
                     selectedAlphabets={selectedAlphabets}
                     search={search}
                     searchGenres={searchGenres}
+                    searchYears={searchYears}
                     searchPublishers={searchPublishers}
                     searchRead={searchRead}
 

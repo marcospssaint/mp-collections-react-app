@@ -7,6 +7,7 @@ export const TYPE_F_SUBTITLE = 'T_SUBTITLE';
 export const TYPE_F_TITLE_ORIGINAL = 'T_TITLE_ORIGINAL';
 export const TYPE_F_AUTHOR = 'T_AUTHOR';
 export const TYPE_F_GENRE = 'T_GENRE';
+export const TYPE_F_YEAR = 'TYPE_YEAR';
 export const TYPE_F_PUBLISHER = 'T_PUBLISHER';
 export const TYPE_F_READ = 'T_READ';
 export const TYPE_F_WATCHED = 'T_WATCHED';
@@ -119,6 +120,7 @@ const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
         const genres = midia.genre?.split(', ');
         return genres?.some((genre) => genre === value);
     }
+    else if (type === TYPE_F_YEAR) return Number(midia.year) === Number(value);
     else if (type === TYPE_F_WATCHED) return midia.watched === value;
     else if (type === TYPE_F_OWNED) return midia.owned === value;
     return false;
@@ -143,4 +145,22 @@ const isFilterSearchByType = (value: any, midia: IMidia, type: string) => {
     
     var valueSearchStr = valueSearch?.toString();
     return valueSearchStr?.toLowerCase().includes(value?.toLowerCase());
+}
+
+export const createOptionsYears = (midias: IMidia[]) => {
+    let years = midias
+        .filter((data) => data.year !== null)
+        .filter((data) => data.year !== undefined)
+        .map((data) => Number(data.year));
+    
+    const yearsSets = [...new Set(years)];
+    console.log(yearsSets)
+    return yearsSets
+        .sort((a, b) => (a?.toString() ?? '').localeCompare(b?.toString() ?? ''))
+        .map((year) => (
+        {
+            value: year,
+            label: year
+        }
+    ));
 }

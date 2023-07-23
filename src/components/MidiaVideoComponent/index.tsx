@@ -3,7 +3,9 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { ListMidiaVideo } from "../ListMidiaVideo";
 
 import { Row } from 'antd';
+import { BaseOptionType } from 'antd/es/select';
 import { ThemeContext } from '../../contexts/theme-context';
+import { createOptionsYears } from '../../entities/midia';
 import { IMidiaVideoKV, createMidiaVideoKV } from '../../entities/midia-video';
 import { loadMidiaVideo } from '../../utils';
 import { FilterMidia } from '../FilterMidia';
@@ -26,16 +28,21 @@ export const MidiaVideoComponent = ({
 
     const [midiaVideoKVArray, setMidiaVideoKVArray] = useState<IMidiaVideoKV[]>([]);
 
+    const [optionsYears, setOptionsYears] = useState<BaseOptionType[]>([]);
+
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
     const [search, setSearch] = useState('');
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
+    const [searchYears, setSearchYears] = useState<string[]>([]);
     const [searchWatcher, setSearchWatcher] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
 
     const { setCollapsed } = useContext(ThemeContext);
 
     const handleLoad = useCallback(async () => {
-        setMidiaVideoKVArray(createMidiaVideoKV(await loadMidiaVideo(type), type));
+        const dataLoaded = await loadMidiaVideo(type);
+        setOptionsYears(createOptionsYears(dataLoaded));
+        setMidiaVideoKVArray(createMidiaVideoKV(dataLoaded, type));
     }, [type]);
 
     useEffect(() => {
@@ -59,6 +66,10 @@ export const MidiaVideoComponent = ({
         setSearchGenres(value);
     };
 
+    const handleChangeYears = (value: string[]) => {
+        setSearchYears(value);
+    };
+
     const handleChangeWatcher = (value: string) => {
         setSearchWatcher(value);
     };
@@ -72,6 +83,7 @@ export const MidiaVideoComponent = ({
             <Row className='component-midia'>
                 <FilterMidia
                     selectedAlphabets={selectedAlphabets}
+                    optionsYears={optionsYears}
                     isWatcher={isWatcher}
                     isOwned={isOwned}
 
@@ -79,6 +91,7 @@ export const MidiaVideoComponent = ({
                     handleChangeSearch={handleChangeSearch}
 
                     handleChangeGenres={handleChangeGenres}
+                    handleChangeYears={handleChangeYears}
                     handleChangeWatcher={handleChangeWatcher}
                     handleChangeOwned={handleChangeOwned} />
 
@@ -88,6 +101,7 @@ export const MidiaVideoComponent = ({
                     selectedAlphabets={selectedAlphabets}
                     search={search}
                     searchGenres={searchGenres}
+                    searchYears={searchYears}
                     searchWatcher={searchWatcher}
                     searchOwned={searchOwned}
                     onClickMore={onClickMore} />

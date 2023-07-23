@@ -11,6 +11,7 @@ import { Select, SelectMultiple } from "../antd";
 interface FilterMidiaProps {
     selectedAlphabets: string[];
     optionsPublisher?: BaseOptionType[];
+    optionsYears?: BaseOptionType[];
 
     isPublisher?: boolean;
     isWatcher?: boolean;
@@ -20,6 +21,7 @@ interface FilterMidiaProps {
     handleChangeSearch: (value: any) => void;
     handleChangeAlphabets: (value: string, checked: boolean) => void;
     handleChangeGenres: (value: string[]) => void;
+    handleChangeYears?: (value: string[]) => void;
     handleChangePublisher?: (value: string[]) => void;
 
     handleChangeWatcher?: (value: string) => void;
@@ -30,6 +32,7 @@ interface FilterMidiaProps {
 export const FilterMidia = ({
     selectedAlphabets,
     optionsPublisher,
+    optionsYears,
 
     isPublisher = false,
     isWatcher = false,
@@ -40,6 +43,7 @@ export const FilterMidia = ({
 
     handleChangeAlphabets,
     handleChangeGenres,
+    handleChangeYears,
     handleChangePublisher,
 
     handleChangeWatcher,
@@ -77,12 +81,18 @@ export const FilterMidia = ({
                 </Col>
                 <Col className="col-search">
                     <Row style={{ textAlign: 'center' }}>
-                        <Col xs={24} sm={24} md={6} lg={6} xl={4}/>
                         <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                             <SelectMultiple
                                 options={optionsGenres}
                                 onChange={handleChangeGenres}
                                 placeholder="Gernes"
+                                style={{ width: '100%', margin: 2 }} />
+                        </Col>
+                        <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+                            <SelectMultiple
+                                options={optionsYears}
+                                onChange={handleChangeYears}
+                                placeholder="Years"
                                 style={{ width: '100%', margin: 2 }} />
                         </Col>
                         {

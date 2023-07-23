@@ -3,7 +3,7 @@ import './styles.css';
 import { Col, FloatButton, List } from "antd";
 
 import { useRef } from 'react';
-import { TYPE_F_GENRE, TYPE_F_OWNED, TYPE_F_WATCHED, isFilterAlphabets, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
+import { TYPE_F_GENRE, TYPE_F_OWNED, TYPE_F_WATCHED, TYPE_F_YEAR, isFilterAlphabets, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
 import { IMidiaVideoKV } from '../../entities/midia-video';
 import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
 import { ListItem } from '../antd';
@@ -14,6 +14,7 @@ export interface ListMidiaVideoProps {
     selectedAlphabets?: string[];
     search?: string;
     searchGenres?: string[];
+    searchYears?: string[];
     searchWatcher?: string;
     searchOwned?: boolean;
     onClickMore: (item: IMidiaVideoKV) => void;
@@ -25,6 +26,7 @@ export const ListMidiaVideo = ({
     selectedAlphabets = [],
     search = '',
     searchGenres = [],
+    searchYears = [],
     searchWatcher,
     searchOwned,
     onClickMore
@@ -36,6 +38,7 @@ export const ListMidiaVideo = ({
         return isNotNullArray(selectedAlphabets) 
             || isNotNullStr(search) 
             || isNotNullArray(searchGenres)
+            || isNotNullArray(searchYears)
             || isNotNull(searchWatcher) 
             || isNotNull(searchOwned);
     }
@@ -48,6 +51,8 @@ export const ListMidiaVideo = ({
                 return isFilterSearch(search, midiaVideoKV);
             }).filter((midiaVideoKV) => {
                 return isFilterMultipleSelect(searchGenres, midiaVideoKV, TYPE_F_GENRE);
+            }).filter((midiaVideoKV) => {
+                return isFilterMultipleSelect(searchYears, midiaVideoKV, TYPE_F_YEAR);
             }).filter((midiaVideoKV) => {
                 return isFilterSingleSelect(searchWatcher, midiaVideoKV, TYPE_F_WATCHED);
             }).filter((midiaVideoKV) => {

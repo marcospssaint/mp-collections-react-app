@@ -4,7 +4,7 @@ import { Col, FloatButton, List } from "antd";
 
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TYPE_F_GENRE, TYPE_F_PUBLISHER, TYPE_F_READ, isFilterAlphabets, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
+import { TYPE_F_GENRE, TYPE_F_PUBLISHER, TYPE_F_READ, TYPE_F_YEAR, isFilterAlphabets, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
 import { IMidiaLeituraKV } from '../../entities/midia-leitura';
 import { useQuery } from '../../utils';
 import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
@@ -17,6 +17,7 @@ export interface ListMidiaLeituraProps {
     search?: string;
     searchPublishers?: string[];
     searchGenres?: string[];
+    searchYears?: string[];
     searchRead?: string | null;
     onClickMore: (item: IMidiaLeituraKV) => void;
 }
@@ -27,6 +28,7 @@ export const ListMidiaLeitura = ({
 
     selectedAlphabets = [],
     search = '',
+    searchYears = [],
     searchPublishers = [],
     searchGenres = [],
     searchRead = null,
@@ -44,6 +46,7 @@ export const ListMidiaLeitura = ({
     const wasResearch = () => {
         return isNotNullArray(selectedAlphabets) 
             || isNotNullStr(search)
+            || isNotNullArray(searchYears)
             || isNotNullArray(searchPublishers)
             || isNotNullArray(searchGenres)
             || isNotNull(searchRead);
@@ -57,6 +60,8 @@ export const ListMidiaLeitura = ({
                 return isFilterAlphabets(selectedAlphabets, midiaLeituraKV);
             }).filter((midiaLeituraKV) => {
                 return isFilterMultipleSelect(searchGenres, midiaLeituraKV, TYPE_F_GENRE);
+            }).filter((midiaLeituraKV) => {
+                return isFilterMultipleSelect(searchGenres, midiaLeituraKV, TYPE_F_YEAR);
             }).filter((midiaLeituraKV) => {
                 return isFilterMultipleSelect(searchPublishers, midiaLeituraKV, TYPE_F_PUBLISHER);
             }).filter((midiaLeituraKV) => {
