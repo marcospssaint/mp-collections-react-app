@@ -61,7 +61,7 @@ export const ListMidiaLeitura = ({
             }).filter((midiaLeituraKV) => {
                 return isFilterMultipleSelect(searchGenres, midiaLeituraKV, TYPE_F_GENRE);
             }).filter((midiaLeituraKV) => {
-                return isFilterMultipleSelect(searchGenres, midiaLeituraKV, TYPE_F_YEAR);
+                return isFilterMultipleSelect(searchYears, midiaLeituraKV, TYPE_F_YEAR);
             }).filter((midiaLeituraKV) => {
                 return isFilterMultipleSelect(searchPublishers, midiaLeituraKV, TYPE_F_PUBLISHER);
             }).filter((midiaLeituraKV) => {

@@ -21,8 +21,8 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
     const midiaLeituraK = midiaLeitura.key;
     const midiaLeituraV = midiaLeitura.value;
 
+    const [midiaLeituraSelected, setMidiaLeituraSelected] = useState<IMidiaLeitura>();
     const [image, setImage] = useState<string | undefined | null>();
-    const [indexCurrent, setIndexCurrent] = useState<number>(1);
     const [genres, setGenres] = useState<(string | undefined)[]>();
     const [isVisibledTable, setVisibledTable] = useState<boolean>(false);
 
@@ -39,6 +39,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 
         setImage(midiaLeituraK?.img);
         setGenres(midiaLeituraK?.genre?.split(','));
+        setMidiaLeituraSelected(undefined);
     }, [midiaLeituraK?.genre, midiaLeituraK?.img, midiaLeituraV]);
 
     const authors = (author?: string) => {
@@ -76,6 +77,14 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
         }
     ];
 
+    // rowSelection object indicates the need for row selection
+    const rowSelection = {
+        onChange: (selectedRowKeys: React.Key[], selectedRows: IMidiaLeitura[]) => {
+            setMidiaLeituraSelected(selectedRows[0]);
+            setImage(selectedRows[0]?.img);
+        },
+    };
+
     return (
         <Modal
             isModalOpen={isModalOpen}
@@ -97,11 +106,8 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 
                             <Descriptions.Item label="N° of editions" span={3}>
                                 <NOfEditionsComponent
-                                    key={`${indexCurrent}_neditions`}
                                     midiaLeitura={midiaLeitura}
-                                    isVisibledTable={isVisibledTable}
-                                    setImage={setImage}
-                                    setIndex={setIndexCurrent} />
+                                    isVisibledTable={isVisibledTable}/>
                             </Descriptions.Item>
                         </>
                     }
@@ -129,23 +135,21 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                             <Descriptions.Item label="Year" span={3}>{midiaLeituraK?.year}</Descriptions.Item>
                             <Descriptions.Item label="N° of editions" span={3}>
                                 <NOfEditionsComponent
-                                    key={`${indexCurrent}_neditions`}
                                     midiaLeitura={midiaLeitura}
-                                    isVisibledTable={isVisibledTable}
-                                    setImage={setImage}
-                                    setIndex={setIndexCurrent} />
+                                    isVisibledTable={isVisibledTable}/>
                             </Descriptions.Item>
                         </>
                     }
 
                     {
-                        isNotNull(midiaLeituraK?.synopsis) &&
+                        (isNotNull(midiaLeituraSelected?.synopsis) || !isVisibledTable) &&
                         <Descriptions.Item label="Synopsis" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }} style={{ textAlign: 'justify' }}>
-                                {midiaLeituraK?.synopsis}
+                                {isVisibledTable ? midiaLeituraSelected?.synopsis : midiaLeituraK?.synopsis}
                             </Paragraph>
                         </Descriptions.Item>
                     }
+
                     {
                         isNotNull(midiaLeituraK?.authors) &&
                         <Descriptions.Item label="Authors" span={3} style={{ whiteSpace: 'pre-wrap' }}>
@@ -182,10 +186,15 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                                 rowKey={(item) => item.id}
                                 pagination={{
                                     pageSize: 1,
-                                    current: indexCurrent,
                                     position: ['topRight'],
-                                    disabled: true,
                                 }}
+                                rowSelection={
+                                    {
+                                        type: "radio",
+                                        hideSelectAll: true,
+                                        ...rowSelection
+                                    }
+                                }
                                 size="small" />
                         </Col>
                     }
@@ -198,16 +207,13 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 interface NOfEditionsComponentProps {
     midiaLeitura: IMidiaLeituraKV;
     isVisibledTable: boolean;
-    setImage: (image?: string | null) => void;
-    setIndex: (index: number) => void;
 }
 
-const NOfEditionsComponent = ({midiaLeitura, isVisibledTable, setImage, setIndex} : NOfEditionsComponentProps) => {
+const NOfEditionsComponent = ({midiaLeitura, isVisibledTable} : NOfEditionsComponentProps) => {
 
     const [total, setTotal] = useState<number>(0);
     const [numeros, setNumeros] = useState<(number | number[])[]>([0]);
     const [reads, setReads] = useState<(number | number[])[]>([0]);
-    const [midiasLeituras, setMidiasLeituras] = useState<IMidiaLeitura[]>([]);
 
     useEffect(() => {
         const midiaLeituraK = midiaLeitura.key;
@@ -215,7 +221,6 @@ const NOfEditionsComponent = ({midiaLeitura, isVisibledTable, setImage, setIndex
 
         if (isVisibledTable) {
             const total = midiaLeitura.value.length;
-            setMidiasLeituras(midiaLeitura.value);
             setTotal(total);
             midiaLeitura.value.forEach((v, index) => { if(v.owned) numerosCurrent.push(index+1)})
             setNumeros([...numerosCurrent]);
@@ -263,8 +268,6 @@ const NOfEditionsComponent = ({midiaLeitura, isVisibledTable, setImage, setIndex
                                 size="large"
                                 icon={contais ? <FireFilled /> : indexCurrent}
                                 onClick={() => {
-                                    setImage(midiasLeituras[index]?.img);
-                                    setIndex(indexCurrent);
                                 }}
                                 style={{ color: conditionColor }} />
                         </>

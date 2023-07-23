@@ -71,9 +71,9 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
 
     const casts = (cast?: string | null) => {
         return cast?.replaceAll(',', ' · ')
+            .replaceAll('<<>>', 'Directors: ')
             .replaceAll('<>', 'Director: ')
-            .replaceAll('*', 'Stars: ')
-            .replaceAll('<<>>', 'Directors: ');
+            .replaceAll('*', 'Stars: ');
     }
 
     const isTypeTvShow = (midiaVideo: IMidiaVideo) => {
