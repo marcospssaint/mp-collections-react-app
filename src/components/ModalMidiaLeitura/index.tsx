@@ -107,20 +107,24 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                             <Descriptions.Item label="N° of editions" span={3}>
                                 <NOfEditionsComponent
                                     midiaLeitura={midiaLeitura}
-                                    isVisibledTable={isVisibledTable}/>
+                                    isVisibledTable={isVisibledTable} />
                             </Descriptions.Item>
                         </>
                     }
 
                     {
-                        !isVisibledTable &&
-                        <>
-                            <Descriptions.Item label="Title" span={3}>{midiaLeituraK?.title}</Descriptions.Item>
-                            {
-                                (isNotNull(midiaLeituraK?.titleOriginal)) &&
-                                <Descriptions.Item label="Title original" span={3}>{midiaLeituraK?.titleOriginal ?? '-'}</Descriptions.Item>
-                            }
-                        </>
+                        !isVisibledTable && <Descriptions.Item label="Title" span={3}>{midiaLeituraK?.title}</Descriptions.Item>
+                    }
+
+
+                    {
+                        (isNotNull(midiaLeituraK?.subtitle)) &&
+                        <Descriptions.Item label="Subtitle" span={3}>{midiaLeituraK?.subtitle ?? '-'}</Descriptions.Item>
+                    }
+
+                    {
+                        (isNotNull(midiaLeituraK?.titleOriginal)) &&
+                        <Descriptions.Item label="Title original" span={3}>{midiaLeituraK?.titleOriginal ?? '-'}</Descriptions.Item>
                     }
 
 
@@ -136,7 +140,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                             <Descriptions.Item label="N° of editions" span={3}>
                                 <NOfEditionsComponent
                                     midiaLeitura={midiaLeitura}
-                                    isVisibledTable={isVisibledTable}/>
+                                    isVisibledTable={isVisibledTable} />
                             </Descriptions.Item>
                         </>
                     }
@@ -209,7 +213,7 @@ interface NOfEditionsComponentProps {
     isVisibledTable: boolean;
 }
 
-const NOfEditionsComponent = ({midiaLeitura, isVisibledTable} : NOfEditionsComponentProps) => {
+const NOfEditionsComponent = ({ midiaLeitura, isVisibledTable }: NOfEditionsComponentProps) => {
 
     const [total, setTotal] = useState<number>(0);
     const [numeros, setNumeros] = useState<(number | number[])[]>([0]);
@@ -222,13 +226,13 @@ const NOfEditionsComponent = ({midiaLeitura, isVisibledTable} : NOfEditionsCompo
         if (isVisibledTable) {
             const total = midiaLeitura.value.length;
             setTotal(total);
-            midiaLeitura.value.forEach((v, index) => { if(v.owned) numerosCurrent.push(index+1)})
+            midiaLeitura.value.forEach((v, index) => { if (v.owned) numerosCurrent.push(index + 1) })
             setNumeros([...numerosCurrent]);
         } else {
             const volume = String(midiaLeituraK?.volume);
 
             if (volume?.includes('|') || volume?.includes(',')) {
-                setTotal(Number(volume.substring(volume.indexOf('|')+2)));
+                setTotal(Number(volume.substring(volume.indexOf('|') + 2)));
 
                 var edicoes = volume.substring(0, volume.indexOf('|')); //'1-5, 6-7, 9';
                 var edicoesSplit = edicoes.split(',');
@@ -251,7 +255,7 @@ const NOfEditionsComponent = ({midiaLeitura, isVisibledTable} : NOfEditionsCompo
             <Space wrap>
                 {
                     [...Array(total).keys()].map((index) => {
-                        const indexCurrent = index+1;
+                        const indexCurrent = index + 1;
                         const contais = numeros.includes(indexCurrent);
 
                         var conditionColor = '#faad14';

@@ -50,7 +50,7 @@ const CardListItem = ({ id, midia, children }: CardListItemProps) => {
             key={`${id}_card`}
             style={{height: 330 }}
             cover={<Image src={imageModified} height={270} />}>
-                <Meta title={midia.collectionTitle ? midia.titleOriginal : midia.title} description={midia.year} />
+                <Meta title={midia.collectionTitle ? midia.subtitle : midia.title} description={midia.year} />
             {children}
         </Card>
     )
