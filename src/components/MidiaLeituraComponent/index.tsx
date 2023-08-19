@@ -5,11 +5,11 @@ import { createMidiaLeituraKV, createOptionsPublisher } from '../../entities/mid
 import { loadMidiaLeitura } from '../../utils/load-midia';
 
 import { Row } from 'antd';
+import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker';
 import { BaseOptionType } from 'antd/es/select';
 import { ThemeContext } from '../../contexts/theme-context';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidiaLeitura } from '../ListMidiaLeitura';
-import { createOptionsYears } from '../../entities/midia';
 
 interface MidiaLeituraComponentProps {
     title: string;
@@ -25,12 +25,11 @@ export const MidiaLeituraComponent = ({
     const [midiaLeituraKVArray, setMidiaLeituraKVArray] = useState<IMidiaLeituraKV[]>([]);
 
     const [optionsPublisher, setOptionsPublisher] = useState<BaseOptionType[]>([]);
-    const [optionsYears, setOptionsYears] = useState<BaseOptionType[]>([]);
 
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
     const [search, setSearch] = useState('');
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
-    const [searchYears, setSearchYears] = useState<string[]>([]);
+    const [searchRangeYear, setSearchRangeYear] = useState<[string, string] | string>();
     const [searchPublishers, setSearchPublishers] = useState<string[]>([]);
     const [searchRead, setSearchRead] = useState<string>();
 
@@ -40,7 +39,6 @@ export const MidiaLeituraComponent = ({
         const dataLoaded = await loadMidiaLeitura(type);
 
         setOptionsPublisher(createOptionsPublisher(dataLoaded));
-        setOptionsYears(createOptionsYears(dataLoaded));
         setMidiaLeituraKVArray(createMidiaLeituraKV(dataLoaded, type));
     }, [type]);
 
@@ -69,8 +67,11 @@ export const MidiaLeituraComponent = ({
         setSearchGenres(value);
     };
 
-    const handleChangeYears = (value: string[]) => {
-        setSearchYears(value);
+    const handleChangeRangeYear = (
+        value: DatePickerProps['value'] | RangePickerProps['value'],
+        dateString: [string, string] | string,
+      ) => {
+        setSearchRangeYear(dateString);
     };
 
     const handleChangeRead = (value: string) => {
@@ -82,7 +83,6 @@ export const MidiaLeituraComponent = ({
             <Row className='component-midia'>
                 <FilterMidia
                     optionsPublisher={optionsPublisher}
-                    optionsYears={optionsYears}
                     selectedAlphabets={selectedAlphabets}
                     isPublisher={true}
                     isRead={true}
@@ -91,7 +91,7 @@ export const MidiaLeituraComponent = ({
                     handleChangeSearch={handleChangeSearch}
 
                     handleChangeGenres={handleChangeGenres}
-                    handleChangeYears={handleChangeYears}
+                    handleChangeRangeYear={handleChangeRangeYear}
                     handleChangePublisher={handleChangePublishers}
                     handleChangeRead={handleChangeRead} />
 
@@ -102,7 +102,7 @@ export const MidiaLeituraComponent = ({
                     selectedAlphabets={selectedAlphabets}
                     search={search}
                     searchGenres={searchGenres}
-                    searchYears={searchYears}
+                    searchRangeYear={searchRangeYear}
                     searchPublishers={searchPublishers}
                     searchRead={searchRead}
 

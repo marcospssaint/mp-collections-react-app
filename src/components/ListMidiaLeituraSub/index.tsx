@@ -1,5 +1,6 @@
 import { Col, List } from "antd";
 
+import { TYPE_F_OWNED, TYPE_F_READ, isFilterIMidiaSingleSelect } from "../../entities/midia";
 import { IMidiaLeitura, IMidiaLeituraKV, createIMidiaLeituraKV } from '../../entities/midia-leitura';
 import { ListItem } from '../antd';
 
@@ -38,6 +39,8 @@ export const ListMidiaLeituraSub = ({
                     <ListItem
                         id={item.id}
                         midia={item}
+                        read={isFilterIMidiaSingleSelect('R', item, TYPE_F_READ)}
+                        owned={isFilterIMidiaSingleSelect(true, item, TYPE_F_OWNED)}
                         handlerClick={() => onClick(
                             createIMidiaLeituraKV({
                                 key: item,

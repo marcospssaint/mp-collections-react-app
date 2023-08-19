@@ -4,7 +4,7 @@ import { Col, FloatButton, List } from "antd";
 
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TYPE_F_GENRE, TYPE_F_PUBLISHER, TYPE_F_READ, TYPE_F_YEAR, isFilterAlphabets, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
+import { TYPE_F_GENRE, TYPE_F_OWNED, TYPE_F_PUBLISHER, TYPE_F_READ, TYPE_F_YEAR, isFilterAlphabets, isFilterIMidiaSingleSelect, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
 import { IMidiaLeituraKV } from '../../entities/midia-leitura';
 import { useQuery } from '../../utils';
 import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
@@ -17,7 +17,7 @@ export interface ListMidiaLeituraProps {
     search?: string;
     searchPublishers?: string[];
     searchGenres?: string[];
-    searchYears?: string[];
+    searchRangeYear?: [string, string] | string;
     searchRead?: string | null;
     onClickMore: (item: IMidiaLeituraKV) => void;
 }
@@ -28,9 +28,9 @@ export const ListMidiaLeitura = ({
 
     selectedAlphabets = [],
     search = '',
-    searchYears = [],
     searchPublishers = [],
     searchGenres = [],
+    searchRangeYear = '',
     searchRead = null,
 
     onClickMore
@@ -46,7 +46,7 @@ export const ListMidiaLeitura = ({
     const wasResearch = () => {
         return isNotNullArray(selectedAlphabets) 
             || isNotNullStr(search)
-            || isNotNullArray(searchYears)
+            || searchRangeYear !== null
             || isNotNullArray(searchPublishers)
             || isNotNullArray(searchGenres)
             || isNotNull(searchRead);
@@ -61,7 +61,7 @@ export const ListMidiaLeitura = ({
             }).filter((midiaLeituraKV) => {
                 return isFilterMultipleSelect(searchGenres, midiaLeituraKV, TYPE_F_GENRE);
             }).filter((midiaLeituraKV) => {
-                return isFilterMultipleSelect(searchYears, midiaLeituraKV, TYPE_F_YEAR);
+                return isFilterSingleSelect(searchRangeYear, midiaLeituraKV, TYPE_F_YEAR);
             }).filter((midiaLeituraKV) => {
                 return isFilterMultipleSelect(searchPublishers, midiaLeituraKV, TYPE_F_PUBLISHER);
             }).filter((midiaLeituraKV) => {
@@ -103,6 +103,8 @@ export const ListMidiaLeitura = ({
                     <ListItem
                         id={item.key.id}
                         midia={item.key}
+                        read={isFilterIMidiaSingleSelect('R', item.key, TYPE_F_READ)}
+                        owned={isFilterIMidiaSingleSelect(true, item.key, TYPE_F_OWNED)}
                         handlerClick={() => onClickMore(item)} />
                 )}
             />

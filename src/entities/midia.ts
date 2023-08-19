@@ -107,10 +107,14 @@ export const isFilterSingleSelect = (value: any | undefined, midiaKV: IMidiaKV, 
     const midiaV = midiaKV.value;
 
     if (midiaV === undefined || midiaV?.length === 1) {
-        return isFilterByType(value, midiaKV.key, type);
+        return isFilterIMidiaSingleSelect(value, midiaKV.key, type);
     }
 
     return midiaV?.filter((midia) => isFilterByType(value, midia, type)).length > 0;
+}
+
+export const isFilterIMidiaSingleSelect = (value: any | undefined, midia: IMidia, type: string) => {
+    return isFilterByType(value, midia, type);
 }
 
 const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
@@ -120,7 +124,16 @@ const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
         const genres = midia.genre?.split(', ');
         return genres?.some((genre) => genre === value);
     }
-    else if (type === TYPE_F_YEAR) return Number(midia.year) === Number(value);
+    else if (type === TYPE_F_YEAR) {
+        const yearOne = Number(value[0]);
+        const yearTwo = Number(value[1]);
+
+        if (yearOne !== 0 && !Number.isNaN(yearOne)) {
+            const year = Number(midia.year);
+            return (year >= yearOne && year <= yearTwo);
+        }
+        return true;
+    }
     else if (type === TYPE_F_WATCHED) return midia.watched === value;
     else if (type === TYPE_F_OWNED) return midia.owned === value;
     return false;
@@ -145,22 +158,4 @@ const isFilterSearchByType = (value: any, midia: IMidia, type: string) => {
     
     var valueSearchStr = valueSearch?.toString();
     return valueSearchStr?.toLowerCase().includes(value?.toLowerCase());
-}
-
-export const createOptionsYears = (midias: IMidia[]) => {
-    let years = midias
-        .filter((data) => data.year !== null)
-        .filter((data) => data.year !== undefined)
-        .map((data) => Number(data.year));
-    
-    const yearsSets = [...new Set(years)];
-    console.log(yearsSets)
-    return yearsSets
-        .sort((a, b) => (a?.toString() ?? '').localeCompare(b?.toString() ?? ''))
-        .map((year) => (
-        {
-            value: year,
-            label: year
-        }
-    ));
 }

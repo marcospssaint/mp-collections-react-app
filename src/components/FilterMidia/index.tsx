@@ -1,5 +1,5 @@
 
-import { Col, Divider, Input, Row } from "antd";
+import { Col, DatePickerProps, Divider, Input, Row } from "antd";
 import { BaseOptionType } from "antd/es/select";
 import CheckableTag from "antd/es/tag/CheckableTag";
 
@@ -8,10 +8,14 @@ import { optionsOwned, optionsRead, optionsWatched } from "../../entities/option
 import { DEFAULT_CHAR_INDEX } from '../../utils';
 import { Select, SelectMultiple } from "../antd";
 
+import { DatePicker } from 'antd';
+import { RangePickerProps } from "antd/es/date-picker";
+
+const { RangePicker } = DatePicker;
+
 interface FilterMidiaProps {
     selectedAlphabets: string[];
     optionsPublisher?: BaseOptionType[];
-    optionsYears?: BaseOptionType[];
 
     isPublisher?: boolean;
     isWatcher?: boolean;
@@ -21,7 +25,9 @@ interface FilterMidiaProps {
     handleChangeSearch: (value: any) => void;
     handleChangeAlphabets: (value: string, checked: boolean) => void;
     handleChangeGenres: (value: string[]) => void;
-    handleChangeYears?: (value: string[]) => void;
+    handleChangeRangeYear?: (
+        value: DatePickerProps['value'] | RangePickerProps['value'],
+        dateString: [string, string] | string,) => void;
     handleChangePublisher?: (value: string[]) => void;
 
     handleChangeWatcher?: (value: string) => void;
@@ -32,7 +38,6 @@ interface FilterMidiaProps {
 export const FilterMidia = ({
     selectedAlphabets,
     optionsPublisher,
-    optionsYears,
 
     isPublisher = false,
     isWatcher = false,
@@ -43,7 +48,7 @@ export const FilterMidia = ({
 
     handleChangeAlphabets,
     handleChangeGenres,
-    handleChangeYears,
+    handleChangeRangeYear,
     handleChangePublisher,
 
     handleChangeWatcher,
@@ -89,10 +94,10 @@ export const FilterMidia = ({
                                 style={{ width: '100%', margin: 2 }} />
                         </Col>
                         <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                            <SelectMultiple
-                                options={optionsYears}
-                                onChange={handleChangeYears}
-                                placeholder="Years"
+                            <RangePicker
+                                picker="year"
+                                size="large"
+                                onChange={handleChangeRangeYear}
                                 style={{ width: '100%', margin: 2 }} />
                         </Col>
                         {

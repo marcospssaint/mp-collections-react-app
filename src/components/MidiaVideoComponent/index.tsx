@@ -2,10 +2,9 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { ListMidiaVideo } from "../ListMidiaVideo";
 
-import { Row } from 'antd';
-import { BaseOptionType } from 'antd/es/select';
+import { DatePickerProps, Row } from 'antd';
+import { RangePickerProps } from 'antd/es/date-picker';
 import { ThemeContext } from '../../contexts/theme-context';
-import { createOptionsYears } from '../../entities/midia';
 import { IMidiaVideoKV, createMidiaVideoKV } from '../../entities/midia-video';
 import { loadMidiaVideo } from '../../utils';
 import { FilterMidia } from '../FilterMidia';
@@ -27,13 +26,10 @@ export const MidiaVideoComponent = ({
 }: MidiaVideoComponentProps) => {
 
     const [midiaVideoKVArray, setMidiaVideoKVArray] = useState<IMidiaVideoKV[]>([]);
-
-    const [optionsYears, setOptionsYears] = useState<BaseOptionType[]>([]);
-
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
     const [search, setSearch] = useState('');
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
-    const [searchYears, setSearchYears] = useState<string[]>([]);
+    const [searchRangeYear, setSearchRangeYear] = useState<[string, string] | string>();
     const [searchWatcher, setSearchWatcher] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
 
@@ -41,7 +37,6 @@ export const MidiaVideoComponent = ({
 
     const handleLoad = useCallback(async () => {
         const dataLoaded = await loadMidiaVideo(type);
-        setOptionsYears(createOptionsYears(dataLoaded));
         setMidiaVideoKVArray(createMidiaVideoKV(dataLoaded, type));
     }, [type]);
 
@@ -66,8 +61,11 @@ export const MidiaVideoComponent = ({
         setSearchGenres(value);
     };
 
-    const handleChangeYears = (value: string[]) => {
-        setSearchYears(value);
+    const handleChangeRangeYear = (
+        value: DatePickerProps['value'] | RangePickerProps['value'],
+        dateString: [string, string] | string,
+      ) => {
+        setSearchRangeYear(dateString);
     };
 
     const handleChangeWatcher = (value: string) => {
@@ -83,7 +81,6 @@ export const MidiaVideoComponent = ({
             <Row className='component-midia'>
                 <FilterMidia
                     selectedAlphabets={selectedAlphabets}
-                    optionsYears={optionsYears}
                     isWatcher={isWatcher}
                     isOwned={isOwned}
 
@@ -91,7 +88,7 @@ export const MidiaVideoComponent = ({
                     handleChangeSearch={handleChangeSearch}
 
                     handleChangeGenres={handleChangeGenres}
-                    handleChangeYears={handleChangeYears}
+                    handleChangeRangeYear={handleChangeRangeYear}
                     handleChangeWatcher={handleChangeWatcher}
                     handleChangeOwned={handleChangeOwned} />
 
@@ -101,7 +98,7 @@ export const MidiaVideoComponent = ({
                     selectedAlphabets={selectedAlphabets}
                     search={search}
                     searchGenres={searchGenres}
-                    searchYears={searchYears}
+                    searchRangeYear={searchRangeYear}
                     searchWatcher={searchWatcher}
                     searchOwned={searchOwned}
                     onClickMore={onClickMore} />
