@@ -14,7 +14,7 @@ export const TYPE_F_WATCHED = 'T_WATCHED';
 export const TYPE_F_CAST = 'T_CAST';
 export const TYPE_F_OWNED = 'T_OWNED';
 
-const TYPES_F_LEITURA = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_TITLE_ORIGINAL,TYPE_F_AUTHOR];
+const TYPES_F_LEITURA = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_TITLE_ORIGINAL,TYPE_F_AUTHOR, TYPE_F_PUBLISHER];
 
 const TYPES_F_VIDEO = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_TITLE_ORIGINAL, TYPE_F_CAST];
 
@@ -118,8 +118,7 @@ export const isFilterIMidiaSingleSelect = (value: any | undefined, midia: IMidia
 }
 
 const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
-    if (type === TYPE_F_PUBLISHER) return midia.publisher === value;
-    else if (type === TYPE_F_READ) return midia.read === value;
+    if (type === TYPE_F_READ) return midia.read === value;
     else if (type === TYPE_F_GENRE) {
         const genres = midia.genre?.split(', ');
         return genres?.some((genre) => genre === value);
@@ -154,6 +153,7 @@ const isFilterSearchByType = (value: any, midia: IMidia, type: string) => {
     else if (type === TYPE_F_SUBTITLE) valueSearch = midia.subtitle;
     else if (type === TYPE_F_TITLE_ORIGINAL) valueSearch = midia.titleOriginal;
     else if (type === TYPE_F_AUTHOR) valueSearch = midia.authors;
+    else if (type === TYPE_F_PUBLISHER) valueSearch = midia.publisher;
     else if (type === TYPE_F_CAST) valueSearch = midia.cast;
     
     var valueSearchStr = valueSearch?.toString();

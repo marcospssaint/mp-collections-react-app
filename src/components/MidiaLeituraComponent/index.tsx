@@ -1,12 +1,11 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { IMidiaLeituraKV } from '../../entities';
-import { createMidiaLeituraKV, createOptionsPublisher } from '../../entities/midia-leitura';
+import { createMidiaLeituraKV } from '../../entities/midia-leitura';
 import { loadMidiaLeitura } from '../../utils/load-midia';
 
 import { Row } from 'antd';
 import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker';
-import { BaseOptionType } from 'antd/es/select';
 import { ThemeContext } from '../../contexts/theme-context';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidiaLeitura } from '../ListMidiaLeitura';
@@ -24,21 +23,18 @@ export const MidiaLeituraComponent = ({
 }: MidiaLeituraComponentProps) => {
     const [midiaLeituraKVArray, setMidiaLeituraKVArray] = useState<IMidiaLeituraKV[]>([]);
 
-    const [optionsPublisher, setOptionsPublisher] = useState<BaseOptionType[]>([]);
-
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
     const [search, setSearch] = useState('');
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
     const [searchRangeYear, setSearchRangeYear] = useState<[string, string] | string>();
-    const [searchPublishers, setSearchPublishers] = useState<string[]>([]);
     const [searchRead, setSearchRead] = useState<string>();
+    const [searchOwned, setSearchOwned] = useState<boolean>();
 
     const { setCollapsed } = useContext(ThemeContext);
 
     const handleLoad = useCallback(async () => {
         const dataLoaded = await loadMidiaLeitura(type);
 
-        setOptionsPublisher(createOptionsPublisher(dataLoaded));
         setMidiaLeituraKVArray(createMidiaLeituraKV(dataLoaded, type));
     }, [type]);
 
@@ -59,10 +55,6 @@ export const MidiaLeituraComponent = ({
         setSearch(value);
     };
 
-    const handleChangePublishers = (value: string[]) => {
-        setSearchPublishers(value);
-    };
-
     const handleChangeGenres = (value: string[]) => {
         setSearchGenres(value);
     };
@@ -78,22 +70,25 @@ export const MidiaLeituraComponent = ({
         setSearchRead(value);
     };
 
+    const handleChangeOwned = (value: boolean) => {
+        setSearchOwned(value);
+    };
+
     return (
         <>
             <Row className='component-midia'>
                 <FilterMidia
-                    optionsPublisher={optionsPublisher}
                     selectedAlphabets={selectedAlphabets}
-                    isPublisher={true}
                     isRead={true}
+                    isOwned={true}
 
                     handleChangeAlphabets={handleChangeAlphabets}
                     handleChangeSearch={handleChangeSearch}
 
                     handleChangeGenres={handleChangeGenres}
                     handleChangeRangeYear={handleChangeRangeYear}
-                    handleChangePublisher={handleChangePublishers}
-                    handleChangeRead={handleChangeRead} />
+                    handleChangeRead={handleChangeRead}
+                    handleChangeOwned={handleChangeOwned} />
 
                 <ListMidiaLeitura
                     emptyMessage={`${title} not found 🤐`}
@@ -103,8 +98,8 @@ export const MidiaLeituraComponent = ({
                     search={search}
                     searchGenres={searchGenres}
                     searchRangeYear={searchRangeYear}
-                    searchPublishers={searchPublishers}
                     searchRead={searchRead}
+                    searchOwned={searchOwned}
 
                     onClickMore={onClickMore}
                 />

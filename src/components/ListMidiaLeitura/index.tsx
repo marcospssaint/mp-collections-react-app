@@ -4,7 +4,7 @@ import { Col, FloatButton, List } from "antd";
 
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TYPE_F_GENRE, TYPE_F_OWNED, TYPE_F_PUBLISHER, TYPE_F_READ, TYPE_F_YEAR, isFilterAlphabets, isFilterIMidiaSingleSelect, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
+import { TYPE_F_GENRE, TYPE_F_OWNED, TYPE_F_READ, TYPE_F_YEAR, isFilterAlphabets, isFilterIMidiaSingleSelect, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
 import { IMidiaLeituraKV } from '../../entities/midia-leitura';
 import { useQuery } from '../../utils';
 import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
@@ -15,10 +15,10 @@ export interface ListMidiaLeituraProps {
     data: IMidiaLeituraKV[];
     selectedAlphabets?: string[];
     search?: string;
-    searchPublishers?: string[];
     searchGenres?: string[];
     searchRangeYear?: [string, string] | string;
     searchRead?: string | null;
+    searchOwned?: boolean;
     onClickMore: (item: IMidiaLeituraKV) => void;
 }
 
@@ -28,10 +28,10 @@ export const ListMidiaLeitura = ({
 
     selectedAlphabets = [],
     search = '',
-    searchPublishers = [],
     searchGenres = [],
     searchRangeYear = '',
     searchRead = null,
+    searchOwned,
 
     onClickMore
 }: ListMidiaLeituraProps) => {
@@ -47,9 +47,9 @@ export const ListMidiaLeitura = ({
         return isNotNullArray(selectedAlphabets) 
             || isNotNullStr(search)
             || searchRangeYear !== null
-            || isNotNullArray(searchPublishers)
             || isNotNullArray(searchGenres)
-            || isNotNull(searchRead);
+            || isNotNull(searchRead)
+            || isNotNull(searchOwned);
     }
 
     const filtered =
@@ -63,9 +63,9 @@ export const ListMidiaLeitura = ({
             }).filter((midiaLeituraKV) => {
                 return isFilterSingleSelect(searchRangeYear, midiaLeituraKV, TYPE_F_YEAR);
             }).filter((midiaLeituraKV) => {
-                return isFilterMultipleSelect(searchPublishers, midiaLeituraKV, TYPE_F_PUBLISHER);
-            }).filter((midiaLeituraKV) => {
                 return isFilterSingleSelect(searchRead, midiaLeituraKV, TYPE_F_READ);
+            }).filter((midiaVideoKV) => {
+                return isFilterSingleSelect(searchOwned, midiaVideoKV, TYPE_F_OWNED);
             })
             : data;
 

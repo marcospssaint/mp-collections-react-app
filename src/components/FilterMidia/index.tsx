@@ -28,7 +28,6 @@ interface FilterMidiaProps {
     handleChangeRangeYear?: (
         value: DatePickerProps['value'] | RangePickerProps['value'],
         dateString: [string, string] | string,) => void;
-    handleChangePublisher?: (value: string[]) => void;
 
     handleChangeWatcher?: (value: string) => void;
     handleChangeRead?: (value: string) => void;
@@ -37,9 +36,7 @@ interface FilterMidiaProps {
 
 export const FilterMidia = ({
     selectedAlphabets,
-    optionsPublisher,
 
-    isPublisher = false,
     isWatcher = false,
     isRead = false,
     isOwned = false,
@@ -49,7 +46,6 @@ export const FilterMidia = ({
     handleChangeAlphabets,
     handleChangeGenres,
     handleChangeRangeYear,
-    handleChangePublisher,
 
     handleChangeWatcher,
     handleChangeRead,
@@ -100,16 +96,6 @@ export const FilterMidia = ({
                                 onChange={handleChangeRangeYear}
                                 style={{ width: '100%', margin: 2 }} />
                         </Col>
-                        {
-                            isPublisher &&
-                            <Col xs={24} sm={24} md={6} lg={6} xl={6}>
-                                <SelectMultiple
-                                    options={optionsPublisher}
-                                    onChange={handleChangePublisher}
-                                    placeholder="Publisher"
-                                    style={{ width: '100%', margin: 2 }} />
-                            </Col>
-                        }
 
                         {
                             isWatcher &&

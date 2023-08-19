@@ -1,5 +1,4 @@
 import { groupByToMap } from "../utils";
-import { isNotNullStr } from "../utils/utils";
 import { IMidia } from "./midia";
 
 export const LEITURA = "LEITURA";
@@ -95,21 +94,4 @@ export const textByTYPE = (midiaLeitura: IMidiaLeituraKV) => {
         case BOOKS: return 'Books';
         default: return '';
     }
-}
-
-export const createOptionsPublisher = (midiasLeituras: IMidiaLeitura[]) => {
-    let publishers = midiasLeituras
-        .filter((data) => isNotNullStr(data.publisher))
-        .map((data) => data.publisher);
-    
-    const publishersSets = [...new Set(publishers)];
-    return publishersSets
-        .filter((p) => p !== undefined)
-        .sort((a, b) => (a ?? '').localeCompare(b ?? ''))
-        .map((publisher) => (
-        {
-            value: publisher,
-            label: publisher
-        }
-    ));
 }
