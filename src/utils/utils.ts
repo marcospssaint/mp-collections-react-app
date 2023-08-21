@@ -13,7 +13,7 @@ export const squash = <T>(arr: T[] | undefined) => {
             tmp.push(arr[i]);
         }
     }
-    return tmp;
+    return tmp.filter((t) => t !== undefined);
 }
 
 export const isNotNull = (value: any | undefined): boolean => value !== undefined && value !== null;

@@ -64,7 +64,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             setVisibledTable(isNotNullArrayMidiaV);
         }
 
-        setAnimeAndTVTK(typeMidiaVideo !== TV_SHOWS && isNotNullArrayMidiaV);
+        setAnimeAndTVTK(types.length > 1 && isNotNullArrayMidiaV);
         setTvShow(typeMidiaVideo === TV_SHOWS);
         setMidiaVideoSelected(undefined);
     }, [midiaVideoK?.genre, midiaVideoV, typeMidiaVideo]);
@@ -77,7 +77,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
     }
 
     const isTypeTvShow = (midiaVideo: IMidiaVideo) => {
-        return midiaVideo?.type === TYPE_TV_SHOW || isTvShow;
+        return midiaVideo?.type === TYPE_TV_SHOW;
     }
 
     const isTypeMovie = (midiaVideos: IMidiaVideo[] | undefined) => {
@@ -129,7 +129,6 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             onCell: (_: IMidiaVideo) => {
                 return !isMovie ? { colSpan: 0 } : {};
             }
-
         },
         {
             title: 'Title Original',
