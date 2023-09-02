@@ -5,12 +5,13 @@ import './styles.css';
 import { Badge, Button, Col, Descriptions, Space, Table, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IMidiaVideoKV } from '../../entities';
-import { ANIMES, IMidiaVideo, MOVIES, TV_SHOWS, TYPE_MOVIE, TYPE_OVA, TYPE_TV_SHOW } from "../../entities/midia-video";
+import { IMidiaVideo, MOVIES, TV_TOKUSATSU, TYPE_MOVIE, TYPE_OVA, TYPE_TV_SHOW } from "../../entities/midia-video";
 import { isNotNull, isNotNullArray, range, rangeBySeparator, squash } from "../../utils/utils";
 import { Modal, Tag } from "../antd";
 
 import { FireFilled } from '@ant-design/icons';
 import { PresetStatusColorType } from "antd/es/_util/colors";
+import { Key } from "antd/es/table/interface";
 
 interface ModalMidiaVideoPros {
     midiaVideo: IMidiaVideoKV | undefined;
@@ -31,9 +32,9 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
     const [genres, setGenres] = useState<(string | undefined)[]>();
     const [isValidType, setValidType] = useState<boolean>(false);
     const [isMovie, setMovie] = useState<boolean>(false);
-    const [isTvShow, setTvShow] = useState<boolean>(false);
     const [isAnimeAndTVTK, setAnimeAndTVTK] = useState<boolean>(false);
     const [isVisibledTable, setVisibledTable] = useState<boolean>(false);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
     const { Paragraph } = Typography;
 
@@ -51,10 +52,9 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
         setGenres(midiaVideoK?.genre?.split(', '));
 
         const isNotNullArrayMidiaV = isNotNullArray(midiaVideoV);
-        const isAnime = typeMidiaVideo === ANIMES;
-
+        const isTokusatsu = typeMidiaVideo === TV_TOKUSATSU;
         if (
-            (isAnime && midiaVideoV?.length === 1 && midiaVideoV[0].type === TYPE_MOVIE)
+            (isTokusatsu && midiaVideoV?.length === 1 && midiaVideoV[0].type === TYPE_MOVIE)
             || typeMidiaVideo === MOVIES
         ) {
             setMovie(true);
@@ -65,9 +65,13 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
         }
 
         setAnimeAndTVTK(types.length > 1 && isNotNullArrayMidiaV);
-        setTvShow(typeMidiaVideo === TV_SHOWS);
         setMidiaVideoSelected(undefined);
-    }, [midiaVideoK?.genre, midiaVideoV, typeMidiaVideo]);
+
+        if (midiaVideoV !== undefined) {
+            setSelectedRowKeys([midiaVideoV[0].id])
+            setMidiaVideoSelected(midiaVideoV[0]);
+        }
+    }, [midiaVideoK, midiaVideoK?.genre, midiaVideoV, typeMidiaVideo]);
 
     const casts = (cast?: string | null) => {
         return cast?.replaceAll(',', ' · ')
@@ -77,7 +81,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
     }
 
     const isTypeTvShow = (midiaVideo: IMidiaVideo) => {
-        return midiaVideo?.type === TYPE_TV_SHOW;
+        return midiaVideo?.type === TYPE_TV_SHOW || midiaVideo?.type === TYPE_OVA;
     }
 
     const isTypeMovie = (midiaVideos: IMidiaVideo[] | undefined) => {
@@ -117,6 +121,15 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                 return 0;
             }, 0);
     }
+
+    const nOfEspisodesByMidia = (episodesOriginal?: string | null | undefined) => {
+        const episodes = String(episodesOriginal);
+        if (episodes !== null && episodes?.includes(' | ')){
+            return Number(episodes.substring(episodes.indexOf('|')+2));
+        }
+
+        return Number(episodes);
+    };
 
     const columns: ColumnsType<IMidiaVideo> = [
         {
@@ -190,13 +203,16 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
 
     // rowSelection object indicates the need for row selection
     const rowSelection = {
+        selectedRowKeys: selectedRowKeys,
         onChange: (selectedRowKeys: React.Key[], selectedRows: IMidiaVideo[]) => {
+            setSelectedRowKeys(selectedRowKeys);
             setMidiaVideoSelected(selectedRows[0]);
         },
     };
 
     return (
         <Modal
+            key={midiaVideoK?.id}
             isModalOpen={isModalOpen}
             hideModal={hideModal}
             witdh={witdhModal}
@@ -208,13 +224,27 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                 }}>
                     <Descriptions.Item label="Title" span={3}>{midiaVideoK?.title}</Descriptions.Item>
                     {
-                        (isNotNull(midiaVideoK?.titleOriginal) && (!isVisibledTable || !!isTvShow)) &&
+                        (
+                            isNotNull(midiaVideoK?.titleOriginal) && 
+                            (
+                                isMovie ||
+                                (!!isVisibledTable && midiaVideoV?.length === 1
+                            )
+                            
+                        )) &&
                         <Descriptions.Item label="Title Original" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             {midiaVideoK?.titleOriginal}
                         </Descriptions.Item>
                     }
                     {
-                        (isNotNull(midiaVideoK?.subtitle) && (!isVisibledTable || !!isTvShow)) &&
+                        (
+                            isNotNull(midiaVideoK?.subtitle) && 
+                            (
+                                isMovie ||
+                                (!!isVisibledTable && midiaVideoV?.length === 1
+                            )
+                            
+                        )) &&
                         <Descriptions.Item label="Subtitle" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             {midiaVideoK?.subtitle}
                         </Descriptions.Item>
@@ -258,7 +288,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
 
                             {
                                 (!!midiaVideoSelected && isTypeTvShow(midiaVideoSelected)) &&
-                                <Descriptions.Item label={`Season ${midiaVideoSelected.season} - List of episodes`} span={3}>
+                                <Descriptions.Item label={`Season ${midiaVideoSelected.season} - List of episodes (${nOfEspisodesByMidia(midiaVideoSelected?.episodes)})`} span={3}>
                                     <NOfEpisodesWatchedComponent
                                         key={`${midiaVideoSelected?.id}_nepisodes`}
                                         midiaVideo={midiaVideoSelected} />
@@ -326,6 +356,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                                         type: "radio",
                                         hideSelectAll: true,
                                         ...rowSelection
+
                                     }
                                 }
                                 size="small" />

@@ -10,6 +10,7 @@ import { isNotNull } from "../../utils";
 
 import Table, { ColumnsType } from "antd/es/table";
 import { isNotNullArray, range, rangeBySeparator } from "../../utils/utils";
+import { Key } from "antd/es/table/interface";
 
 interface ModalMidiaLeituraPros {
     midiaLeitura: IMidiaLeituraKV;
@@ -25,6 +26,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
     const [image, setImage] = useState<string | undefined | null>();
     const [genres, setGenres] = useState<(string | undefined)[]>();
     const [isVisibledTable, setVisibledTable] = useState<boolean>(false);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
     const { Paragraph } = Typography;
 
@@ -39,7 +41,12 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 
         setImage(midiaLeituraK?.img);
         setGenres(midiaLeituraK?.genre?.split(','));
-        setMidiaLeituraSelected(undefined);
+
+        if (midiaLeituraV !== undefined) {
+            setSelectedRowKeys([midiaLeituraV[0].id])
+            setMidiaLeituraSelected(midiaLeituraV[0]);
+            setImage(midiaLeituraV[0]?.img);
+        }
     }, [midiaLeituraK?.genre, midiaLeituraK?.img, midiaLeituraV]);
 
     const authors = (author?: string) => {
@@ -50,6 +57,15 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
             .replaceAll('<>', 'Write: ')
             .replaceAll('*', 'Penciler: ');
     }
+
+    const nOfEditions = (editionsOriginal?: string | null | undefined) => {
+        const editions = String(editionsOriginal);
+        if (editions !== null && editions?.includes(' | ')){
+            return Number(editions.substring(editions.indexOf('|')+2));
+        }
+
+        return Number(editions);
+    };
 
     const columns: ColumnsType<IMidiaLeitura> = [
         {
@@ -79,7 +95,9 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 
     // rowSelection object indicates the need for row selection
     const rowSelection = {
+        selectedRowKeys: selectedRowKeys,
         onChange: (selectedRowKeys: React.Key[], selectedRows: IMidiaLeitura[]) => {
+            setSelectedRowKeys(selectedRowKeys);
             setMidiaLeituraSelected(selectedRows[0]);
             setImage(selectedRows[0]?.img);
         },
@@ -87,6 +105,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 
     return (
         <Modal
+            key={midiaLeituraK?.id}
             isModalOpen={isModalOpen}
             witdh={700}
             hideModal={hideModal}
@@ -104,7 +123,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                         <>
                             <Descriptions.Item label="Name" span={3}>{midiaLeituraK?.title}</Descriptions.Item>
 
-                            <Descriptions.Item label="N° of editions" span={3}>
+                            <Descriptions.Item label={`N° of editions (${midiaLeituraV.length})`} span={3}>
                                 <NOfEditionsComponent
                                     midiaLeitura={midiaLeitura}
                                     isVisibledTable={isVisibledTable} />
@@ -137,7 +156,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                         !isVisibledTable &&
                         <>
                             <Descriptions.Item label="Year" span={3}>{midiaLeituraK?.year}</Descriptions.Item>
-                            <Descriptions.Item label="N° of editions" span={3}>
+                            <Descriptions.Item label={`N° of editions (${nOfEditions(midiaLeituraK?.volume)})`} span={3}>
                                 <NOfEditionsComponent
                                     midiaLeitura={midiaLeitura}
                                     isVisibledTable={isVisibledTable} />

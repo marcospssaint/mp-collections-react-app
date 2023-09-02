@@ -23,7 +23,7 @@ export interface IMidia {
     title: string;
     titleOriginal?: string | null;
     subtitle?: string | null;
-    year?: number | null;
+    year: number;
     owned: boolean;
     typeMidia: string;
 

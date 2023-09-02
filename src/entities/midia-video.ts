@@ -31,6 +31,7 @@ export function createIMidiaVideo(options?: Partial<IMidiaVideo>): IMidiaVideo {
         typeMidia: VIDEO,
         title: '',
         watched: 'NOTW',
+        year: 1910,
         owned: false,
         notes: null,
         genre: null
@@ -82,5 +83,5 @@ export const createMidiaVideoKV = (data: IMidiaVideo[], type: string) => {
         )
     }
 
-    return midiaVideoKVArray.sort((a, b) => a.key.title.localeCompare(b.key.title));
+    return midiaVideoKVArray.sort((a, b) => a.key.year - b.key.year);
 }
