@@ -5,7 +5,7 @@ import './styles.css';
 import { Badge, Button, Col, Descriptions, Space, Table, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { IMidiaVideoKV } from '../../entities';
-import { IMidiaVideo, MOVIES, TV_TOKUSATSU, TYPE_MOVIE, TYPE_OVA, TYPE_TV_SHOW } from "../../entities/midia-video";
+import { IMidiaVideo, MOVIES, TYPE_MOVIE, TYPE_OVA, TYPE_TV_SHOW } from "../../entities/midia-video";
 import { isNotNull, isNotNullArray, range, rangeBySeparator, squash } from "../../utils/utils";
 import { Modal, Tag } from "../antd";
 
@@ -32,7 +32,6 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
     const [genres, setGenres] = useState<(string | undefined)[]>();
     const [isValidType, setValidType] = useState<boolean>(false);
     const [isMovie, setMovie] = useState<boolean>(false);
-    const [isAnimeAndTVTK, setAnimeAndTVTK] = useState<boolean>(false);
     const [isVisibledTable, setVisibledTable] = useState<boolean>(false);
     const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
@@ -52,9 +51,8 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
         setGenres(midiaVideoK?.genre?.split(', '));
 
         const isNotNullArrayMidiaV = isNotNullArray(midiaVideoV);
-        const isTokusatsu = typeMidiaVideo === TV_TOKUSATSU;
         if (
-            (isTokusatsu && midiaVideoV?.length === 1 && midiaVideoV[0].type === TYPE_MOVIE)
+            (midiaVideoV?.length === 1 && midiaVideoV[0].type === TYPE_MOVIE)
             || typeMidiaVideo === MOVIES
         ) {
             setMovie(true);
@@ -64,7 +62,6 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             setVisibledTable(isNotNullArrayMidiaV);
         }
 
-        setAnimeAndTVTK(types.length > 1 && isNotNullArrayMidiaV);
         setMidiaVideoSelected(undefined);
 
         if (midiaVideoV !== undefined) {
@@ -81,7 +78,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
     }
 
     const isTypeTvShow = (midiaVideo: IMidiaVideo) => {
-        return midiaVideo?.type === TYPE_TV_SHOW || midiaVideo?.type === TYPE_OVA;
+        return midiaVideo?.type === TYPE_TV_SHOW;
     }
 
     const isTypeMovie = (midiaVideos: IMidiaVideo[] | undefined) => {
@@ -148,10 +145,10 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             dataIndex: 'titleOriginal',
             key: 'titleOriginal',
             onHeaderCell: (_) => ({
-                hidden: (!isAnimeAndTVTK || midiaVideoV?.length === 1)
+                hidden: (midiaVideoV?.length === 1)
             }),
             onCell: (_: IMidiaVideo) => {
-                return (!isAnimeAndTVTK || midiaVideoV?.length === 1) ? { colSpan: 0 } : {};
+                return (midiaVideoV?.length === 1) ? { colSpan: 0 } : {};
             }
         },
         {
@@ -226,12 +223,9 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                     {
                         (
                             isNotNull(midiaVideoK?.titleOriginal) && 
-                            (
-                                isMovie ||
-                                (!!isVisibledTable && midiaVideoV?.length === 1
-                            )
+                            (!isVisibledTable || midiaVideoV?.length === 1)
                             
-                        )) &&
+                        ) &&
                         <Descriptions.Item label="Title Original" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             {midiaVideoK?.titleOriginal}
                         </Descriptions.Item>
@@ -239,12 +233,8 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                     {
                         (
                             isNotNull(midiaVideoK?.subtitle) && 
-                            (
-                                isMovie ||
-                                (!!isVisibledTable && midiaVideoV?.length === 1
-                            )
-                            
-                        )) &&
+                            (!isVisibledTable || midiaVideoV?.length === 1)
+                        ) &&
                         <Descriptions.Item label="Subtitle" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             {midiaVideoK?.subtitle}
                         </Descriptions.Item>
