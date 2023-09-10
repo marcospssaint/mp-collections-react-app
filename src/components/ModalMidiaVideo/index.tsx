@@ -141,9 +141,9 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             }
         },
         {
-            title: 'Title Original',
-            dataIndex: 'titleOriginal',
-            key: 'titleOriginal',
+            title: 'Original title',
+            dataIndex: 'originalTitle',
+            key: 'originalTitle',
             onHeaderCell: (_) => ({
                 hidden: (midiaVideoV?.length === 1)
             }),
@@ -222,12 +222,12 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                     <Descriptions.Item label="Title" span={3}>{midiaVideoK?.title}</Descriptions.Item>
                     {
                         (
-                            isNotNull(midiaVideoK?.titleOriginal) && 
+                            isNotNull(midiaVideoK?.originalTitle) && 
                             (!isVisibledTable || midiaVideoV?.length === 1)
                             
                         ) &&
-                        <Descriptions.Item label="Title Original" span={3} style={{ whiteSpace: 'pre-wrap' }}>
-                            {midiaVideoK?.titleOriginal}
+                        <Descriptions.Item label="Original title" span={3} style={{ whiteSpace: 'pre-wrap' }}>
+                            {midiaVideoK?.originalTitle}
                         </Descriptions.Item>
                     }
                     {

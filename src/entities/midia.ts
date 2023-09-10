@@ -4,7 +4,7 @@ import { VIDEO } from "./midia-video";
 
 export const TYPE_F_TITLE = 'T_TITLE';
 export const TYPE_F_SUBTITLE = 'T_SUBTITLE';
-export const TYPE_F_TITLE_ORIGINAL = 'T_TITLE_ORIGINAL';
+export const TYPE_F_ORIGINAL_TITLE = 'T_ORIGINAL_TITLE';
 export const TYPE_F_AUTHOR = 'T_AUTHOR';
 export const TYPE_F_GENRE = 'T_GENRE';
 export const TYPE_F_YEAR = 'TYPE_YEAR';
@@ -14,14 +14,14 @@ export const TYPE_F_WATCHED = 'T_WATCHED';
 export const TYPE_F_CAST = 'T_CAST';
 export const TYPE_F_OWNED = 'T_OWNED';
 
-const TYPES_F_LEITURA = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_TITLE_ORIGINAL,TYPE_F_AUTHOR, TYPE_F_PUBLISHER];
+const TYPES_F_LEITURA = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_ORIGINAL_TITLE,TYPE_F_AUTHOR, TYPE_F_PUBLISHER];
 
-const TYPES_F_VIDEO = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_TITLE_ORIGINAL, TYPE_F_CAST];
+const TYPES_F_VIDEO = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_ORIGINAL_TITLE, TYPE_F_CAST];
 
 export interface IMidia {
     id: number;
     title: string;
-    titleOriginal?: string | null;
+    originalTitle?: string | null;
     subtitle?: string | null;
     year: number;
     owned: boolean;
@@ -151,7 +151,7 @@ const isFilterSearchByType = (value: any, midia: IMidia, type: string) => {
 
     if (type === TYPE_F_TITLE) valueSearch = midia.title;
     else if (type === TYPE_F_SUBTITLE) valueSearch = midia.subtitle;
-    else if (type === TYPE_F_TITLE_ORIGINAL) valueSearch = midia.titleOriginal;
+    else if (type === TYPE_F_ORIGINAL_TITLE) valueSearch = midia.originalTitle;
     else if (type === TYPE_F_AUTHOR) valueSearch = midia.authors;
     else if (type === TYPE_F_PUBLISHER) valueSearch = midia.publisher;
     else if (type === TYPE_F_CAST) valueSearch = midia.cast;

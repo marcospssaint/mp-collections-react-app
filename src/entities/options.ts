@@ -36,8 +36,8 @@ export const optionsGenres = [
         label: 'Drama',
     },
     {
-        value: 'Familiy',
-        label: 'Familiy',
+        value: 'Family',
+        label: 'Family',
     },
     {
         value: 'Fantasy',

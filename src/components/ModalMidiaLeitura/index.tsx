@@ -74,9 +74,9 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
             key: 'subtitle'
         },
         {
-            title: 'Title Original',
-            dataIndex: 'titleOriginal',
-            key: 'titleOriginal'
+            title: 'Original title',
+            dataIndex: 'originalTitle',
+            key: 'originalTitle'
         },
         {
             title: 'Year',
@@ -142,8 +142,8 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                     }
 
                     {
-                        (isNotNull(midiaLeituraK?.titleOriginal)) &&
-                        <Descriptions.Item label="Title original" span={3}>{midiaLeituraK?.titleOriginal ?? '-'}</Descriptions.Item>
+                        (isNotNull(midiaLeituraK?.originalTitle)) &&
+                        <Descriptions.Item label="Original title" span={3}>{midiaLeituraK?.originalTitle ?? '-'}</Descriptions.Item>
                     }
 
 

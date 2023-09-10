@@ -76,7 +76,7 @@ export const createMidiaLeituraKV = (data: IMidiaLeitura[], type: string) => {
         )
     }
 
-    return midiaLeituraKVArray.sort((a, b) => a.key.year - b.key.year);
+    return midiaLeituraKVArray.sort((a, b) => a.key.title.localeCompare(b.key.title));
 }
 
 export const pathByTYPE = (midiaLeitura: IMidiaLeituraKV) => {
