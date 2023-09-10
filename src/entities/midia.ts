@@ -40,6 +40,7 @@ export interface IMidia {
     collectionTitle?: boolean | null;
 
     // video
+    typeMidiaVideo?: string | null;
     cast?: string;
     watched?: string | null;
 }

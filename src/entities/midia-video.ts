@@ -12,7 +12,6 @@ export const TYPE_OVA = 'OVA';
 export const TYPE_TV_SHOW = 'TV Show';
 
 export interface IMidiaVideo extends IMidia {
-    typeMidiaVideo: string | null;
     season?: number | null;
     episodes?: string | null;
     watchedEpisodes?: number;
@@ -83,5 +82,10 @@ export const createMidiaVideoKV = (data: IMidiaVideo[], type: string) => {
         )
     }
 
-    return midiaVideoKVArray.sort((a, b) => a.key.year - b.key.year);
+    return midiaVideoKVArray.sort((a, b) => {
+        if (type === ANIMES) {
+            return a.key.title.localeCompare(b.key.title);
+        }
+        return a.key.year - b.key.year;
+    });
 }

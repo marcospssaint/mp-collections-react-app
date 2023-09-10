@@ -14,7 +14,7 @@ import { Image } from '..';
 import { Avatar, Card, List, Space } from "antd";
 import { IMidia } from "../../../entities";
 import { LEITURA } from '../../../entities/midia-leitura';
-import { VIDEO } from '../../../entities/midia-video';
+import { ANIMES, VIDEO } from '../../../entities/midia-video';
 
 interface ListItemProps {
     id: number;
@@ -64,6 +64,13 @@ const CardListItem = ({ id, midia, read, watched, owned, children }: CardListIte
         }
     }
 
+    const description = (midia: IMidia) => {
+        if (midia.typeMidiaVideo === ANIMES) {
+            return '';
+        }
+        return midia.year;
+    }
+
     return (
         <Card hoverable
             key={`${id}_card`}
@@ -83,11 +90,13 @@ const CardListItem = ({ id, midia, read, watched, owned, children }: CardListIte
             </>}>
             <Meta
                 title={midia.collectionTitle ? midia.subtitle : midia.title}
-                description={midia.year} />
+                description={description(midia)} />
             {children}
         </Card>
     )
 }
+
+
 
 interface IconsComponentProps {
     midia: IMidia;

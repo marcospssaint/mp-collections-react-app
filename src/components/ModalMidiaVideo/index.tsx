@@ -7,7 +7,7 @@ import { ColumnsType } from "antd/es/table";
 import { IMidiaVideoKV } from '../../entities';
 import { IMidiaVideo, MOVIES, TYPE_MOVIE, TYPE_OVA, TYPE_TV_SHOW } from "../../entities/midia-video";
 import { isNotNull, isNotNullArray, range, rangeBySeparator, squash } from "../../utils/utils";
-import { Modal, Tag } from "../antd";
+import { Modal } from "../antd";
 
 import { FireFilled } from '@ant-design/icons';
 import { PresetStatusColorType } from "antd/es/_util/colors";
@@ -77,32 +77,62 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             .replaceAll('*', 'Stars: ');
     }
 
+    const isTypeTvShowOrOVA = (midiaVideo: IMidiaVideo) => {
+        return midiaVideo?.type === TYPE_TV_SHOW || midiaVideo?.type === TYPE_OVA;
+    }
+
     const isTypeTvShow = (midiaVideo: IMidiaVideo) => {
         return midiaVideo?.type === TYPE_TV_SHOW;
+    }
+
+    const isTypeTvShows = (midiaVideos: IMidiaVideo[] | undefined) => {
+        return midiaVideos?.some((mv) => mv.type === TYPE_TV_SHOW);
+    }
+
+    const nOfSeason = () => {
+        return midiaVideoV?.filter((mv) => isTypeTvShow(mv)).length;
+    }
+
+    const nOfEpisodes = () => {
+        return midiaVideoV?.filter((mv) => isTypeTvShow(mv))
+            .map(md => md.episodes).map((e) => {
+                var episode = String(e);
+                if (episode === undefined) {
+                    return 0;
+                } else  if (episode != null && episode.includes('|')) {
+                    return Number(episode.substring(episode.indexOf('|')+2));
+                }
+                return Number(episode);
+            }).reduce((a, c) => {
+                if (a != null && c != null) {
+                    return a + c;
+                }
+                return 0;
+            }, 0);
     }
 
     const isTypeMovie = (midiaVideos: IMidiaVideo[] | undefined) => {
         return midiaVideos?.some((mv) => mv.type === TYPE_MOVIE);
     }
 
-    const isTypeOVA = (midiaVideos: IMidiaVideo[] | undefined) => {
+    const nOfMovies = () => {
+        return midiaVideoV?.filter((mv) => mv.type === TYPE_MOVIE).length;
+    }
+
+    const isTypeOVA = (midiaVideo: IMidiaVideo | undefined) => {
+        return midiaVideo?.type === TYPE_OVA;
+    }
+
+    const isTypeOVAs = (midiaVideos: IMidiaVideo[] | undefined) => {
         return midiaVideos?.some((mv) => mv.type === TYPE_OVA);
     }
 
-    const nOfSeason = () => {
-        return midiaVideo?.value?.filter((mv) =>isTypeTvShow(mv)).length;
-    }
-
-    const nOfMovies = () => {
-        return midiaVideo?.value?.filter((mv) => mv.type === TYPE_MOVIE).length;
-    }
-
     const nOfOVAs = () => {
-        return midiaVideo?.value?.filter((mv) => mv.type === TYPE_OVA).length;
+        return midiaVideoV?.filter((mv) => mv.type === TYPE_OVA).length;
     }
 
-    const nOfEpisodes = () => {
-        return midiaVideoV?.filter((mv) => isTypeTvShow(mv))
+    const nOfEpisodesOVAs = () => {
+        return midiaVideoV?.filter((mv) => isTypeOVA(mv))
             .map(md => md.episodes).map((e) => {
                 var episode = String(e);
                 if (episode === undefined) {
@@ -134,10 +164,10 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             dataIndex: 'subtitle',
             key: 'subtitle',
             onHeaderCell: (_) => ({
-                hidden: !isMovie
+                hidden: (midiaVideoV?.length === 1)
             }),
             onCell: (_: IMidiaVideo) => {
-                return !isMovie ? { colSpan: 0 } : {};
+                return (midiaVideoV?.length === 1) ? { colSpan: 0 } : {};
             }
         },
         {
@@ -252,15 +282,26 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                         </Descriptions.Item>
                     }
                     {
+                        isValidType &&
+                        <Descriptions.Item label="Types" span={3}>
+                            { type?.map((type, index) => <Badge color="blue" count={type} key={index} />) }
+                        </Descriptions.Item>
+                    }
+                    {
                         !isMovie &&
                         <>
-                            <Descriptions.Item label="No. of seasons" style={{ textAlign: 'center' }}>
-                                {nOfSeason()}
-                            </Descriptions.Item>
+                            {
+                                isTypeTvShows(midiaVideo?.value) &&
+                                    <>
+                                        <Descriptions.Item label="No. of seasons" style={{ textAlign: 'center' }}>
+                                            {nOfSeason()}
+                                        </Descriptions.Item>
 
-                            <Descriptions.Item label="No. of episodes" span={2} style={{ textAlign: 'center' }}>
-                                {nOfEpisodes()}
-                            </Descriptions.Item>
+                                        <Descriptions.Item label="No. of episodes" span={2} style={{ textAlign: 'center' }}>
+                                            {nOfEpisodes()}
+                                        </Descriptions.Item>
+                                    </>
+                            }
 
                             {
                                 isTypeMovie(midiaVideo?.value) &&
@@ -270,14 +311,19 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                             }
 
                             {
-                                isTypeOVA(midiaVideo?.value) &&
-                                    <Descriptions.Item label="No. of OVAs" span={3} style={{ textAlign: 'center' }}>
-                                        {nOfOVAs()}
-                                    </Descriptions.Item>
+                                isTypeOVAs(midiaVideo?.value) &&
+                                    <>
+                                        <Descriptions.Item label="No. of OVAs" span={2} style={{ textAlign: 'center' }}>
+                                            {nOfOVAs()}
+                                        </Descriptions.Item>
+                                        <Descriptions.Item label="No. of episodes" span={2} style={{ textAlign: 'center' }}>
+                                            {nOfEpisodesOVAs()}
+                                        </Descriptions.Item>
+                                    </>
                             }
 
                             {
-                                (!!midiaVideoSelected && isTypeTvShow(midiaVideoSelected)) &&
+                                (!!midiaVideoSelected && isTypeTvShowOrOVA(midiaVideoSelected)) &&
                                 <Descriptions.Item label={`Season ${midiaVideoSelected.season} - List of episodes (${nOfEspisodesByMidia(midiaVideoSelected?.episodes)})`} span={3}>
                                     <NOfEpisodesWatchedComponent
                                         key={`${midiaVideoSelected?.id}_nepisodes`}
@@ -285,12 +331,6 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                                 </Descriptions.Item>
                             }
                         </>
-                    }
-                    {
-                        isValidType &&
-                        <Descriptions.Item label="Types" span={3} style={{ textAlign: 'center' }}>
-                            { type?.map((type, index) => <Tag color="blue" label={type} key={index} />) }
-                        </Descriptions.Item>
                     }
                     
                     {
