@@ -8,6 +8,8 @@ export const TYPE_F_ORIGINAL_TITLE = 'T_ORIGINAL_TITLE';
 export const TYPE_F_AUTHOR = 'T_AUTHOR';
 export const TYPE_F_GENRE = 'T_GENRE';
 export const TYPE_F_YEAR = 'TYPE_YEAR';
+export const TYPE_F_COUNTRIES = 'TYPE_COUNTRIES';
+export const TYPE_F_LANGUAGE = 'TYPE_LANGUAGE';
 export const TYPE_F_PUBLISHER = 'T_PUBLISHER';
 export const TYPE_F_READ = 'T_READ';
 export const TYPE_F_WATCHED = 'T_WATCHED';
@@ -26,6 +28,9 @@ export interface IMidia {
     year: number;
     owned: boolean;
     typeMidia: string;
+
+    countries?: string;
+    language?: string;
 
     synopsis?: string | null;
     notes?: string | null;
@@ -134,6 +139,11 @@ const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
         }
         return true;
     }
+    else if (type === TYPE_F_COUNTRIES) {
+        const countries = midia.countries?.split(', ');
+        return countries?.some((country) => country === value);
+    }
+    else if (type === TYPE_F_LANGUAGE) return midia.language === value;
     else if (type === TYPE_F_WATCHED) return midia.watched === value;
     else if (type === TYPE_F_OWNED) return midia.owned === value;
     return false;

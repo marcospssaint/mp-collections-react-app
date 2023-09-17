@@ -27,6 +27,8 @@ export const MidiaLeituraComponent = ({
     const [search, setSearch] = useState('');
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
     const [searchRangeYear, setSearchRangeYear] = useState<[string, string] | string>();
+    const [searchCountries, setSearchCountries] = useState<string[]>([]);
+    const [searchLanguage, setSearchLanguage] = useState<string>();
     const [searchRead, setSearchRead] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
 
@@ -62,8 +64,16 @@ export const MidiaLeituraComponent = ({
     const handleChangeRangeYear = (
         value: DatePickerProps['value'] | RangePickerProps['value'],
         dateString: [string, string] | string,
-      ) => {
+    ) => {
         setSearchRangeYear(dateString);
+    };
+
+    const handleChangeCountries = (value: string[]) => {
+        setSearchCountries(value);
+    };
+
+    const handleChangeLanguage = (value: string) => {
+        setSearchLanguage(value);
     };
 
     const handleChangeRead = (value: string) => {
@@ -87,6 +97,10 @@ export const MidiaLeituraComponent = ({
 
                     handleChangeGenres={handleChangeGenres}
                     handleChangeRangeYear={handleChangeRangeYear}
+
+                    handleChangeCountries={handleChangeCountries}
+                    handleChangeLanguage={handleChangeLanguage}
+
                     handleChangeRead={handleChangeRead}
                     handleChangeOwned={handleChangeOwned} />
 
@@ -98,6 +112,8 @@ export const MidiaLeituraComponent = ({
                     search={search}
                     searchGenres={searchGenres}
                     searchRangeYear={searchRangeYear}
+                    searchCountries={searchCountries}
+                    searchLanguage={searchLanguage}
                     searchRead={searchRead}
                     searchOwned={searchOwned}
 

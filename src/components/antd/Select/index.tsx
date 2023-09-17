@@ -19,7 +19,6 @@ interface SelectMulProps extends DefaultSelectProps {
 export const Select = ({ onChange, placeholder, options, style }: SelectProps) => {
     return (
         <SelectAntd
-            size="large"
             placeholder={placeholder}
             onChange={onChange}
             style={style}
@@ -33,7 +32,6 @@ export const SelectMultiple = ({ onChange, placeholder, options, style }: Select
     return (
         <SelectAntd
             mode="multiple"
-            size="large"
             placeholder={placeholder}
             onChange={onChange}
             style={style}

@@ -12,6 +12,8 @@ import { FilterMidia } from '../FilterMidia';
 interface MidiaVideoComponentProps {
     title: string;
     type: string;
+    isCountries?: boolean;
+    isLanguage?: boolean;
     isWatcher?: boolean;
     isOwned?: boolean;
     onClickMore: (midiaVideo: IMidiaVideoKV) => void;
@@ -20,6 +22,9 @@ interface MidiaVideoComponentProps {
 export const MidiaVideoComponent = ({
     title,
     type,
+
+    isCountries = true,
+    isLanguage = true,
     isWatcher = false,
     isOwned = false,
     onClickMore
@@ -30,6 +35,8 @@ export const MidiaVideoComponent = ({
     const [search, setSearch] = useState('');
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
     const [searchRangeYear, setSearchRangeYear] = useState<[string, string] | string>();
+    const [searchCountries, setSearchCountries] = useState<string[]>([]);
+    const [searchLanguage, setSearchLanguage] = useState<string>();
     const [searchWatcher, setSearchWatcher] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
 
@@ -68,6 +75,14 @@ export const MidiaVideoComponent = ({
         setSearchRangeYear(dateString);
     };
 
+    const handleChangeCountries = (value: string[]) => {
+        setSearchCountries(value);
+    };
+
+    const handleChangeLanguage = (value: string) => {
+        setSearchLanguage(value);
+    };
+
     const handleChangeWatcher = (value: string) => {
         setSearchWatcher(value);
     };
@@ -81,11 +96,16 @@ export const MidiaVideoComponent = ({
             <Row className='component-midia'>
                 <FilterMidia
                     selectedAlphabets={selectedAlphabets}
+                    isCountries={isCountries}
+                    isLanguage={isLanguage}
                     isWatcher={isWatcher}
                     isOwned={isOwned}
 
                     handleChangeAlphabets={handleChangeAlphabets}
                     handleChangeSearch={handleChangeSearch}
+
+                    handleChangeCountries={handleChangeCountries}
+                    handleChangeLanguage={handleChangeLanguage}
 
                     handleChangeGenres={handleChangeGenres}
                     handleChangeRangeYear={handleChangeRangeYear}
@@ -99,6 +119,8 @@ export const MidiaVideoComponent = ({
                     search={search}
                     searchGenres={searchGenres}
                     searchRangeYear={searchRangeYear}
+                    searchCountries={searchCountries}
+                    searchLanguage={searchLanguage}
                     searchWatcher={searchWatcher}
                     searchOwned={searchOwned}
                     onClickMore={onClickMore} />

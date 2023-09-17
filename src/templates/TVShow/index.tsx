@@ -22,6 +22,7 @@ export const TVShow = () => {
         <MidiaVideoComponent
             title='TV Shows'
             type={TV_SHOWS}
+            isLanguage={false}
             isWatcher={true}
             isOwned={true}
             onClickMore={onClickMore}

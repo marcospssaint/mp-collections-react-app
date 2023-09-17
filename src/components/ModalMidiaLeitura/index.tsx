@@ -25,6 +25,7 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
     const [midiaLeituraSelected, setMidiaLeituraSelected] = useState<IMidiaLeitura>();
     const [image, setImage] = useState<string | undefined | null>();
     const [genres, setGenres] = useState<(string | undefined)[]>();
+    const [countries, setCountries] = useState<(string | undefined)[]>();
     const [isVisibledTable, setVisibledTable] = useState<boolean>(false);
     const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
@@ -41,13 +42,14 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 
         setImage(midiaLeituraK?.img);
         setGenres(midiaLeituraK?.genre?.split(','));
+        setCountries(midiaLeituraK?.countries?.split(','))
 
-        if (midiaLeituraV !== undefined) {
-            setSelectedRowKeys([midiaLeituraV[0].id])
+        if (isNotNullArrayMidiaV) {
+            setSelectedRowKeys([midiaLeituraV[0]?.id])
             setMidiaLeituraSelected(midiaLeituraV[0]);
             setImage(midiaLeituraV[0]?.img);
         }
-    }, [midiaLeituraK?.genre, midiaLeituraK?.img, midiaLeituraV]);
+    }, [midiaLeituraK, midiaLeituraV]);
 
     const authors = (author?: string) => {
         return author?.replaceAll(',', ' · ')
@@ -60,8 +62,8 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
 
     const nOfEditions = (editionsOriginal?: string | null | undefined) => {
         const editions = String(editionsOriginal);
-        if (editions !== null && editions?.includes(' | ')){
-            return Number(editions.substring(editions.indexOf('|')+2));
+        if (editions !== null && editions?.includes(' | ')) {
+            return Number(editions.substring(editions.indexOf('|') + 2));
         }
 
         return Number(editions);
@@ -135,23 +137,27 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                         !isVisibledTable && <Descriptions.Item label="Title" span={3}>{midiaLeituraK?.title}</Descriptions.Item>
                     }
 
-
                     {
-                        (isNotNull(midiaLeituraK?.subtitle)) &&
-                        <Descriptions.Item label="Subtitle" span={3}>{midiaLeituraK?.subtitle ?? '-'}</Descriptions.Item>
-                    }
+                        !isVisibledTable &&
+                        <>
+                            {
+                                (isNotNull(midiaLeituraK?.subtitle)) &&
+                                <Descriptions.Item label="Subtitle" span={3}>{midiaLeituraK?.subtitle ?? '-'}</Descriptions.Item>
+                            }
 
-                    {
-                        (isNotNull(midiaLeituraK?.originalTitle)) &&
-                        <Descriptions.Item label="Original title" span={3}>{midiaLeituraK?.originalTitle ?? '-'}</Descriptions.Item>
+                            {
+                                (isNotNull(midiaLeituraK?.originalTitle)) &&
+                                <Descriptions.Item label="Original title" span={3}>{midiaLeituraK?.originalTitle ?? '-'}</Descriptions.Item>
+                            }
+                        </>
                     }
-
 
                     <Descriptions.Item label="Genres" span={3}>
                         {genres?.map((genre, index) => <Tag color="blue" label={genre} key={index} />)}
                     </Descriptions.Item>
 
                     <Descriptions.Item label="Publisher" span={3}>{midiaLeituraK?.publisher}</Descriptions.Item>
+
                     {
                         !isVisibledTable &&
                         <>
@@ -164,12 +170,14 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                         </>
                     }
 
+                    <Descriptions.Item label={`${countries?.length??0 > 1 ? 'Countries' : 'Country'} of origin`} span={3}>
+                        {countries?.map((country, index) => <Tag color="blue" label={country} key={index} />)}
+                    </Descriptions.Item>
+
                     {
-                        (isNotNull(midiaLeituraSelected?.synopsis) || !isVisibledTable) &&
-                        <Descriptions.Item label="Synopsis" span={3} style={{ whiteSpace: 'pre-wrap' }}>
-                            <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }} style={{ textAlign: 'justify' }}>
-                                {isVisibledTable ? midiaLeituraSelected?.synopsis : midiaLeituraK?.synopsis}
-                            </Paragraph>
+                        isNotNull(midiaLeituraK?.language) &&
+                        <Descriptions.Item label="Language" span={3}>
+                            <Tag color="blue" label={midiaLeituraK?.language} />
                         </Descriptions.Item>
                     }
 
@@ -178,6 +186,15 @@ export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: Mod
                         <Descriptions.Item label="Authors" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }}>
                                 {authors(midiaLeituraK?.authors)}
+                            </Paragraph>
+                        </Descriptions.Item>
+                    }
+
+                    {
+                        (isNotNull(midiaLeituraSelected?.synopsis) || !isVisibledTable) &&
+                        <Descriptions.Item label="Synopsis" span={3} style={{ whiteSpace: 'pre-wrap' }}>
+                            <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }} style={{ textAlign: 'justify' }}>
+                                {isVisibledTable ? midiaLeituraSelected?.synopsis : midiaLeituraK?.synopsis}
                             </Paragraph>
                         </Descriptions.Item>
                     }
