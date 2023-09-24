@@ -4,8 +4,10 @@ import { ListMidiaVideo } from "../ListMidiaVideo";
 
 import { DatePickerProps, Row } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
+import { BaseOptionType } from 'antd/es/select';
 import { ThemeContext } from '../../contexts/theme-context';
-import { IMidiaVideoKV, createMidiaVideoKV } from '../../entities/midia-video';
+import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, createOptions } from '../../entities/midia';
+import { IMidiaVideo, IMidiaVideoKV, createMidiaVideoKV } from '../../entities/midia-video';
 import { loadMidiaVideo } from '../../utils';
 import { FilterMidia } from '../FilterMidia';
 
@@ -16,6 +18,7 @@ interface MidiaVideoComponentProps {
     isLanguage?: boolean;
     isWatcher?: boolean;
     isOwned?: boolean;
+    isVisibleCollection?: boolean;
     onClickMore: (midiaVideo: IMidiaVideoKV) => void;
 }
 
@@ -27,8 +30,13 @@ export const MidiaVideoComponent = ({
     isLanguage = true,
     isWatcher = false,
     isOwned = false,
+    isVisibleCollection = false,
     onClickMore
 }: MidiaVideoComponentProps) => {
+
+    const [optionsCountries, setOptionsCountries] = useState<BaseOptionType[]>([]);
+    const [optionsGenres, setOptionsGenres] = useState<BaseOptionType[]>([]);
+    const [optionsLanguage, setOptionsLanguage] = useState<BaseOptionType[]>([]);
 
     const [midiaVideoKVArray, setMidiaVideoKVArray] = useState<IMidiaVideoKV[]>([]);
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
@@ -39,18 +47,28 @@ export const MidiaVideoComponent = ({
     const [searchLanguage, setSearchLanguage] = useState<string>();
     const [searchWatcher, setSearchWatcher] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
+    const [visibleCollection, setVisibleCollection] = useState<boolean>(false);
+
+    const [dataLoaded, setDataLoaded] = useState<IMidiaVideo[]>([]);
 
     const { setCollapsed } = useContext(ThemeContext);
 
     const handleLoad = useCallback(async () => {
-        const dataLoaded = await loadMidiaVideo(type);
-        setMidiaVideoKVArray(createMidiaVideoKV(dataLoaded, type));
+        const datas = await loadMidiaVideo(type);
+        setDataLoaded(datas);
+        setOptionsCountries(createOptions(datas, TYPE_F_COUNTRIES));
+        setOptionsGenres(createOptions(datas, TYPE_F_GENRE));
+        setOptionsLanguage(createOptions(datas, TYPE_F_LANGUAGE));
     }, [type]);
 
     useEffect(() => {
         handleLoad();
+    }, [handleLoad]);
+
+    useEffect(() => {
+        setMidiaVideoKVArray(createMidiaVideoKV(dataLoaded, type, visibleCollection));
         setCollapsed(true);
-    }, [handleLoad, setCollapsed])
+    }, [dataLoaded, setCollapsed, type, visibleCollection])
 
     const handleChangeAlphabets = (alphabet: string, checked: boolean) => {
         const nextSelectedAlphabets = checked
@@ -91,15 +109,23 @@ export const MidiaVideoComponent = ({
         setSearchOwned(value);
     };
 
+    const handleChangeVisibleCollection = (value: boolean) => {
+        setVisibleCollection(value);
+    };
+
     return (
         <>
             <Row className='component-midia'>
                 <FilterMidia
                     selectedAlphabets={selectedAlphabets}
+                    optionsCountries={optionsCountries}
+                    optionsGenres={optionsGenres}
+                    optionsLanguage={optionsLanguage}
                     isCountries={isCountries}
                     isLanguage={isLanguage}
                     isWatcher={isWatcher}
                     isOwned={isOwned}
+                    isVisibleCollection={isVisibleCollection}
 
                     handleChangeAlphabets={handleChangeAlphabets}
                     handleChangeSearch={handleChangeSearch}
@@ -110,7 +136,8 @@ export const MidiaVideoComponent = ({
                     handleChangeGenres={handleChangeGenres}
                     handleChangeRangeYear={handleChangeRangeYear}
                     handleChangeWatcher={handleChangeWatcher}
-                    handleChangeOwned={handleChangeOwned} />
+                    handleChangeOwned={handleChangeOwned}
+                    handleChangeVisibleCollection={handleChangeVisibleCollection} />
 
                 <ListMidiaVideo
                     emptyMessage={`${title} not found 🤐`}

@@ -88,7 +88,7 @@ export const isFilterSearch = (value: any | undefined , midiaKV: IMidiaKV) => {
     const midiaK = midiaKV.key;
     const midiaV = midiaKV.value;
 
-    if (midiaV === undefined || midiaV?.length === 1) {
+    if (midiaV === undefined || midiaV?.length === 0) {
         return isFilterByTypeMidia(value, midiaK);
     }
 
@@ -100,7 +100,7 @@ export const isFilterMultipleSelect = (values: any[] | undefined, midiaKV: IMidi
 
     const midiaV = midiaKV.value;
 
-    if (midiaV !== undefined && midiaV?.length === 1) {
+    if (midiaV !== undefined && midiaV?.length === 0) {
         return values?.some((value) => isFilterByType(value, midiaKV.key, type));
     }
 
@@ -108,7 +108,8 @@ export const isFilterMultipleSelect = (values: any[] | undefined, midiaKV: IMidi
 }
 
 export const isFilterSingleSelect = (value: any | undefined, midiaKV: IMidiaKV, type: string) => {
-    if (!isNotNull(value)) return true;
+    if (type === TYPE_F_YEAR && !isNotNullArray(value)) return true;
+    else if (!isNotNull(value)) return true;
 
     const midiaV = midiaKV.value;
 
@@ -169,4 +170,35 @@ const isFilterSearchByType = (value: any, midia: IMidia, type: string) => {
     
     var valueSearchStr = valueSearch?.toString();
     return valueSearchStr?.toLowerCase().includes(value?.toLowerCase());
+}
+
+export const createOptions = (midias: IMidia[], type: string) => {
+    var options = [''];
+    midias
+        .filter((data) => {
+            if (type === TYPE_F_GENRE)
+                return isNotNullStr(data?.genre)
+            else if (type === TYPE_F_COUNTRIES)
+                return isNotNullStr(data?.countries)
+            else if (type === TYPE_F_LANGUAGE)
+                return isNotNullStr(data?.language)
+            return '';
+        })
+        .forEach((data) => {
+            var value;
+            if (type === TYPE_F_GENRE) value = data?.genre
+            else if (type === TYPE_F_COUNTRIES) value = data?.countries;
+            else if (type === TYPE_F_LANGUAGE) value = data?.language;
+
+            value?.split(', ').forEach((c) => options.push(c))
+        });
+
+    const optionsSets = [...new Set(options)];
+    return optionsSets
+        .filter((p) => p !== undefined)
+        .sort((a, b) => (a ?? '').localeCompare(b ?? ''))
+        .map((option) => ({
+            value: option,
+            label: option
+        }));
 }

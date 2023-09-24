@@ -3,19 +3,22 @@ import { Button, Col, DatePickerProps, Divider, Input, Row, Tooltip } from "antd
 import CheckableTag from "antd/es/tag/CheckableTag";
 
 import { SearchOutlined } from '@ant-design/icons';
-import { optionsGenres } from "../../entities";
-import { optionsCountries, optionsLanguages, optionsOwned, optionsRead, optionsWatched } from "../../entities/options";
+import { optionsOwned, optionsRead, optionsVisibleCollection, optionsWatched } from "../../entities/options";
 import { DEFAULT_CHAR_INDEX } from '../../utils';
 import { Select, SelectMultiple } from "../antd";
 
 import { DatePicker, Form } from 'antd';
 import { RangePickerProps } from "antd/es/date-picker";
 import { useState } from "react";
+import { BaseOptionType } from "antd/es/select";
 
 const { RangePicker } = DatePicker;
 
 interface FilterMidiaProps {
     selectedAlphabets: string[];
+    optionsCountries: BaseOptionType[];
+    optionsGenres: BaseOptionType[];
+    optionsLanguage: BaseOptionType[];
 
     isPublisher?: boolean;
     isCountries?: boolean;
@@ -23,6 +26,7 @@ interface FilterMidiaProps {
     isWatcher?: boolean;
     isRead?: boolean;
     isOwned?: boolean;
+    isVisibleCollection?: boolean;
 
     handleChangeSearch: (value: any) => void;
     handleChangeAlphabets: (value: string, checked: boolean) => void;
@@ -37,10 +41,14 @@ interface FilterMidiaProps {
     handleChangeWatcher?: (value: string) => void;
     handleChangeRead?: (value: string) => void;
     handleChangeOwned?: (value: boolean) => void;
+    handleChangeVisibleCollection?: (value: boolean) => void;
 }
 
 export const FilterMidia = ({
     selectedAlphabets,
+    optionsCountries = [],
+    optionsGenres = [],
+    optionsLanguage = [],
 
     isCountries = true,
     isLanguage = true,
@@ -48,6 +56,7 @@ export const FilterMidia = ({
     isWatcher = false,
     isRead = false,
     isOwned = false,
+    isVisibleCollection = false,
 
     handleChangeSearch,
 
@@ -60,7 +69,8 @@ export const FilterMidia = ({
 
     handleChangeWatcher,
     handleChangeRead,
-    handleChangeOwned
+    handleChangeOwned,
+    handleChangeVisibleCollection
 }: FilterMidiaProps) => {
 
     const [isVisibled, setVisibled] = useState<boolean>(true);
@@ -78,8 +88,6 @@ export const FilterMidia = ({
 
     return (
         <Col className="border-col-filter"  offset={2}>
-
-
             <Col className="col-search" style={{ paddingBottom: 30 }}>
                 {
                     DEFAULT_CHAR_INDEX.map((item) => (
@@ -148,12 +156,11 @@ export const FilterMidia = ({
                         isLanguage &&
                         <Form.Item label="Languages:">
                             <Select
-                                options={optionsLanguages}
+                                options={optionsLanguage}
                                 onChange={handleChangeLanguage}
                                 placeholder="Please select language"/>
                         </Form.Item>
                     }
-
 
                     {
                         isWatcher &&
@@ -182,6 +189,18 @@ export const FilterMidia = ({
                                 options={optionsRead}
                                 onChange={handleChangeRead}
                                 placeholder="Please select read" />
+                        </Form.Item>
+                    }
+
+                    {
+                        isVisibleCollection &&
+                        <Form.Item label="Colletion:">
+                            <Select
+                                options={optionsVisibleCollection}
+                                allowClear={false}
+                                defaultValue={false}
+                                onChange={handleChangeVisibleCollection}
+                                placeholder="Please select visible collection" />
                         </Form.Item>
                     }
                 </Col>

@@ -6,7 +6,9 @@ import { loadMidiaLeitura } from '../../utils/load-midia';
 
 import { Row } from 'antd';
 import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker';
+import { BaseOptionType } from 'antd/es/select';
 import { ThemeContext } from '../../contexts/theme-context';
+import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, createOptions } from '../../entities/midia';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidiaLeitura } from '../ListMidiaLeitura';
 
@@ -22,6 +24,9 @@ export const MidiaLeituraComponent = ({
     onClickMore
 }: MidiaLeituraComponentProps) => {
     const [midiaLeituraKVArray, setMidiaLeituraKVArray] = useState<IMidiaLeituraKV[]>([]);
+    const [optionsCountries, setOptionsCountries] = useState<BaseOptionType[]>([]);
+    const [optionsGenres, setOptionsGenres] = useState<BaseOptionType[]>([]);
+    const [optionsLanguage, setOptionsLanguage] = useState<BaseOptionType[]>([]);
 
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
     const [search, setSearch] = useState('');
@@ -36,8 +41,10 @@ export const MidiaLeituraComponent = ({
 
     const handleLoad = useCallback(async () => {
         const dataLoaded = await loadMidiaLeitura(type);
-
         setMidiaLeituraKVArray(createMidiaLeituraKV(dataLoaded, type));
+        setOptionsCountries(createOptions(dataLoaded, TYPE_F_COUNTRIES));
+        setOptionsGenres(createOptions(dataLoaded, TYPE_F_GENRE));
+        setOptionsLanguage(createOptions(dataLoaded, TYPE_F_LANGUAGE));
     }, [type]);
 
     useEffect(() => {
@@ -89,6 +96,9 @@ export const MidiaLeituraComponent = ({
             <Row className='component-midia'>
                 <FilterMidia
                     selectedAlphabets={selectedAlphabets}
+                    optionsCountries={optionsCountries}
+                    optionsGenres={optionsGenres}
+                    optionsLanguage={optionsLanguage}
                     isRead={true}
                     isOwned={true}
 

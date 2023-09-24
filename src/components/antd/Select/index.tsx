@@ -4,6 +4,8 @@ import { BaseOptionType } from 'antd/es/select';
 interface DefaultSelectProps {
     placeholder?: string;
     options?: BaseOptionType[];
+    allowClear?: boolean;
+    defaultValue?: any | null;
     style?: React.CSSProperties;
 }
 
@@ -16,14 +18,15 @@ interface SelectMulProps extends DefaultSelectProps {
     onChange?: (value: any[]) => void;
 }
 
-export const Select = ({ onChange, placeholder, options, style }: SelectProps) => {
+export const Select = ({ onChange, placeholder, options, allowClear = true, defaultValue, style }: SelectProps) => {
     return (
         <SelectAntd
             placeholder={placeholder}
             onChange={onChange}
             style={style}
-            allowClear
+            allowClear={allowClear}
             options={options}
+            defaultValue={defaultValue}
         />
     )
 }

@@ -17,7 +17,7 @@ export const squash = <T>(arr: T[] | undefined) => {
 }
 
 export const isNotNull = (value: any | undefined): boolean => value !== undefined && value !== null;
-export const isNotNullStr = (value: String | undefined): boolean => value !== undefined && value !== '';
+export const isNotNullStr = (value: String | undefined | null): boolean => value !== undefined && value !== null && value !== '';
 export const isNotNullArray = (value: any[] | undefined): boolean => value !== undefined && value?.length > 0;
 
 export const isNumberObject = (value: any) => {

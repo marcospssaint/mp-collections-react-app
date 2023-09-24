@@ -23,6 +23,7 @@ export const Movie: React.FC = () => {
             type={MOVIES}
             isWatcher={true}
             isOwned={true}
+            isVisibleCollection={true}
             onClickMore={onClickMore}
         />
 

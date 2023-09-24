@@ -31,6 +31,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
     const [type, setType] = useState<(string | undefined)[]>();
     const [genres, setGenres] = useState<(string | undefined)[]>();
     const [countries, setCountries] = useState<(string | undefined)[]>();
+    const [image, setImage] = useState<string | undefined | null>();
     const [isValidType, setValidType] = useState<boolean>(false);
     const [isMovie, setMovie] = useState<boolean>(false);
     const [isVisibledTable, setVisibledTable] = useState<boolean>(false);
@@ -50,7 +51,8 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
         }
 
         setGenres(midiaVideoK?.genre?.split(', '));
-        setCountries(midiaVideoK?.countries?.split(','))
+        setCountries(midiaVideoK?.countries?.split(','));
+        setImage(midiaVideoK?.img);
 
         const isNotNullArrayMidiaV = isNotNullArray(midiaVideoV);
         if (
@@ -66,9 +68,10 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
 
         setMidiaVideoSelected(undefined);
 
-        if (midiaVideoV !== undefined) {
-            setSelectedRowKeys([midiaVideoV[0].id])
+        if (midiaVideoV !== undefined && midiaVideoV?.length > 1) {
+            setSelectedRowKeys([midiaVideoV[0]?.id]);
             setMidiaVideoSelected(midiaVideoV[0]);
+            setImage(midiaVideoV[0]?.img);
         }
     }, [midiaVideoK, midiaVideoK?.genre, midiaVideoV, typeMidiaVideo]);
 
@@ -236,6 +239,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
         onChange: (selectedRowKeys: React.Key[], selectedRows: IMidiaVideo[]) => {
             setSelectedRowKeys(selectedRowKeys);
             setMidiaVideoSelected(selectedRows[0]);
+            setImage(selectedRows[0]?.img);
         },
     };
 
@@ -246,7 +250,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             hideModal={hideModal}
             witdh={witdhModal}
             imgHeight={!isVisibledTable ? 460 : imgHeight}
-            img={midiaVideoK?.img}
+            img={image}
             children={
                 <Descriptions key={`${midiaVideoK}_descriptions`} layout="vertical" bordered style={{
                     maxHeight: !isVisibledTable ? 460 : imgHeight, overflow: 'auto'
