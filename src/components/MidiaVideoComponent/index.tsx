@@ -19,6 +19,7 @@ interface MidiaVideoComponentProps {
     isWatcher?: boolean;
     isOwned?: boolean;
     isVisibleCollection?: boolean;
+    defaultValueCollection?: boolean;
     onClickMore: (midiaVideo: IMidiaVideoKV) => void;
 }
 
@@ -31,6 +32,7 @@ export const MidiaVideoComponent = ({
     isWatcher = false,
     isOwned = false,
     isVisibleCollection = false,
+    defaultValueCollection = true,
     onClickMore
 }: MidiaVideoComponentProps) => {
 
@@ -47,7 +49,7 @@ export const MidiaVideoComponent = ({
     const [searchLanguage, setSearchLanguage] = useState<string>();
     const [searchWatcher, setSearchWatcher] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
-    const [visibleCollection, setVisibleCollection] = useState<boolean>(false);
+    const [visibleCollection, setVisibleCollection] = useState<boolean>(defaultValueCollection);
 
     const [dataLoaded, setDataLoaded] = useState<IMidiaVideo[]>([]);
 
@@ -126,6 +128,7 @@ export const MidiaVideoComponent = ({
                     isWatcher={isWatcher}
                     isOwned={isOwned}
                     isVisibleCollection={isVisibleCollection}
+                    defaultValueCollection={defaultValueCollection}
 
                     handleChangeAlphabets={handleChangeAlphabets}
                     handleChangeSearch={handleChangeSearch}

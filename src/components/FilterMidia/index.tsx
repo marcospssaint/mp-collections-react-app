@@ -27,6 +27,7 @@ interface FilterMidiaProps {
     isRead?: boolean;
     isOwned?: boolean;
     isVisibleCollection?: boolean;
+    defaultValueCollection?: boolean;
 
     handleChangeSearch: (value: any) => void;
     handleChangeAlphabets: (value: string, checked: boolean) => void;
@@ -57,6 +58,7 @@ export const FilterMidia = ({
     isRead = false,
     isOwned = false,
     isVisibleCollection = false,
+    defaultValueCollection = true,
 
     handleChangeSearch,
 
@@ -70,7 +72,7 @@ export const FilterMidia = ({
     handleChangeWatcher,
     handleChangeRead,
     handleChangeOwned,
-    handleChangeVisibleCollection
+    handleChangeVisibleCollection,
 }: FilterMidiaProps) => {
 
     const [isVisibled, setVisibled] = useState<boolean>(true);
@@ -198,7 +200,7 @@ export const FilterMidia = ({
                             <Select
                                 options={optionsVisibleCollection}
                                 allowClear={false}
-                                defaultValue={false}
+                                defaultValue={defaultValueCollection}
                                 onChange={handleChangeVisibleCollection}
                                 placeholder="Please select visible collection" />
                         </Form.Item>

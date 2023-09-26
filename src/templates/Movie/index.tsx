@@ -24,6 +24,7 @@ export const Movie: React.FC = () => {
             isWatcher={true}
             isOwned={true}
             isVisibleCollection={true}
+            defaultValueCollection={false}
             onClickMore={onClickMore}
         />
 
