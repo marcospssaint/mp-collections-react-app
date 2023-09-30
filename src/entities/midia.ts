@@ -79,7 +79,8 @@ const replaceAlphabets = (alphabet : string) => {
         .replaceAll('ò', 'o')
         .replaceAll('ó', 'o')
         .replaceAll('ù', 'u')
-        .replaceAll('ú', 'u');
+        .replaceAll('ú', 'u')
+       ;
 }
 
 export const isFilterSearch = (value: any | undefined , midiaKV: IMidiaKV) => {
@@ -109,11 +110,11 @@ export const isFilterMultipleSelect = (values: any[] | undefined, midiaKV: IMidi
 
 export const isFilterSingleSelect = (value: any | undefined, midiaKV: IMidiaKV, type: string) => {
     if (type === TYPE_F_YEAR && !isNotNullArray(value)) return true;
-    else if (!isNotNull(value)) return true;
+    else if (type !== TYPE_F_YEAR && !isNotNull(value)) return true;
 
     const midiaV = midiaKV.value;
 
-    if (midiaV === undefined || midiaV?.length === 1) {
+    if (midiaV === undefined || midiaV?.length === 0) {
         return isFilterIMidiaSingleSelect(value, midiaKV.key, type);
     }
 
