@@ -5,7 +5,6 @@ import './styles.css';
 
 import { UserOutlined } from '@ant-design/icons';
 import { useAuth } from '../../contexts/auth';
-//import { useAuth } from '../../contexts/auth';
 
 export const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -57,7 +56,7 @@ export const Login: React.FC = () => {
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button">
-                            Log in
+                            Login
                         </Button>
                     </Form.Item>
                 </Form>

@@ -112,6 +112,6 @@ export const createMidiaVideoKV = (data: IMidiaVideo[], type: string, visibleCol
         if (type === ANIMES) {
             return a.key.title.localeCompare(b.key.title);
         }
-        return a.key.year - b.key.year;
+        return b.key.year - a.key.year;
     });
 }
