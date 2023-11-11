@@ -114,7 +114,7 @@ const IconsComponent = ({ midia, read, watched, owned }: IconsComponentProps) =>
                     <>
                         <Avatar
                             size={30}
-                            style={{ backgroundColor: 'rgb(255, 255, 255)' }}
+                            style={{ backgroundColor: read ? '#b5ec9b' : 'rgb(255, 255, 255)' }}
                             icon={
                                 read ? <FileDoneOutlined style={{ color: 'black' }} /> : <QuestionOutlined style={{ color: 'black' }} />
                             } />
@@ -132,7 +132,7 @@ const IconsComponent = ({ midia, read, watched, owned }: IconsComponentProps) =>
                     <>
                         <Avatar
                             size={30}
-                            style={{ backgroundColor: 'rgb(255, 255, 255)' }}
+                            style={{ backgroundColor: watched ? '#b5ec9b' : 'rgb(255, 255, 255)' }}
                             icon={
                                 watched ? <VideoCameraOutlined style={{ color: 'black' }} /> : <QuestionOutlined style={{ color: 'black' }} />
                             } />
