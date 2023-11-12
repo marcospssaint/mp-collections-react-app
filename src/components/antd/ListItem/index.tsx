@@ -3,18 +3,13 @@ import './styles.css';
 import Meta from "antd/es/card/Meta";
 
 import {
-    DownloadOutlined,
-    FileAddOutlined,
-    FileDoneOutlined,
-    QuestionOutlined,
-    VideoCameraAddOutlined, VideoCameraOutlined
+    DownloadOutlined
 } from '@ant-design/icons';
 import { Image } from '..';
 
 import { Avatar, Card, List, Space } from "antd";
 import { IMidia } from "../../../entities";
-import { LEITURA } from '../../../entities/midia-leitura';
-import { ANIMES, VIDEO } from '../../../entities/midia-video';
+import { ANIMES } from '../../../entities/midia-video';
 
 interface ListItemProps {
     id: number;
@@ -109,42 +104,23 @@ const IconsComponent = ({ midia, read, watched, owned }: IconsComponentProps) =>
     return <div className="bottom-right">
         <Space direction="vertical">
             <Space wrap>
-                {
-                    midia.typeMidia === LEITURA &&
-                    <>
+                <>
+                    {
+                        (read || watched) &&
                         <Avatar
                             size={30}
-                            style={{ backgroundColor: read ? '#b5ec9b' : 'rgb(255, 255, 255)' }}
-                            icon={
-                                read ? <FileDoneOutlined style={{ color: 'black' }} /> : <QuestionOutlined style={{ color: 'black' }} />
-                            } />
+                            style={{ backgroundColor: '#52c41a' }}
+                        />
+                    }
 
+                    {
+                        owned &&
                         <Avatar
                             size={30}
                             style={{ backgroundColor: 'rgb(255, 255, 255)' }}
-                            icon={
-                                owned ? <DownloadOutlined style={{ color: 'black' }} /> : <FileAddOutlined style={{ color: 'black' }} />
-                            } />
-                    </>
-                }
-                {
-                    midia.typeMidia === VIDEO &&
-                    <>
-                        <Avatar
-                            size={30}
-                            style={{ backgroundColor: watched ? '#b5ec9b' : 'rgb(255, 255, 255)' }}
-                            icon={
-                                watched ? <VideoCameraOutlined style={{ color: 'black' }} /> : <QuestionOutlined style={{ color: 'black' }} />
-                            } />
-
-                        <Avatar
-                            size={30}
-                            style={{ backgroundColor: 'rgb(255, 255, 255)' }}
-                            icon={
-                                owned ? <DownloadOutlined style={{ color: 'black' }} /> : <VideoCameraAddOutlined style={{ color: 'black' }} />
-                            } />
-                    </>
-                }
+                            icon={<DownloadOutlined style={{ color: 'black' }} />} />
+                    }
+                </>
             </Space>
         </Space>
     </div>;
