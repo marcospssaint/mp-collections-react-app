@@ -100,7 +100,9 @@ export const ListMidiaVideo = ({
                     <ListItem
                         id={item.key.id}
                         midia={item.key}
-                        watched={isFilterIMidiaSingleSelect('W', item.key, TYPE_F_WATCHED)}
+                        inProcess={isFilterSingleSelect('P', item, TYPE_F_WATCHED)}
+                        watched={isFilterSingleSelect('W', item, TYPE_F_WATCHED)}
+                        notStarted={isFilterSingleSelect('NOTW', item, TYPE_F_WATCHED)}
                         owned={isFilterIMidiaSingleSelect(true, item.key, TYPE_F_OWNED)}
                         handlerClick={() => onClickMore(item)}>
                     </ListItem>

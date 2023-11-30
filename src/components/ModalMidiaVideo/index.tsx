@@ -239,7 +239,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
         onChange: (selectedRowKeys: React.Key[], selectedRows: IMidiaVideo[]) => {
             setSelectedRowKeys(selectedRowKeys);
             setMidiaVideoSelected(selectedRows[0]);
-            setImage(selectedRows[0]?.img);
+            if (isMovie) setImage(selectedRows[0]?.img);
         },
     };
 

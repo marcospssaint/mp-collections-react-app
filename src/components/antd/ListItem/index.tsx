@@ -9,26 +9,30 @@ import { Image } from '..';
 
 import { Avatar, Card, List, Space } from "antd";
 import { IMidia } from "../../../entities";
-import { ANIMES } from '../../../entities/midia-video';
+import { ANIMES, VIDEO } from '../../../entities/midia-video';
 
 interface ListItemProps {
     id: number;
     midia: IMidia;
     read?: boolean;
+    inProcess?: boolean;
     watched?: boolean;
+    notStarted?: boolean;
     owned?: boolean;
     children?: React.ReactNode;
     handlerClick: () => void;
 }
 
-export const ListItem = ({ id, midia, read, watched, owned, children, handlerClick }: ListItemProps) => {
+export const ListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, children, handlerClick }: ListItemProps) => {
     return (
         <List.Item className="list-item" key={`${id}_listitem`} onClick={handlerClick}>
             <CardListItem
                 id={id}
                 midia={midia}
                 read={read}
+                inProcess={inProcess}
                 watched={watched}
+                notStarted={notStarted}
                 owned={owned}
                 children={children} />
         </List.Item>
@@ -39,12 +43,14 @@ interface CardListItemProps {
     id: number;
     midia: IMidia;
     read?: boolean;
+    inProcess?: boolean;
     watched?: boolean;
+    notStarted?: boolean;
     owned?: boolean;
     children?: React.ReactNode;
 }
 
-const CardListItem = ({ id, midia, read, watched, owned, children }: CardListItemProps) => {
+const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, children }: CardListItemProps) => {
 
     const image = midia.img;
     let imageModified = image?.slice(1, -1);
@@ -78,7 +84,9 @@ const CardListItem = ({ id, midia, read, watched, owned, children }: CardListIte
                     <IconsComponent
                         midia={midia}
                         read={read}
+                        inProcess={inProcess}
                         watched={watched}
+                        notStarted={notStarted}
                         owned={owned}
                     />
                 </div>
@@ -96,17 +104,34 @@ const CardListItem = ({ id, midia, read, watched, owned, children }: CardListIte
 interface IconsComponentProps {
     midia: IMidia;
     read?: boolean;
+    inProcess?: boolean;
     watched?: boolean;
+    notStarted?: boolean;
     owned?: boolean;
 }
 
-const IconsComponent = ({ midia, read, watched, owned }: IconsComponentProps) => {
+const IconsComponent = ({ midia, read, inProcess, watched, notStarted, owned }: IconsComponentProps) => {
+    console.log('watched ', watched)
     return <div className="bottom-right">
         <Space direction="vertical">
             <Space wrap>
                 <>
                     {
-                        (read || watched) &&
+                        (midia.typeMidia === VIDEO && notStarted && watched && !inProcess) &&
+                        <Avatar
+                            size={30}
+                            style={{ backgroundColor: '#faad14' }}
+                        />
+                    }
+                    {
+                        (midia.typeMidia === VIDEO && inProcess) &&
+                        <Avatar
+                            size={30}
+                            style={{ backgroundColor: '#1677ff' }}
+                        />
+                    }
+                    {
+                        ((read || watched) && !inProcess) &&
                         <Avatar
                             size={30}
                             style={{ backgroundColor: '#52c41a' }}
