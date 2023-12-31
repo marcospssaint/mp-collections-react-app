@@ -10,6 +10,7 @@ import { Image } from '..';
 import { Avatar, Card, List, Space } from "antd";
 import { IMidia } from "../../../entities";
 import { ANIMES, VIDEO } from '../../../entities/midia-video';
+import { TYPE_F_GENRE, isFilterByType } from '../../../entities/midia';
 
 interface ListItemProps {
     id: number;
@@ -56,6 +57,7 @@ const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, 
     let imageModified = image?.slice(1, -1);
 
     const imageMultipleArr = image?.split('", "') ?? [];
+    const isFilterByAdult = isFilterByType('Adult', midia, TYPE_F_GENRE);
 
     if (imageMultipleArr?.length > 1) {
         if (!!midia.collection) {
@@ -78,8 +80,10 @@ const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, 
             style={{ height: 330 }}
             cover={<>
                 <div className='container'>
-
-                    <Image src={imageModified} height={270} />
+                    <Image 
+                        src={imageModified}
+                        prefixCls={`${isFilterByAdult ? 'image-adult' : ''}`}
+                        height={270} />
 
                     <IconsComponent
                         midia={midia}

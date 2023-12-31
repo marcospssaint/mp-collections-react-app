@@ -125,7 +125,7 @@ export const isFilterIMidiaSingleSelect = (value: any | undefined, midia: IMidia
     return isFilterByType(value, midia, type);
 }
 
-const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
+export const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
     if (type === TYPE_F_READ) return midia.read === value;
     else if (type === TYPE_F_GENRE) {
         const genres = midia.genre?.split(', ');
