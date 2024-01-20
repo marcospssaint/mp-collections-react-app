@@ -115,7 +115,6 @@ interface IconsComponentProps {
 }
 
 const IconsComponent = ({ midia, read, inProcess, watched, notStarted, owned }: IconsComponentProps) => {
-    console.log('watched ', watched)
     return <div className="bottom-right">
         <Space direction="vertical">
             <Space wrap>

@@ -163,16 +163,26 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
         return Number(episodes);
     };
 
+     
+    const isVisibleSubTitle = () => {
+        var length = midiaVideoV?.length;
+        return length === 1 || midiaVideoV?.filter(m => m.subtitle === undefined).length === length;
+    }
+
+    const isVisibleTitleOriginalColumn = () => {
+        return midiaVideoV?.filter(m => m.originalTitle).length !== midiaVideoV?.length;
+    }
+
     const columns: ColumnsType<IMidiaVideo> = [
         {
             title: 'Title',
             dataIndex: 'subtitle',
             key: 'subtitle',
             onHeaderCell: (_) => ({
-                hidden: (midiaVideoV?.length === 1)
+                hidden: isVisibleSubTitle()
             }),
             onCell: (_: IMidiaVideo) => {
-                return (midiaVideoV?.length === 1) ? { colSpan: 0 } : {};
+                return isVisibleSubTitle() ? { colSpan: 0 } : {};
             }
         },
         {
@@ -180,10 +190,10 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
             dataIndex: 'originalTitle',
             key: 'originalTitle',
             onHeaderCell: (_) => ({
-                hidden: (midiaVideoV?.length === 1)
+                hidden: isVisibleTitleOriginalColumn()
             }),
             onCell: (_: IMidiaVideo) => {
-                return (midiaVideoV?.length === 1) ? { colSpan: 0 } : {};
+                return isVisibleTitleOriginalColumn() ? { colSpan: 0 } : {};
             }
         },
         {
@@ -259,8 +269,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                     {
                         (
                             isNotNull(midiaVideoK?.originalTitle) && 
-                            (!isVisibledTable || midiaVideoV?.length === 1)
-                            
+                                isVisibleTitleOriginalColumn()
                         ) &&
                         <Descriptions.Item label="Original title" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             {midiaVideoK?.originalTitle}
