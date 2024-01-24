@@ -269,7 +269,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                     {
                         (
                             isNotNull(midiaVideoK?.originalTitle) && 
-                                isVisibleTitleOriginalColumn()
+                                (isVisibleTitleOriginalColumn() || (!isVisibledTable && typeMidiaVideo === MOVIES))
                         ) &&
                         <Descriptions.Item label="Original title" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             {midiaVideoK?.originalTitle}
