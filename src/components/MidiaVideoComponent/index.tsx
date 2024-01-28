@@ -2,19 +2,18 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { ListMidiaVideo } from "../ListMidiaVideo";
 
-import { DatePickerProps, Row } from 'antd';
+import { DatePickerProps, RadioChangeEvent, Row } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { BaseOptionType } from 'antd/es/select';
 import { ThemeContext } from '../../contexts/theme-context';
 import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, createOptions } from '../../entities/midia';
-import { IMidiaVideo, IMidiaVideoKV, createMidiaVideoKV } from '../../entities/midia-video';
+import { IMidiaVideo, IMidiaVideoKV, MOVIES, TV_SHOWS, createMidiaVideoKV } from '../../entities/midia-video';
 import { loadMidiaVideo } from '../../utils';
 import { FilterMidia } from '../FilterMidia';
 
 interface MidiaVideoComponentProps {
     title: string;
     type: string;
-    isCountries?: boolean;
     isLanguage?: boolean;
     isWatcher?: boolean;
     isOwned?: boolean;
@@ -27,7 +26,6 @@ export const MidiaVideoComponent = ({
     title,
     type,
 
-    isCountries = true,
     isLanguage = true,
     isWatcher = false,
     isOwned = false,
@@ -42,16 +40,18 @@ export const MidiaVideoComponent = ({
 
     const [midiaVideoKVArray, setMidiaVideoKVArray] = useState<IMidiaVideoKV[]>([]);
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
+    const [selectedCountry, setSelectedCountry] = useState<string>();
     const [search, setSearch] = useState('');
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
     const [searchRangeYear, setSearchRangeYear] = useState<[string, string] | string>();
-    const [searchCountries, setSearchCountries] = useState<string[]>([]);
     const [searchLanguage, setSearchLanguage] = useState<string>();
     const [searchWatcher, setSearchWatcher] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
     const [visibleCollection, setVisibleCollection] = useState<boolean>(defaultValueCollection);
 
     const [dataLoaded, setDataLoaded] = useState<IMidiaVideo[]>([]);
+
+    const isFilterCountry = (type === TV_SHOWS) || (type === MOVIES);
 
     const { setCollapsed } = useContext(ThemeContext);
 
@@ -65,6 +65,7 @@ export const MidiaVideoComponent = ({
 
     useEffect(() => {
         handleLoad();
+        setSelectedCountry('All');
     }, [handleLoad]);
 
     useEffect(() => {
@@ -78,6 +79,10 @@ export const MidiaVideoComponent = ({
             : selectedAlphabets.filter((a) => a !== alphabet);
         setSelectedAlphabets(nextSelectedAlphabets);
     };
+
+    const handleSelectedCountry = ({ target: { value } }: RadioChangeEvent) => {
+        setSelectedCountry(value);
+    }
 
     const handleChangeSearch = (e: any) => {
         const { value } = e.target;
@@ -93,10 +98,6 @@ export const MidiaVideoComponent = ({
         dateString: [string, string] | string,
       ) => {
         setSearchRangeYear(dateString);
-    };
-
-    const handleChangeCountries = (value: string[]) => {
-        setSearchCountries(value);
     };
 
     const handleChangeLanguage = (value: string) => {
@@ -123,17 +124,18 @@ export const MidiaVideoComponent = ({
                     optionsCountries={optionsCountries}
                     optionsGenres={optionsGenres}
                     optionsLanguage={optionsLanguage}
-                    isCountries={isCountries}
                     isLanguage={isLanguage}
                     isWatcher={isWatcher}
                     isOwned={isOwned}
                     isVisibleCollection={isVisibleCollection}
+                    isFilterCountries={isFilterCountry}
                     defaultValueCollection={defaultValueCollection}
+                    selectedCountry={selectedCountry}
 
-                    handleChangeAlphabets={handleChangeAlphabets}
                     handleChangeSearch={handleChangeSearch}
+                    handleChangeAlphabets={handleChangeAlphabets}
+                    handleSelectedCountry={handleSelectedCountry}
 
-                    handleChangeCountries={handleChangeCountries}
                     handleChangeLanguage={handleChangeLanguage}
 
                     handleChangeGenres={handleChangeGenres}
@@ -147,9 +149,9 @@ export const MidiaVideoComponent = ({
                     data={midiaVideoKVArray}
                     selectedAlphabets={selectedAlphabets}
                     search={search}
+                    selectedCountry={selectedCountry}
                     searchGenres={searchGenres}
                     searchRangeYear={searchRangeYear}
-                    searchCountries={searchCountries}
                     searchLanguage={searchLanguage}
                     searchWatcher={searchWatcher}
                     searchOwned={searchOwned}

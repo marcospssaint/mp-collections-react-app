@@ -6,7 +6,7 @@ import { Badge, Button, Col, Descriptions, Space, Table, Typography } from "antd
 import { ColumnsType } from "antd/es/table";
 import { IMidiaVideoKV } from '../../entities';
 import { IMidiaVideo, MOVIES, TYPE_MOVIE, TYPE_OVA, TYPE_TV_SHOW } from "../../entities/midia-video";
-import { isNotNull, isNotNullArray, range, rangeBySeparator, squash } from "../../utils/utils";
+import { isNotNull, isNotNullArray, isNotNullStr, range, rangeBySeparator, squash } from "../../utils/utils";
 import { Modal, Tag } from "../antd";
 
 import { FireFilled } from '@ant-design/icons';
@@ -353,14 +353,15 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                     </Descriptions.Item>
 
                     {
-                        isNotNull(midiaVideoK?.language) &&
+                        isNotNullStr(midiaVideoK?.language) &&
                         <Descriptions.Item label="Language" span={3}>
                             <Tag color="blue" label={midiaVideoK?.language} />
                         </Descriptions.Item>
                     }
 
                     {
-                        (isNotNull(midiaVideoSelected?.cast) || !isVisibledTable) &&
+                        
+                        isNotNullStr(midiaVideoK?.cast) &&
                         <Descriptions.Item label="Cast" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }}>
                                 {isVisibledTable ? casts(midiaVideoSelected?.cast) : casts(midiaVideoK?.cast)}
@@ -369,7 +370,7 @@ export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdh
                     }
                     
                     {
-                        (isNotNull(midiaVideoSelected?.synopsis) || !isVisibledTable) &&
+                        isNotNullStr(midiaVideoK?.synopsis) &&
                         <Descriptions.Item label="Synopsis" span={3} style={{ whiteSpace: 'pre-wrap' }}>
                             <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }} style={{ textAlign: 'justify' }}>
                                 {isVisibledTable ? midiaVideoSelected?.synopsis : midiaVideoK?.synopsis}

@@ -1,5 +1,5 @@
 
-import { Button, Col, DatePickerProps, Divider, Input, Row, Tooltip } from "antd";
+import { Button, Col, DatePickerProps, Divider, Input, Radio, Row, Tooltip } from "antd";
 import CheckableTag from "antd/es/tag/CheckableTag";
 
 import { SearchOutlined } from '@ant-design/icons';
@@ -9,8 +9,8 @@ import { Select, SelectMultiple } from "../antd";
 
 import { DatePicker, Form } from 'antd';
 import { RangePickerProps } from "antd/es/date-picker";
-import { useState } from "react";
 import { BaseOptionType } from "antd/es/select";
+import { useState } from "react";
 
 const { RangePicker } = DatePicker;
 
@@ -26,11 +26,14 @@ interface FilterMidiaProps {
     isWatcher?: boolean;
     isRead?: boolean;
     isOwned?: boolean;
+    isFilterCountries?: boolean;
     isVisibleCollection?: boolean;
     defaultValueCollection?: boolean;
+    selectedCountry?: string;
 
     handleChangeSearch: (value: any) => void;
     handleChangeAlphabets: (value: string, checked: boolean) => void;
+    handleSelectedCountry: (e: any) => void;
     handleChangeGenres: (value: string[]) => void;
     handleChangeRangeYear?: (
         value: DatePickerProps['value'] | RangePickerProps['value'],
@@ -51,24 +54,23 @@ export const FilterMidia = ({
     optionsGenres = [],
     optionsLanguage = [],
 
-    isCountries = true,
     isLanguage = true,
 
     isWatcher = false,
     isRead = false,
     isOwned = false,
+    isFilterCountries = false,
     isVisibleCollection = false,
     defaultValueCollection = true,
+    selectedCountry = '',
 
     handleChangeSearch,
 
     handleChangeAlphabets,
+    handleSelectedCountry,
     handleChangeGenres,
     handleChangeRangeYear,
-
-    handleChangeCountries,
     handleChangeLanguage,
-
     handleChangeWatcher,
     handleChangeRead,
     handleChangeOwned,
@@ -89,7 +91,7 @@ export const FilterMidia = ({
     };
 
     return (
-        <Col className="border-col-filter"  offset={2}>
+        <Col className="border-col-filter" offset={2}>
             <Col className="col-search" style={{ paddingBottom: 30 }}>
                 {
                     DEFAULT_CHAR_INDEX.map((item) => (
@@ -122,7 +124,7 @@ export const FilterMidia = ({
                                 <Button
                                     size="large"
                                     shape="circle"
-                                    icon={<SearchOutlined />} 
+                                    icon={<SearchOutlined />}
                                     onClick={() => {
                                         setVisibled(!isVisibled)
                                     }} />
@@ -145,22 +147,12 @@ export const FilterMidia = ({
                     </Form.Item>
 
                     {
-                        isCountries &&
-                            <Form.Item label="Countries:">
-                                <SelectMultiple
-                                    options={optionsCountries}
-                                    onChange={handleChangeCountries}
-                                    placeholder="Please select country" />
-                            </Form.Item>
-                    }
-
-                    {
                         isLanguage &&
                         <Form.Item label="Languages:">
                             <Select
                                 options={optionsLanguage}
                                 onChange={handleChangeLanguage}
-                                placeholder="Please select language"/>
+                                placeholder="Please select language" />
                         </Form.Item>
                     }
 
@@ -170,7 +162,7 @@ export const FilterMidia = ({
                             <Select
                                 options={optionsWatched}
                                 onChange={handleChangeWatcher}
-                                placeholder="Please select watcher"/>
+                                placeholder="Please select watcher" />
                         </Form.Item>
                     }
 
@@ -180,7 +172,7 @@ export const FilterMidia = ({
                             <Select
                                 options={optionsOwned}
                                 onChange={handleChangeOwned}
-                                placeholder="Please select owned"/>
+                                placeholder="Please select owned" />
                         </Form.Item>
                     }
 
@@ -207,7 +199,24 @@ export const FilterMidia = ({
                     }
                 </Col>
             </Form>
-
+            {
+                isFilterCountries &&
+                <Col className="col-search" style={{ paddingBottom: 30 }}>
+                    <Radio.Group buttonStyle="solid" value={selectedCountry} onChange={handleSelectedCountry}>
+                        {
+                            optionsCountries
+                                .map((country) => {
+                                    var value = country["value"];
+                                    if (value === '') return 'All';
+                                    return value;
+                                })
+                                .map((item) => (
+                                    <Radio.Button value={item}>{item}</Radio.Button>
+                                ))
+                        }
+                    </Radio.Group>
+                </Col>
+            }
             <Divider />
         </Col>
     );

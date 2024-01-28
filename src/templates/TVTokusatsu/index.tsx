@@ -23,7 +23,6 @@ export const TVTokusatsu = () => {
         <MidiaVideoComponent
             title='TV Tokusatsu'
             type={TV_TOKUSATSU}
-            isCountries={false}
             isLanguage={false}
             isWatcher={true}
             isOwned={true}

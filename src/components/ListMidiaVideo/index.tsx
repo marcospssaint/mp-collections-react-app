@@ -3,7 +3,7 @@ import './styles.css';
 import { Col, FloatButton, List } from "antd";
 
 import { useRef } from 'react';
-import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_WATCHED, TYPE_F_YEAR, isFilterAlphabets, isFilterIMidiaSingleSelect, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
+import { TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_WATCHED, TYPE_F_YEAR, isFilterAlphabets, isFilterCountry, isFilterIMidiaSingleSelect, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
 import { IMidiaVideoKV } from '../../entities/midia-video';
 import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
 import { ListItem } from '../antd';
@@ -13,6 +13,7 @@ export interface ListMidiaVideoProps {
     data: IMidiaVideoKV[];
     selectedAlphabets?: string[];
     search?: string;
+    selectedCountry?: string;
     searchGenres?: string[];
     searchRangeYear?: [string, string] | string;
     searchCountries?: string[];
@@ -27,9 +28,9 @@ export const ListMidiaVideo = ({
     data,
     selectedAlphabets = [],
     search = '',
+    selectedCountry = '',
     searchGenres = [],
     searchRangeYear = '',
-    searchCountries = [],
     searchLanguage = null,
     searchWatcher,
     searchOwned,
@@ -41,9 +42,9 @@ export const ListMidiaVideo = ({
     const wasResearch = () => {
         return isNotNullArray(selectedAlphabets) 
             || isNotNullStr(search) 
+            || isNotNullStr(selectedCountry)
             || isNotNullArray(searchGenres)
             || searchRangeYear !== null
-            || isNotNullArray(searchCountries)
             || isNotNull(searchLanguage)
             || isNotNull(searchWatcher) 
             || isNotNull(searchOwned);
@@ -56,11 +57,11 @@ export const ListMidiaVideo = ({
             }).filter((midiaVideoKV) => {
                 return isFilterSearch(search, midiaVideoKV);
             }).filter((midiaVideoKV) => {
+                return isFilterCountry(selectedCountry, midiaVideoKV);
+            }).filter((midiaVideoKV) => {
                 return isFilterMultipleSelect(searchGenres, midiaVideoKV, TYPE_F_GENRE);
             }).filter((midiaVideoKV) => {
                 return isFilterSingleSelect(searchRangeYear, midiaVideoKV, TYPE_F_YEAR);
-            }).filter((midiaVideoKV) => {
-                return isFilterMultipleSelect(searchCountries, midiaVideoKV, TYPE_F_COUNTRIES);
             }).filter((midiaVideoKV) => {
                 return isFilterSingleSelect(searchLanguage, midiaVideoKV, TYPE_F_LANGUAGE);
             }).filter((midiaVideoKV) => {

@@ -4,7 +4,7 @@ import { Col, FloatButton, List } from "antd";
 
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_READ, TYPE_F_YEAR, isFilterAlphabets, isFilterIMidiaSingleSelect, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
+import { TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_READ, TYPE_F_YEAR, isFilterAlphabets, isFilterCountry, isFilterIMidiaSingleSelect, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
 import { IMidiaLeituraKV } from '../../entities/midia-leitura';
 import { useQuery } from '../../utils';
 import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
@@ -14,11 +14,11 @@ export interface ListMidiaLeituraProps {
     emptyMessage: string;
     data: IMidiaLeituraKV[];
     selectedAlphabets?: string[];
+    selectedCountry?:string;
     search?: string;
     searchGenres?: string[];
     searchRangeYear?: [string, string] | string;
 
-    searchCountries?: string[];
     searchLanguage?: string | null;
     searchRead?: string | null;
     searchOwned?: boolean;
@@ -30,13 +30,11 @@ export const ListMidiaLeitura = ({
     data,
 
     selectedAlphabets = [],
+    selectedCountry = '',
     search = '',
     searchGenres = [],
     searchRangeYear = '',
-
-    searchCountries = [],
     searchLanguage = null,
-
     searchRead = null,
     searchOwned,
 
@@ -51,11 +49,11 @@ export const ListMidiaLeitura = ({
     const pageTopRef = useRef<HTMLDivElement>(null);
 
     const wasResearch = () => {
-        return isNotNullArray(selectedAlphabets) 
+        return isNotNullArray(selectedAlphabets)
             || isNotNullStr(search)
+            || isNotNullStr(selectedCountry)
             || searchRangeYear !== null
             || isNotNullArray(searchGenres)
-            || isNotNullArray(searchCountries)
             || isNotNull(searchLanguage)
             || isNotNull(searchRead)
             || isNotNull(searchOwned);
@@ -68,11 +66,12 @@ export const ListMidiaLeitura = ({
             }).filter((midiaLeituraKV) => {
                 return isFilterAlphabets(selectedAlphabets, midiaLeituraKV);
             }).filter((midiaLeituraKV) => {
+                return isFilterCountry(selectedCountry, midiaLeituraKV);
+            })
+            .filter((midiaLeituraKV) => {
                 return isFilterMultipleSelect(searchGenres, midiaLeituraKV, TYPE_F_GENRE);
             }).filter((midiaLeituraKV) => {
                 return isFilterSingleSelect(searchRangeYear, midiaLeituraKV, TYPE_F_YEAR);
-            }).filter((midiaLeituraKV) => {
-                return isFilterMultipleSelect(searchCountries, midiaLeituraKV, TYPE_F_COUNTRIES);
             }).filter((midiaLeituraKV) => {
                 return isFilterSingleSelect(searchLanguage, midiaLeituraKV, TYPE_F_LANGUAGE);
             }).filter((midiaLeituraKV) => {

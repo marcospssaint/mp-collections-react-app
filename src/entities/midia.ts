@@ -68,6 +68,15 @@ export const isFilterAlphabets = (alphabets: any[], midiaKV: IMidiaKV) => {
     })
 }
 
+export const isFilterCountry = (countries: any, midiaKV: IMidiaKV) => {
+    if (!isNotNullStr(countries)) return true;
+    if (countries !== undefined && countries === 'All') return true;
+
+    const midiaKCountries = midiaKV.key?.countries;
+    var options = midiaKCountries?.split(', ').map((c) => c);
+    return options?.some((o) => o === countries);
+}
+
 const replaceAlphabets = (alphabet : string) => {
     return alphabet
         .replaceAll('á', 'a')
@@ -140,10 +149,6 @@ export const isFilterByType = (value: any | any[], midia: IMidia, type: string) 
             return (year >= yearOne && year <= yearTwo);
         }
         return true;
-    }
-    else if (type === TYPE_F_COUNTRIES) {
-        const countries = midia.countries?.split(', ');
-        return countries?.some((country) => country === value);
     }
     else if (type === TYPE_F_LANGUAGE) return midia.language === value;
     else if (type === TYPE_F_WATCHED) return midia.watched === value;

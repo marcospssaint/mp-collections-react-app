@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { IMidiaLeituraKV } from '../../entities';
-import { createMidiaLeituraKV } from '../../entities/midia-leitura';
+import { COMICS, createMidiaLeituraKV } from '../../entities/midia-leitura';
 import { loadMidiaLeitura } from '../../utils/load-midia';
 
 import { Row } from 'antd';
@@ -9,6 +9,7 @@ import { DatePickerProps, RangePickerProps } from 'antd/es/date-picker';
 import { BaseOptionType } from 'antd/es/select';
 import { ThemeContext } from '../../contexts/theme-context';
 import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, createOptions } from '../../entities/midia';
+import { isNotNullStr } from '../../utils/utils';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidiaLeitura } from '../ListMidiaLeitura';
 
@@ -30,12 +31,14 @@ export const MidiaLeituraComponent = ({
 
     const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
     const [search, setSearch] = useState('');
+    const [selectedCountry, setSelectedCountry] = useState<string>();
     const [searchGenres, setSearchGenres] = useState<string[]>([]);
     const [searchRangeYear, setSearchRangeYear] = useState<[string, string] | string>();
-    const [searchCountries, setSearchCountries] = useState<string[]>([]);
     const [searchLanguage, setSearchLanguage] = useState<string>();
     const [searchRead, setSearchRead] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
+
+    const isFilterCountry = type === COMICS;
 
     const { setCollapsed } = useContext(ThemeContext);
 
@@ -59,6 +62,11 @@ export const MidiaLeituraComponent = ({
         setSelectedAlphabets(nextSelectedAlphabets);
     };
 
+    const handleSelectedCountry = (e: any) => {
+        const { value } = e.target;
+        setSelectedCountry(value);
+    }
+
     const handleChangeSearch = (e: any) => {
         const { value } = e.target;
         setSearch(value);
@@ -73,10 +81,6 @@ export const MidiaLeituraComponent = ({
         dateString: [string, string] | string,
     ) => {
         setSearchRangeYear(dateString);
-    };
-
-    const handleChangeCountries = (value: string[]) => {
-        setSearchCountries(value);
     };
 
     const handleChangeLanguage = (value: string) => {
@@ -101,34 +105,40 @@ export const MidiaLeituraComponent = ({
                     optionsLanguage={optionsLanguage}
                     isRead={true}
                     isOwned={true}
+                    isFilterCountries={isFilterCountry}
+                    selectedCountry={selectedCountry}
 
-                    handleChangeAlphabets={handleChangeAlphabets}
                     handleChangeSearch={handleChangeSearch}
+                    handleChangeAlphabets={handleChangeAlphabets}
+                    handleSelectedCountry={handleSelectedCountry}
 
                     handleChangeGenres={handleChangeGenres}
                     handleChangeRangeYear={handleChangeRangeYear}
 
-                    handleChangeCountries={handleChangeCountries}
                     handleChangeLanguage={handleChangeLanguage}
-
                     handleChangeRead={handleChangeRead}
                     handleChangeOwned={handleChangeOwned} />
 
-                <ListMidiaLeitura
-                    emptyMessage={`${title} not found 🤐`}
-                    data={midiaLeituraKVArray}
+                {
+                    (!isFilterCountry || 
+                        (isFilterCountry && (isNotNullStr(selectedCountry) || isNotNullStr(search)))
+                    ) &&
+                        <ListMidiaLeitura
+                            emptyMessage={`${title} not found 🤐`}
+                            data={midiaLeituraKVArray}
 
-                    selectedAlphabets={selectedAlphabets}
-                    search={search}
-                    searchGenres={searchGenres}
-                    searchRangeYear={searchRangeYear}
-                    searchCountries={searchCountries}
-                    searchLanguage={searchLanguage}
-                    searchRead={searchRead}
-                    searchOwned={searchOwned}
+                            selectedAlphabets={selectedAlphabets}
+                            search={search}
+                            selectedCountry={selectedCountry}
+                            searchGenres={searchGenres}
+                            searchRangeYear={searchRangeYear}
+                            searchLanguage={searchLanguage}
+                            searchRead={searchRead}
+                            searchOwned={searchOwned}
 
-                    onClickMore={onClickMore}
-                />
+                            onClickMore={onClickMore}
+                        />
+                }
             </Row>
         </>
     )

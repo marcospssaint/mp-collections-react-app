@@ -77,13 +77,13 @@ const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, 
     return (
         <Card hoverable
             key={`${id}_card`}
-            style={{ height: 330 }}
+            style={{ height: 360, width: '90%' }}
             cover={<>
                 <div className='container'>
                     <Image 
                         src={imageModified}
                         prefixCls={`${isFilterByAdult ? 'image-adult' : ''}`}
-                        height={270} />
+                        height={280} />
 
                     <IconsComponent
                         midia={midia}
