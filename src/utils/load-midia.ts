@@ -37,6 +37,9 @@ export const loadMidiaLeitura  = async (type: string, username: any) => {
 const getValueEnv = (value: string, username: any) => {
     const URL_ = value+'_URL_'+username?.name?.toLocaleUpperCase() ?? value;
     const URL_COMPLETO = process.env[URL_] ;
+    console.log("URL_COMPLETO: ", URL_COMPLETO);
+    console.log("URL_: ", URL_);
+    console.log("username: ", username);
     return { url: URL_COMPLETO, status: URL_COMPLETO !== undefined } ;
 }
 
