@@ -12,16 +12,20 @@ export function post(user: any): Promise<Response> {
     } = process.env;
 
     return new Promise((resolve) => {
-        if (user?.name === REACT_APP_USERNAME) {
-            setTimeout(() => {
-                resolve({
-                    data: {
-                        user: {
-                            name: user?.name,
+        var usernames = REACT_APP_USERNAME?.split(',');
+
+        usernames?.forEach((u) => {
+            if (user?.name === u) {
+                setTimeout(() => {
+                    resolve({
+                        data: {
+                            user: {
+                                name: user?.name,
+                            },
                         },
-                    },
-                });
-            }, 500);
-        }
+                    });
+                }, 500);
+            }
+        });
     });
 }

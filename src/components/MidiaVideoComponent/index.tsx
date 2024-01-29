@@ -5,6 +5,7 @@ import { ListMidiaVideo } from "../ListMidiaVideo";
 import { DatePickerProps, RadioChangeEvent, Row } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { BaseOptionType } from 'antd/es/select';
+import { useAuth } from '../../contexts/auth';
 import { ThemeContext } from '../../contexts/theme-context';
 import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, createOptions } from '../../entities/midia';
 import { IMidiaVideo, IMidiaVideoKV, MOVIES, TV_SHOWS, createMidiaVideoKV } from '../../entities/midia-video';
@@ -34,6 +35,8 @@ export const MidiaVideoComponent = ({
     onClickMore
 }: MidiaVideoComponentProps) => {
 
+    const { user } = useAuth();
+
     const [optionsCountries, setOptionsCountries] = useState<BaseOptionType[]>([]);
     const [optionsGenres, setOptionsGenres] = useState<BaseOptionType[]>([]);
     const [optionsLanguage, setOptionsLanguage] = useState<BaseOptionType[]>([]);
@@ -56,12 +59,12 @@ export const MidiaVideoComponent = ({
     const { setCollapsed } = useContext(ThemeContext);
 
     const handleLoad = useCallback(async () => {
-        const datas = await loadMidiaVideo(type);
+        const datas = await loadMidiaVideo(type, user);
         setDataLoaded(datas);
         setOptionsCountries(createOptions(datas, TYPE_F_COUNTRIES));
         setOptionsGenres(createOptions(datas, TYPE_F_GENRE));
         setOptionsLanguage(createOptions(datas, TYPE_F_LANGUAGE));
-    }, [type]);
+    }, [type, user]);
 
     useEffect(() => {
         handleLoad();

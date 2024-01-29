@@ -1,44 +1,47 @@
 import { BOOKS, COMICS, IMidiaLeitura, MANGAS } from '../entities/midia-leitura';
 import { ANIMES, IMidiaVideo, MOVIES, TV_SHOWS, TV_TOKUSATSU } from '../entities/midia-video';
 
-export const loadMidiaVideo = async (type: string) => {
+export const loadMidiaVideo = async (type: string, username: any) => {
     const {
-        REACT_APP_MOVIES, REACT_APP_TV_SHOWS, REACT_APP_TV_TOKUSATSU, REACT_APP_ANIMES,
-        REACT_APP_MOVIES_URL, REACT_APP_TV_SHOWS_URL, REACT_APP_TV_TOKUSATSU_URL, REACT_APP_ANIMES_URL,
+        REACT_APP_MOVIES, REACT_APP_TV_SHOWS, REACT_APP_TV_TOKUSATSU, REACT_APP_ANIMES
     } = process.env;
 
     let data = [];
 
     switch (type) {
-        case MOVIES: data = await load(REACT_APP_MOVIES, REACT_APP_MOVIES_URL); break;
-        case TV_SHOWS: data = await load(REACT_APP_TV_SHOWS, REACT_APP_TV_SHOWS_URL); break;
-        case ANIMES: data = await load(REACT_APP_ANIMES, REACT_APP_ANIMES_URL); break;
-        case TV_TOKUSATSU: data = await load(REACT_APP_TV_TOKUSATSU, REACT_APP_TV_TOKUSATSU_URL); break;
+        case MOVIES: data = await load(REACT_APP_MOVIES, getValueEnv("REACT_APP_MOVIES", username)); break;
+        case TV_SHOWS: data = await load(REACT_APP_TV_SHOWS, getValueEnv("REACT_APP_TV_SHOWS", username)); break;
+        case ANIMES: data = await load(REACT_APP_ANIMES, getValueEnv("REACT_APP_ANIMES", username)); break;
+        case TV_TOKUSATSU: data = await load(REACT_APP_TV_TOKUSATSU, getValueEnv("REACT_APP_TV_TOKUSATSU", username)); break;
     }
 
     return data as IMidiaVideo[];
 }
 
-export const loadMidiaLeitura  = async (type: string) => {
+export const loadMidiaLeitura  = async (type: string, username: any) => {
     const {
         REACT_APP_BOOKS, REACT_APP_COMICS, REACT_APP_MANGAS,
-        REACT_APP_BOOKS_URL, REACT_APP_COMICS_URL, REACT_APP_MANGAS_URL,
     } = process.env;
 
     let data = [];
 
     switch (type) {
-        case BOOKS: data = await load(REACT_APP_BOOKS, REACT_APP_BOOKS_URL); break;
-        case COMICS: data = await load(REACT_APP_COMICS, REACT_APP_COMICS_URL); break;
-        case MANGAS: data = await load(REACT_APP_MANGAS, REACT_APP_MANGAS_URL); break;
+        case BOOKS: data = await load(REACT_APP_BOOKS, getValueEnv("REACT_APP_BOOKS", username)); break;
+        case COMICS: data = await load(REACT_APP_COMICS, getValueEnv("REACT_APP_COMICS", username)); break;
+        case MANGAS: data = await load(REACT_APP_MANGAS, getValueEnv("REACT_APP_MANGAS", username)); break;
     }
 
     return data as IMidiaLeitura[];
 }
 
-const load = async (env: string | undefined, envURL?: string | undefined) => {
+const getValueEnv = (value: string, username: any) => {
+    const URL_ = value+'_URL_'+username?.name?.toLocaleUpperCase() ?? value;
+    const URL_COMPLETO = process.env[URL_] ;
+    return { url: URL_COMPLETO, status: URL_COMPLETO !== undefined } ;
+}
 
-    if (envURL !== undefined) {
+const load = async (env: string | undefined, envURL?: any) => {
+    if (envURL.status) {
         const response = await fetch(envURL, {
             headers: {
                 'Content-Type': 'application/json',

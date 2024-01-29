@@ -12,6 +12,7 @@ import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, createOptions } from '
 import { isNotNullStr } from '../../utils/utils';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidiaLeitura } from '../ListMidiaLeitura';
+import { useAuth } from '../../contexts/auth';
 
 interface MidiaLeituraComponentProps {
     title: string;
@@ -38,17 +39,19 @@ export const MidiaLeituraComponent = ({
     const [searchRead, setSearchRead] = useState<string>();
     const [searchOwned, setSearchOwned] = useState<boolean>();
 
+    const { user } = useAuth();
+
     const isFilterCountry = type === COMICS;
 
     const { setCollapsed } = useContext(ThemeContext);
 
     const handleLoad = useCallback(async () => {
-        const dataLoaded = await loadMidiaLeitura(type);
+        const dataLoaded = await loadMidiaLeitura(type, user);
         setMidiaLeituraKVArray(createMidiaLeituraKV(dataLoaded, type));
         setOptionsCountries(createOptions(dataLoaded, TYPE_F_COUNTRIES));
         setOptionsGenres(createOptions(dataLoaded, TYPE_F_GENRE));
         setOptionsLanguage(createOptions(dataLoaded, TYPE_F_LANGUAGE));
-    }, [type]);
+    }, [type, user]);
 
     useEffect(() => {
         handleLoad();
