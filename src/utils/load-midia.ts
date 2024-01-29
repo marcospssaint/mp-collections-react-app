@@ -37,15 +37,12 @@ export const loadMidiaLeitura  = async (type: string, username: any) => {
 const getValueEnv = (value: string, username: any) => {
     const URL_ = value+'_URL_'+username?.name?.toLocaleUpperCase() ?? value;
     const URL_COMPLETO = process.env[URL_] ;
-    console.log("URL_COMPLETO: ", URL_COMPLETO);
-    console.log("URL_: ", URL_);
-    console.log("username: ", username);
     return { url: URL_COMPLETO, status: URL_COMPLETO !== undefined } ;
 }
 
 const load = async (env: string | undefined, envURL?: any) => {
     if (envURL.status) {
-        const response = await fetch(envURL, {
+        const response = await fetch(envURL.url, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
