@@ -1,6 +1,7 @@
 import { DEFAULT_NUMBER_INDEX, isNotNull } from "../utils";
 import { isNotNullArray, isNotNullStr } from "../utils/utils";
-import { VIDEO } from "./midia-video";
+import { BOOKS, COMICS, MANGAS } from "./midia-leitura";
+import { ANIMES, MOVIES, TV_SHOWS, TV_TOKUSATSU, VIDEO } from "./midia-video";
 
 export const TYPE_F_TITLE = 'T_TITLE';
 export const TYPE_F_SUBTITLE = 'T_SUBTITLE';
@@ -135,24 +136,26 @@ export const isFilterIMidiaSingleSelect = (value: any | undefined, midia: IMidia
 }
 
 export const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
-    if (type === TYPE_F_READ) return midia.read === value;
+    if (type === TYPE_F_READ) return midia?.read === value;
     else if (type === TYPE_F_GENRE) {
-        const genres = midia.genre?.split(', ');
+        const genres = midia?.genre?.split(', ');
         return genres?.some((genre) => genre === value);
-    }
-    else if (type === TYPE_F_YEAR) {
+    } else if (type === TYPE_F_COUNTRIES) {
+        const countries = midia?.countries?.split(', ');
+        return countries?.some((country) => country === value);
+    } else if (type === TYPE_F_YEAR) {
         const yearOne = Number(value[0]);
         const yearTwo = Number(value[1]);
 
         if (yearOne !== 0 && !Number.isNaN(yearOne)) {
-            const year = Number(midia.year);
+            const year = Number(midia?.year);
             return (year >= yearOne && year <= yearTwo);
         }
         return true;
     }
-    else if (type === TYPE_F_LANGUAGE) return midia.language === value;
-    else if (type === TYPE_F_WATCHED) return midia.watched === value;
-    else if (type === TYPE_F_OWNED) return midia.owned === value;
+    else if (type === TYPE_F_LANGUAGE) return midia?.language === value;
+    else if (type === TYPE_F_WATCHED) return midia?.watched === value;
+    else if (type === TYPE_F_OWNED) return midia?.owned === value;
     return false;
 }
 
@@ -207,4 +210,56 @@ export const createOptions = (midias: IMidia[], type: string) => {
             value: option,
             label: option
         }));
+}
+
+export const createByType = (midias: IMidia[], type: string) => {
+    var options = [''];
+    midias
+        .filter((data) => {
+            if (type === TYPE_F_GENRE)
+                return isNotNullStr(data?.genre)
+            else if (type === TYPE_F_COUNTRIES)
+                return isNotNullStr(data?.countries)
+            else if (type === TYPE_F_LANGUAGE)
+                return isNotNullStr(data?.language)
+            return '';
+        })
+        .forEach((data) => {
+            var value;
+            if (type === TYPE_F_GENRE) value = data?.genre
+            else if (type === TYPE_F_COUNTRIES) value = data?.countries;
+            else if (type === TYPE_F_LANGUAGE) value = data?.language;
+
+            value?.split(', ').forEach((c) => options.push(c))
+        });
+
+    const optionsSets = [...new Set(options)];
+    return optionsSets
+        .filter((p) => p !== undefined && p !== '')
+        .sort((a, b) => (a ?? '').localeCompare(b ?? ''));
+}
+
+export const titleByMidia = (midia: any) => {
+    const typeMidia = midia?.key?.typeMidia;
+    const type = typeMidia === VIDEO ? midia?.key?.typeMidiaVideo : midia?.key?.typeMidiaLeitura;
+    return titleByTYPE(typeMidia, type);
+}
+
+export const titleByTYPE = (typeMidia: string, type: string) => {
+    if (typeMidia === VIDEO) {
+        switch (type) {
+            case MOVIES: return 'Movies';
+            case TV_SHOWS: return 'TV Shows';
+            case TV_TOKUSATSU: return 'TV Tokusatsu';
+            case ANIMES: return 'Animes';
+            default: return '';
+        }
+    }
+
+    switch (type) {
+        case COMICS: return 'Comics';
+        case MANGAS: return 'Mangas';
+        case BOOKS: return 'Books';
+        default: return '';
+    }
 }

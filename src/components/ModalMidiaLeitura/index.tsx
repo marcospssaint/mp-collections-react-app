@@ -13,14 +13,14 @@ import { isNotNullArray, range, rangeBySeparator } from "../../utils/utils";
 import { Key } from "antd/es/table/interface";
 
 interface ModalMidiaLeituraPros {
-    midiaLeitura: IMidiaLeituraKV;
+    midiaLeitura: IMidiaLeituraKV | any;
     isModalOpen: boolean;
     hideModal: () => void;
 }
 
 export const ModalMidiaLeitura = ({ midiaLeitura, isModalOpen, hideModal, }: ModalMidiaLeituraPros) => {
     const midiaLeituraK = midiaLeitura.key;
-    const midiaLeituraV = midiaLeitura.value;
+    const midiaLeituraV = midiaLeitura.value as IMidiaLeitura[];
 
     const [midiaLeituraSelected, setMidiaLeituraSelected] = useState<IMidiaLeitura>();
     const [image, setImage] = useState<string | undefined | null>();

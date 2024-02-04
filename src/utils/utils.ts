@@ -7,10 +7,10 @@ export const groupByToMap = <T, Q>(array: T[], predicate: (value: T, index: numb
 
 export const squash = <T>(arr: T[] | undefined) => {
     if (arr === undefined) return [];
-    var tmp = [];
+    var tmp :string[] = [] ;
     for (var i = 0; i < arr.length; i++) {
-        if (tmp.indexOf(arr[i]) === -1) {
-            tmp.push(arr[i]);
+        if (tmp.indexOf(arr[i]+'') === -1) {
+            tmp.push(arr[i]+'');
         }
     }
     return tmp.filter((t) => t !== undefined);

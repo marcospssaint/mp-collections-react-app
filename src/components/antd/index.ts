@@ -6,3 +6,4 @@ export { Menu } from './Menu';
 export { Modal } from './Modal';
 export { Select, SelectMultiple } from './Select';
 export { Tag, TagConditional } from './Tag';
+export { ListMidiaSkeleton } from './Skeleton';

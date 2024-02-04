@@ -10,8 +10,7 @@ interface DefaultSelectProps {
 }
 
 interface SelectProps extends DefaultSelectProps {
-    onChange?: (value: any) => void;
-    
+    onChange?: (value: any) => void;   
 }
 
 interface SelectMulProps extends DefaultSelectProps {
@@ -40,6 +39,7 @@ export const SelectMultiple = ({ onChange, placeholder, options, style }: Select
             style={style}
             allowClear
             options={options}
+            size='large'
         />
     )
 }

@@ -3,10 +3,10 @@
 }
 
 /* Bottom right text */
-.bottom-right {
+.bottom-left {
   position: absolute;
-  bottom: 8px;
-  right: 16px;
+  bottom: -19px;
+  left: 10px;
 }
 
 /* Container holding the image and the text */

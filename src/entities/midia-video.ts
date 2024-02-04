@@ -20,7 +20,8 @@ const defaultsIMidiaVideo = {
     year: 1910,
     owned: false,
     notes: null,
-    genre: null
+    genre: null,
+    collection: false
 };
 
 export interface IMidiaVideo extends IMidia {
@@ -55,6 +56,8 @@ export function createIMidiaVideoKV(options?: Partial<IMidiaVideoKV>): IMidiaVid
 }
 
 export const createMidiaVideoKV = (data: IMidiaVideo[], type: string, visibleCollection: boolean) => {
+    const isMidiaTypeSeasons = type !== MOVIES;
+ 
     data.forEach((d) => {
         d.typeMidia = VIDEO;
         d.typeMidiaVideo = type;
@@ -78,14 +81,14 @@ export const createMidiaVideoKV = (data: IMidiaVideo[], type: string, visibleCol
         var groupedMidia = midiaVideoGrouped.get(midiaVideo.title);
         let newMidia: IMidiaVideo = midiaVideo;
 
-        if (visibleCollection) {
+        if ((visibleCollection || type !== MOVIES) && groupedMidia !== undefined && groupedMidia?.length > 1) {
             midiaVideoKVArray.push(
                 createIMidiaVideoKV({
                     key: {...newMidia, collection: visibleCollection},
                     value: groupedMidia
                 }),
-            )
-        } else {
+            );
+        } else if (!visibleCollection) {
             if (groupedMidia !== undefined && groupedMidia.length > 1) {
                 for (let midiaValue of groupedMidia) {
                     newMidia = {...midiaValue, title: midiaValue.subtitle??midiaValue.originalTitle??midiaValue.title??'', subtitle: null};
@@ -100,16 +103,15 @@ export const createMidiaVideoKV = (data: IMidiaVideo[], type: string, visibleCol
                 midiaVideoKVArray.push(
                     createIMidiaVideoKV({
                         key: {...newMidia, collection: visibleCollection},
-                        value: []
+                        value: isMidiaTypeSeasons ?  [{...newMidia}] : []
                     }),
                 )
             }
-
         }
-    }
+    } 
 
     return midiaVideoKVArray.sort((a, b) => {
-        if (type === ANIMES) {
+        if (type === ANIMES || !!visibleCollection) {
             return a.key.title.localeCompare(b.key.title);
         }
         return b.key.year - a.key.year;

@@ -104,6 +104,14 @@ body {
     margin: 0px 20px !important;
 }
 
+:where(.css-dev-only-do-not-override-1b0bdye).ant-descriptions .ant-descriptions-item-container .ant-descriptions-item-label {
+    align-items: center !important;
+}
+
+:where(.css-1b0bdye).ant-descriptions .ant-descriptions-item-container .ant-descriptions-item-label {
+    align-items: center !important;
+}
+
 .component-midia {
     min-height: 360px !important;
     margin: 0px 15px 0px 0px !important;
@@ -123,4 +131,41 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 10px;
+}
+
+.responsive-two-columns {
+    display:flex;
+    flex-wrap:wrap;
+}
+
+/* columns */
+.responsive-two-columns > * {
+    width:100%;
+    padding:1rem;
+}
+
+/* tablet breakpoint */
+@media (min-width:768px) {
+    .responsive-two-columns > *:nth-child(1) {
+        width: 25%;
+    }
+    .responsive-two-columns > *:nth-child(2) {
+        width: 75%;
+    }
+}
+
+.checkable-tag {
+    display: inline-flex;
+    border: 1px solid #9e9e9e;
+    border-radius: 14px;
+    padding: 4px 12px;
+    font-size: .9em;
+    margin-right: 6px;
+    margin-top: 8px;
+}
+
+:where(.css-dev-only-do-not-override-1b0bdye).ant-tag-checkable-checked:hover {
+    background-color: rgba(var(1,180,228),1);
+    color: #fff;
+    border-color: rgba(var(1,180,228),1);
 }

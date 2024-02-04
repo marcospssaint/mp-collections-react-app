@@ -68,7 +68,7 @@ const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, 
     }
 
     const description = (midia: IMidia) => {
-        if (midia.typeMidiaVideo === ANIMES) {
+        if (midia.typeMidiaVideo === ANIMES || !!midia.collection) {
             return '';
         }
         return midia.year;
@@ -115,7 +115,7 @@ interface IconsComponentProps {
 }
 
 const IconsComponent = ({ midia, read, inProcess, watched, notStarted, owned }: IconsComponentProps) => {
-    return <div className="bottom-right">
+    return <div className="bottom-left">
         <Space direction="vertical">
             <Space wrap>
                 <>

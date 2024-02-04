@@ -1,8 +1,12 @@
-export { ListMidiaVideo } from './ListMidiaVideo';
-export { MidiaLeituraComponent } from './MidiaLeituraComponent';
+export { BadgeRibbon, Breadcrumb, Image, Menu, Modal, SelectMultiple, Tag, TagConditional } from './antd';
+export { MidiaComponent } from './MidiaComponent';
+
+export { ListMidia } from './ListMidia';
+
 export { MidiaLeituraSubComponent } from './MidiaLeituraSubComponent';
-export { MidiaVideoComponent } from './MidiaVideoComponent';
 export { ModalMidiaLeitura } from './ModalMidiaLeitura';
 export { ModalMidiaVideo } from './ModalMidiaVideo';
-export { BadgeRibbon, Breadcrumb, Image, Menu, Modal, SelectMultiple, Tag, TagConditional } from './antd';
+
+export { MidiaContent } from './MidiaContent';
+export { MidiaVideoContent } from './MidiaVideoContent';
 

@@ -1,11 +1,5 @@
-export { Anime } from './Anime';
-export { Book } from './Book';
-export { Comic } from './Comic';
 export { ErroPage } from './ErroPage';
 export { Home } from './Home';
 export { LayoutTemplate } from './Layout';
 export { Login } from './Login';
-export { Manga } from './Manga';
-export { Movie } from './Movie';
-export { TVShow } from './TVShow';
-export { TVTokusatsu } from './TVTokusatsu';
+export { MidiaTemplate } from './MidiaTemplate';

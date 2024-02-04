@@ -14,7 +14,7 @@ import { PresetStatusColorType } from "antd/es/_util/colors";
 import { Key } from "antd/es/table/interface";
 
 interface ModalMidiaVideoPros {
-    midiaVideo: IMidiaVideoKV | undefined;
+    midiaVideo: IMidiaVideoKV | any | undefined;
     typeMidiaVideo: string;
 
     isModalOpen: boolean;
@@ -25,7 +25,7 @@ interface ModalMidiaVideoPros {
 
 export const ModalMidiaVideo = ({ midiaVideo, typeMidiaVideo, isModalOpen, witdhModal = 700, imgHeight = 360, hideModal, }: ModalMidiaVideoPros) => {
     const midiaVideoK = midiaVideo?.key;
-    const midiaVideoV = midiaVideo?.value;
+    const midiaVideoV = midiaVideo?.value as IMidiaVideo[];
 
     const [midiaVideoSelected, setMidiaVideoSelected] = useState<IMidiaVideo>();
     const [type, setType] = useState<(string | undefined)[]>();

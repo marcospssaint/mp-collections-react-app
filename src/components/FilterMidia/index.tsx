@@ -1,23 +1,23 @@
 
-import { Button, Col, DatePickerProps, Divider, Input, Radio, Row, Tooltip } from "antd";
-import CheckableTag from "antd/es/tag/CheckableTag";
+import { Col, Collapse, DatePickerProps, Divider, Input, Row, Typography } from "antd";
 
-import { SearchOutlined } from '@ant-design/icons';
 import { optionsOwned, optionsRead, optionsVisibleCollection, optionsWatched } from "../../entities/options";
-import { DEFAULT_CHAR_INDEX } from '../../utils';
-import { Select, SelectMultiple } from "../antd";
+import { Select } from "../antd";
 
-import { DatePicker, Form } from 'antd';
+import { DatePicker } from 'antd';
 import { RangePickerProps } from "antd/es/date-picker";
 import { BaseOptionType } from "antd/es/select";
-import { useState } from "react";
+import CheckableTag from "antd/es/tag/CheckableTag";
 
 const { RangePicker } = DatePicker;
 
 interface FilterMidiaProps {
-    selectedAlphabets: string[];
-    optionsCountries: BaseOptionType[];
-    optionsGenres: BaseOptionType[];
+    genres?: string[];
+    countries?: string[];
+
+    selectedGenres?: string[];
+    selectedCountries?: string[];
+
     optionsLanguage: BaseOptionType[];
 
     isPublisher?: boolean;
@@ -25,50 +25,43 @@ interface FilterMidiaProps {
     isLanguage?: boolean;
     isWatcher?: boolean;
     isRead?: boolean;
-    isOwned?: boolean;
     isFilterCountries?: boolean;
     isVisibleCollection?: boolean;
     defaultValueCollection?: boolean;
-    selectedCountry?: string;
 
     handleChangeSearch: (value: any) => void;
-    handleChangeAlphabets: (value: string, checked: boolean) => void;
-    handleSelectedCountry: (e: any) => void;
-    handleChangeGenres: (value: string[]) => void;
+    handleChangeGenres: (genre: string, checked: boolean) => void;
+    handleChangeCountries: (country: string, checked: boolean) => void;
     handleChangeRangeYear?: (
         value: DatePickerProps['value'] | RangePickerProps['value'],
         dateString: [string, string] | string,) => void;
 
-    handleChangeCountries?: (value: string[]) => void;
-    handleChangeLanguage?: (value: string) => void;
-
     handleChangeWatcher?: (value: string) => void;
     handleChangeRead?: (value: string) => void;
     handleChangeOwned?: (value: boolean) => void;
+    handleChangeLanguage?: (value: string) => void;
     handleChangeVisibleCollection?: (value: boolean) => void;
 }
 
 export const FilterMidia = ({
-    selectedAlphabets,
-    optionsCountries = [],
-    optionsGenres = [],
+    selectedGenres = [],
+    selectedCountries = [],
+
+    genres = [],
+    countries = [],
     optionsLanguage = [],
 
     isLanguage = true,
 
     isWatcher = false,
     isRead = false,
-    isOwned = false,
     isFilterCountries = false,
     isVisibleCollection = false,
-    defaultValueCollection = true,
-    selectedCountry = '',
+    defaultValueCollection = false,
 
     handleChangeSearch,
-
-    handleChangeAlphabets,
-    handleSelectedCountry,
     handleChangeGenres,
+    handleChangeCountries,
     handleChangeRangeYear,
     handleChangeLanguage,
     handleChangeWatcher,
@@ -76,148 +69,140 @@ export const FilterMidia = ({
     handleChangeOwned,
     handleChangeVisibleCollection,
 }: FilterMidiaProps) => {
-
-    const [isVisibled, setVisibled] = useState<boolean>(true);
-
-    const formItemLayout = {
-        labelCol: {
-            xs: { span: 24 },
-            sm: { span: 8 },
-        },
-        wrapperCol: {
-            xs: { span: 24 },
-            sm: { span: 16 },
-        },
-    };
-
     return (
-        <Col className="border-col-filter" offset={2}>
-            <Col className="col-search" style={{ paddingBottom: 30 }}>
-                {
-                    DEFAULT_CHAR_INDEX.map((item) => (
-                        <CheckableTag
-                            key={item}
-                            checked={selectedAlphabets.includes(item)}
-                            onChange={(checked) => handleChangeAlphabets(item, checked)}
-                            className="filter-tags">
-                            {item}
-                        </CheckableTag>
-                    ))
-                }
-            </Col>
-            <Form
-                size='small'
-                {...formItemLayout}
-                style={{ maxWidth: 800 }}
-            >
-                <Form.Item label="Search Term:" >
-                    <Row gutter={8}>
-                        <Col span={22}>
-                            <Input
-                                size="large"
-                                placeholder="Search for a title.."
-                                allowClear
-                                onChange={handleChangeSearch} />
-                        </Col>
-                        <Col span={2}>
-                            <Tooltip title="search">
-                                <Button
-                                    size="large"
-                                    shape="circle"
-                                    icon={<SearchOutlined />}
-                                    onClick={() => {
-                                        setVisibled(!isVisibled)
-                                    }} />
-                            </Tooltip>
-                        </Col>
-                    </Row>
-                </Form.Item>
-                <Col style={{ display: isVisibled ? 'none' : '' }}>
-                    <Form.Item label="Genres:">
-                        <SelectMultiple
-                            options={optionsGenres}
-                            onChange={handleChangeGenres}
-                            placeholder="Please select" />
-                    </Form.Item>
-                    <Form.Item label="Range Year:">
-                        <RangePicker
-                            picker="year"
-                            onChange={handleChangeRangeYear}
-                            style={{ width: '100%' }} />
-                    </Form.Item>
-
+        <Row>
+            <Collapse
+                defaultActiveKey={['1']}
+                expandIconPosition="end"
+                style={{ width: '100%' }}
+                items={[
                     {
-                        isLanguage &&
-                        <Form.Item label="Languages:">
-                            <Select
-                                options={optionsLanguage}
-                                onChange={handleChangeLanguage}
-                                placeholder="Please select language" />
-                        </Form.Item>
-                    }
+                        key: '1',
+                        label: 'Filters',
+                        children:
+                            <>
+                                <Col>
+                                    <div>
+                                        <Typography.Title level={5}>Keywords</Typography.Title>
+                                        <Input
+                                            placeholder="Filter by keywords..."
+                                            allowClear
+                                            onChange={handleChangeSearch}
+                                        />
+                                    </div>
+                                    <Divider />
+                                    <div>
+                                        <Typography.Title level={5}>Genres</Typography.Title>
+                                        {
+                                            genres.map((item) => (
+                                                <CheckableTag
+                                                    key={item}
+                                                    className="checkable-tag"
+                                                    checked={selectedGenres.includes(item)}
+                                                    onChange={(checked) => handleChangeGenres(item, checked)}>
+                                                    {item}
+                                                </CheckableTag>
+                                            ))
+                                        }
+                                    </div>
+                                    <Divider />
+                                    {
+                                        isFilterCountries && <>
+                                            <div>
+                                                <Typography.Title level={5}>Countries</Typography.Title>
+                                                {
+                                                    countries.map((item) => (
+                                                        <CheckableTag
+                                                            key={item}
+                                                            className="checkable-tag"
+                                                            checked={selectedCountries.includes(item)}
+                                                            onChange={(checked) => handleChangeCountries(item, checked)}>
+                                                            {item}
+                                                        </CheckableTag>
+                                                    ))
+                                                }
+                                            </div>
+                                            <Divider />
+                                        </>
+                                    }
 
-                    {
-                        isWatcher &&
-                        <Form.Item label="Watcher:">
-                            <Select
-                                options={optionsWatched}
-                                onChange={handleChangeWatcher}
-                                placeholder="Please select watcher" />
-                        </Form.Item>
-                    }
-
-                    {
-                        isOwned &&
-                        <Form.Item label="Owned:">
-                            <Select
-                                options={optionsOwned}
-                                onChange={handleChangeOwned}
-                                placeholder="Please select owned" />
-                        </Form.Item>
-                    }
-
-                    {
-                        isRead &&
-                        <Form.Item label="Read:">
-                            <Select
-                                options={optionsRead}
-                                onChange={handleChangeRead}
-                                placeholder="Please select read" />
-                        </Form.Item>
-                    }
-
-                    {
-                        isVisibleCollection &&
-                        <Form.Item label="Colletion:">
-                            <Select
-                                options={optionsVisibleCollection}
-                                allowClear={false}
-                                defaultValue={defaultValueCollection}
-                                onChange={handleChangeVisibleCollection}
-                                placeholder="Please select visible collection" />
-                        </Form.Item>
-                    }
-                </Col>
-            </Form>
-            {
-                isFilterCountries &&
-                <Col className="col-search" style={{ paddingBottom: 30 }}>
-                    <Radio.Group buttonStyle="solid" value={selectedCountry} onChange={handleSelectedCountry}>
-                        {
-                            optionsCountries
-                                .map((country) => {
-                                    var value = country["value"];
-                                    if (value === '') return 'All';
-                                    return value;
-                                })
-                                .map((item) => (
-                                    <Radio.Button value={item}>{item}</Radio.Button>
-                                ))
-                        }
-                    </Radio.Group>
-                </Col>
-            }
-            <Divider />
-        </Col>
+                                    <div>
+                                        <Typography.Title level={5}>Release Dates</Typography.Title>
+                                        <RangePicker
+                                            picker="year"
+                                            onChange={handleChangeRangeYear}
+                                            placeholder={['from', 'to']}
+                                            style={{ width: '100%' }} />
+                                    </div>
+                                    <Divider />
+                                    {
+                                        isWatcher && <>
+                                            <div>
+                                                <Typography.Title level={5}>Watcher</Typography.Title>
+                                                <Select
+                                                    options={optionsWatched}
+                                                    onChange={handleChangeWatcher}
+                                                    placeholder="None Selected"
+                                                    style={{ width: '100%' }} />
+                                            </div>
+                                            <Divider />
+                                        </>
+                                    }
+                                    <div>
+                                        <Typography.Title level={5}>Owned</Typography.Title>
+                                        <Select
+                                            options={optionsOwned}
+                                            onChange={handleChangeOwned}
+                                            placeholder="None Selected"
+                                            style={{ width: '100%' }} />
+                                    </div>
+                                    <Divider />
+                                    {
+                                        isRead && <>
+                                            <div>
+                                                <Typography.Title level={5}>Read</Typography.Title>
+                                                <Select
+                                                    options={optionsRead}
+                                                    onChange={handleChangeRead}
+                                                    placeholder="None Selected"
+                                                    style={{ width: '100%' }} />
+                                            </div>
+                                            <Divider />
+                                        </>
+                                    }
+                                    {
+                                        isVisibleCollection && <>
+                                            <div>
+                                                <Typography.Title level={5}>Collection</Typography.Title>
+                                                <Select
+                                                    options={optionsVisibleCollection}
+                                                    allowClear={false}
+                                                    defaultValue={defaultValueCollection}
+                                                    onChange={handleChangeVisibleCollection}
+                                                    placeholder="None Selected"
+                                                    style={{ width: '100%' }} />
+                                            </div>
+                                            <Divider />
+                                        </>
+                                    }
+                                    {
+                                        isLanguage && <>
+                                            <div>
+                                                <Typography.Title level={5}>Language</Typography.Title>
+                                                <Select
+                                                    options={optionsLanguage}
+                                                    onChange={handleChangeLanguage}
+                                                    placeholder="None Selected"
+                                                    style={{ width: '100%' }} />
+                                            </div>
+                                            <Divider />
+                                        </>
+                                    }
+                                </Col>
+                            </>
+                    },
+                ]}
+            />
+        </Row>
     );
 }

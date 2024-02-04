@@ -89,8 +89,8 @@ export const pathByTYPE = (midiaLeitura: IMidiaLeituraKV) => {
     }
 }
 
-export const textByTYPE = (midiaLeitura: IMidiaLeituraKV) => {
-    switch (midiaLeitura.key?.typeMidiaLeitura) {
+export const textByTYPE = (midia: any) => {
+    switch (midia?.key?.typeMidiaLeitura) {
         case COMICS: return 'Comics';
         case MANGAS: return 'Mangas';
         case BOOKS: return 'Books';

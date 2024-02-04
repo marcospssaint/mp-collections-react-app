@@ -1,5 +1,10 @@
 import { BOOKS, COMICS, IMidiaLeitura, MANGAS } from '../entities/midia-leitura';
-import { ANIMES, IMidiaVideo, MOVIES, TV_SHOWS, TV_TOKUSATSU } from '../entities/midia-video';
+import { ANIMES, IMidiaVideo, MOVIES, TV_SHOWS, TV_TOKUSATSU, VIDEO } from '../entities/midia-video';
+
+export const loadMidia = async (typeMidia: string, type: string, username: any) => {
+    if (typeMidia === VIDEO) return loadMidiaVideo(type, username);
+    return loadMidiaLeitura(type, username);
+}
 
 export const loadMidiaVideo = async (type: string, username: any) => {
     const {
