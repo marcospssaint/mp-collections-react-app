@@ -5,7 +5,7 @@ import { IMidiaLeitura, IMidiaLeituraKV, createIMidiaLeituraKV } from '../../ent
 import { ListItem } from '../antd';
 
 export interface ListMidiaLeituraSubProps {
-    data: IMidiaLeitura[];
+    data: IMidiaLeitura[] | undefined;
     onClick: (item: IMidiaLeituraKV) => void;
 }
 

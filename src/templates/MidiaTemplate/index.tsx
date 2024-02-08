@@ -25,9 +25,11 @@ export const MidiaTemplate = ({
 
     const onClickMore = (midia: any) => {
         const URL = window.location.hash.replace('#', '').split('?');
- 
+
+        console.log('midia.key', midia.key)
+
         if (midia.key?.collection === true) {
-            navigate(URL.at(0) + '/'+ midia.key.id, {
+            navigate(URL.at(0) + '/'+ midia.key.id + '/collection', {
                 state: midia
             });
         } else {

@@ -29,7 +29,7 @@ export const MidiaLeituraSubComponent = () => {
     useEffect(() => {
         const midiaLeituraKV = state as IMidiaLeituraKV ?? {};
 
-        var midiaLeituraV = midiaLeituraKV.value.map((v) => {
+        var midiaLeituraV = midiaLeituraKV?.value?.map((v) => {
             return {...v, collectionTitle: true};
         });
 
@@ -60,7 +60,7 @@ export const MidiaLeituraSubComponent = () => {
                 />
 
                 <ListMidiaLeituraSub
-                    data={midiaLeitura.value}
+                    data={midiaLeitura?.value}
                     onClick={handlerClick} />
 
                 <ModalMidiaLeitura midiaLeitura={midiaLeituraSelected} isModalOpen={isModalOpen} hideModal={hideModal}  />

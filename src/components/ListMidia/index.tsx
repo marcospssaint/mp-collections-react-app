@@ -1,38 +1,20 @@
-import React, { Col, FloatButton, List } from "antd";
+import { Col, FloatButton, List } from "antd";
 
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_READ, TYPE_F_WATCHED, TYPE_F_YEAR, isFilterIMidiaSingleSelect, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
+import { TYPE_F_OWNED, TYPE_F_READ, TYPE_F_WATCHED, isFilterIMidiaSingleSelect, isFilterSingleSelect } from '../../entities/midia';
 import { useQuery } from '../../utils';
-import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
 import { ListItem } from '../antd';
 
 export interface ListMidiaProps {
-    emptyMessage: string;
     data: any[];
-    search?: string;
-    searchGenres?: string[];
-    searchCountries?: string[];
-    searchRangeYear?: [string, string] | string;
-    searchWatcher?: string | null;
-    searchRead?: string | null;
-    searchOwned?: boolean;
-    searchLanguage?: string | null;
+    emptyMessage?: string;
     onClickMore: (item: any) => void;
 }
 
 export const ListMidia = ({
-    emptyMessage,
+    emptyMessage = '',
     data,
-    search = '',
-    searchGenres = [],
-    searchCountries = [],
-    searchRangeYear = '',
-    searchWatcher = null,
-    searchRead = null,
-    searchLanguage = null,
-    searchOwned,
-
     onClickMore
 }: ListMidiaProps) => {
     const navigate = useNavigate();
@@ -42,39 +24,6 @@ export const ListMidia = ({
     const defaultCurrent = query.get("page") !== undefined ? Number(query.get("page")) : 1;
 
     const pageTopRef = useRef<HTMLDivElement>(null);
-
-    const wasResearch = () => {
-        return isNotNullStr(search)
-            || isNotNullArray(searchGenres)
-            || isNotNullArray(searchCountries)
-            || searchRangeYear !== null
-            || isNotNull(searchWatcher) 
-            || isNotNull(searchRead)
-            || isNotNull(searchOwned)
-            || isNotNull(searchLanguage);
-    }
-
-    const filtered =
-        wasResearch() ?
-            data.filter((midiaKV) => {
-                return isFilterSearch(search, midiaKV);
-            })
-            .filter((midiaKV) => {
-                return isFilterMultipleSelect(searchGenres, midiaKV, TYPE_F_GENRE);
-            }).filter((midiaKV) => {
-                return isFilterMultipleSelect(searchCountries, midiaKV, TYPE_F_COUNTRIES);
-            }).filter((midiaKV) => {
-                return isFilterSingleSelect(searchRangeYear, midiaKV, TYPE_F_YEAR);
-            }).filter((midiaVideoKV) => {
-                return isFilterSingleSelect(searchWatcher, midiaVideoKV, TYPE_F_WATCHED);
-            }).filter((midiaKV) => {
-                return isFilterSingleSelect(searchRead, midiaKV, TYPE_F_READ);
-            }).filter((midiaVideoKV) => {
-                return isFilterSingleSelect(searchOwned, midiaVideoKV, TYPE_F_OWNED);
-            }).filter((midiaKV) => {
-                return isFilterSingleSelect(searchLanguage, midiaKV, TYPE_F_LANGUAGE);
-            })
-            : data;
 
     const paginate = (e: any) => {
         const pageNumber = Number(e)
@@ -87,7 +36,7 @@ export const ListMidia = ({
         <Col span={24} ref={pageTopRef}>
             <List
                 itemLayout='vertical'
-                dataSource={filtered}
+                dataSource={data}
                 locale={{ emptyText: emptyMessage }}
                 rowKey={(item) => item.key.id}
                 grid={{

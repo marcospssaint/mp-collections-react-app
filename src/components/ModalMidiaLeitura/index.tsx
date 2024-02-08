@@ -260,9 +260,9 @@ const NOfEditionsComponent = ({ midiaLeitura, isVisibledTable }: NOfEditionsComp
         var numerosCurrent: (number | number[])[] = [];
 
         if (isVisibledTable) {
-            const total = midiaLeitura.value.length;
+            const total = midiaLeitura?.value?.length ?? 0;
             setTotal(total);
-            midiaLeitura.value.forEach((v, index) => { if (v.owned) numerosCurrent.push(index + 1) })
+            midiaLeitura?.value?.forEach((v, index) => { if (v.owned) numerosCurrent.push(index + 1) })
             setNumeros([...numerosCurrent]);
         } else {
             const volume = String(midiaLeituraK?.volume);

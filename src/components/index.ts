@@ -9,4 +9,6 @@ export { ModalMidiaVideo } from './ModalMidiaVideo';
 
 export { MidiaContent } from './MidiaContent';
 export { MidiaVideoContent } from './MidiaVideoContent';
+export { MidiaLeituraContent } from './MidiaLeituraContent';
+export { MidiaCollectionComponent } from './MidiaCollectionComponent';
 

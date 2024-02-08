@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { HashRouter, Route, Routes as Router } from 'react-router-dom';
-import { MidiaContent, MidiaLeituraSubComponent } from '../components';
+import { MidiaCollectionComponent, MidiaContent, MidiaLeituraSubComponent } from '../components';
 import {
   ErroPage,
   Home,
@@ -33,6 +33,8 @@ const Routes: React.FC = () => {
             element={<RouteAuth children={<LayoutTemplate />} />} errorElement={<ErroPage />}>
             <Route path="/home" element={<Home />} />
 
+            <Route path="/movies/?page=:page/collection" element={<MidiaCollectionComponent />} />
+            <Route path="/movies/:id/collection" element={<MidiaCollectionComponent />} />
             <Route path="/movies/?page=:page" element={<MidiaContent />} />
             <Route path="/movies/:id" element={<MidiaContent />} />
             <Route path="/movies" element={<MidiaTemplate title='Movies' typeMidia={VIDEO} type={MOVIES} />} />
@@ -49,12 +51,13 @@ const Routes: React.FC = () => {
             <Route path="/animes/:id" element={<MidiaContent />} />
             <Route path="/animes" element={<MidiaTemplate title='Animes' typeMidia={VIDEO} type={ANIMES} />} />
 
-            <Route path="/mangas/?page=:page" element={<MidiaLeituraSubComponent />} />
-            <Route path="/mangas/:id" element={<MidiaLeituraSubComponent />} />
+            <Route path="/mangas/?page=:page" element={<MidiaContent />} />
+            <Route path="/mangas/:id" element={<MidiaContent />} />
             <Route path="/mangas" element={<MidiaTemplate title='Mangas' typeMidia={LEITURA} type={MANGAS}/>} />
 
-            <Route path="/comics/?page=:page" element={<MidiaLeituraSubComponent />} />
-            <Route path="/comics/:id" element={<MidiaLeituraSubComponent />} />
+            <Route path="/comics/?page=:page" element={<MidiaContent />} />
+            <Route path="/comics/:id/collection" element={<MidiaCollectionComponent />} />
+            <Route path="/comics/:id" element={<MidiaContent />} />
             <Route path="/comics" element={<MidiaTemplate title='Comics' typeMidia={LEITURA} type={COMICS}/>} />
 
             <Route path="/books/:id" element={<MidiaLeituraSubComponent />} />

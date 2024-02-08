@@ -1,14 +1,16 @@
 
-import { Avatar, Breadcrumb, Col, Descriptions, Divider, Image, Row, Tag } from "antd";
+import { Breadcrumb, Col, Descriptions, Divider, Image, Row, Tag } from "antd";
 
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useParams } from "react-router-dom";
 import { IMidiaKV, TYPE_F_READ, TYPE_F_WATCHED, isFilterIMidiaSingleSelect, isFilterSingleSelect, titleByMidia } from "../../entities/midia";
 
 import { Typography } from 'antd';
+import { MOVIES, VIDEO } from "../../entities/midia-video";
 import { isNotNullStr } from "../../utils/utils";
 import { MidiaVideoContent } from "../MidiaVideoContent";
-import { MOVIES, VIDEO } from "../../entities/midia-video";
+import { LEITURA, nOfEditions } from "../../entities/midia-leitura";
+import { MidiaLeituraContent } from "../MidiaLeituraContent";
 
 export const MidiaContent = () => {
     let { id } = useParams();
@@ -32,6 +34,11 @@ export const MidiaContent = () => {
             return midia?.key?.typeMidiaVideo !== MOVIES;
         }
         return false;
+    }
+
+    const isVisibleMidiaLeitura = () => {
+        console.log(midia?.key?.typeMidia === LEITURA && nOfEditions(midia?.key) > 1)
+        return midia?.key?.typeMidia === LEITURA && nOfEditions(midia?.key) > 1;
     }
 
     const image = () => {
@@ -64,6 +71,10 @@ export const MidiaContent = () => {
         return midia?.key?.synopsis;
     }
 
+    const notes = () => {
+        return midia?.key?.notes;
+    }
+
     const genres = () => {
         var options = [''];
         const genres = midia?.key?.genre;
@@ -74,6 +85,14 @@ export const MidiaContent = () => {
         return optionsSets
             .filter((p) => p !== undefined && p !== '')
             .sort((a, b) => (a ?? '').localeCompare(b ?? ''));
+    }
+
+    const publisher = () => {
+        return midia?.key?.publisher;
+    }
+
+    const language = () => {
+        return midia?.key?.language;
     }
 
     const countries = () => {
@@ -92,33 +111,33 @@ export const MidiaContent = () => {
         const stars = midia?.key?.cast?.replaceAll(',', ' · ')
             .split('*');
 
-        return stars?.at(1)?.replaceAll('*', '');
+        return stars?.at(1)?.replaceAll('*', '') ?? '-';
     }
 
-    const WatchedOrRead = () => {
-        let backgroundColor = '';
+    const writes = () => {
+        const writes = midia?.key?.authors?.replaceAll(',', ' · ')
+            .split('*');
+
+        return writes?.at(0)?.replaceAll('<<!>>', '')
+            .replaceAll('<<>>', '')
+            .replaceAll('<>', '');
+    }
+
+    const percilers = () => {
+        const percilers = midia?.key?.authors?.replaceAll(',', ' · ')
+            .split('*');
+
+        return percilers?.at(1)?.replaceAll('*', '') ?? '-';
+    }
+
+    const watchedOrRead = () => {
         const watched = isFilterSingleSelect('W', midia, TYPE_F_WATCHED);
-        const notStarted = isFilterSingleSelect('NOTW', midia, TYPE_F_WATCHED);
         const read = isFilterIMidiaSingleSelect('R', midia.key, TYPE_F_READ);
-
-        if (midia?.key?.typeMidia === VIDEO && notStarted && !!watched) {
-            backgroundColor = '#faad14';
-        } else if (!!read || !!watched) {
-            backgroundColor = '#52c41a';
-        }
-
-        return <Avatar
-            size={20}
-            style={{ backgroundColor: backgroundColor }}
-        />
+        return (!!read || !!watched) ? 'YES' : 'NO';
     }
 
-    const Owned = () => {
-        const backgroundColor = !!midia?.key?.owned ? '#faad14' : '';
-        return <Avatar
-            size={20}
-            style={{ backgroundColor: backgroundColor }}
-        />
+    const owned = () => {
+        return !!midia?.key?.owned ? 'YES' : 'NO';
     }
 
     return (
@@ -134,29 +153,15 @@ export const MidiaContent = () => {
                 ]}
             />
             <Row className='responsive-two-columns'>
-                <Col style={{ marginTop: 40 }}>
+                <Col>
+                    <Row>
+                        <Typography.Title level={2} className="text-font-beautiful">{title()}</Typography.Title>
+                    </Row>
                     <Image src={image()} height={440} />
-                    {
-                        !isVisibleMidiaVideo() &&
-                        <Row>
-                            <Divider orientation="left">Control</Divider>
-                            <Descriptions>
-                                <Descriptions.Item label="Watched">
-                                    <WatchedOrRead />
-                                </Descriptions.Item>
-                                <Descriptions.Item label="Owned">
-                                    <Owned/>
-                                </Descriptions.Item>
-                            </Descriptions>
-                        </Row>
-                    }
+
                 </Col>
 
                 <Col style={{ maxWidth: 1000 }}>
-                    <Row>
-                        <Typography.Title level={2} style={{ fontFamily: '"Source Sans Pro",Arial,sans-serif' }}>{title()}</Typography.Title>
-                    </Row>
-
                     <Divider orientation="left">Details</Divider>
 
                     {
@@ -197,18 +202,51 @@ export const MidiaContent = () => {
                         <Descriptions>
                             <Descriptions.Item label="Genres" span={23}>
                                 <div>
-                                    {genres().map((item) => <Tag key={item} className="checkable-tag">{item}</Tag>)}
+                                    {genres().map((item) => <Tag key={item} className="tags">{item}</Tag>)}
                                 </div>
                             </Descriptions.Item>
                         </Descriptions>
                     </Row>
+                    {
+                        isVisibleMidiaLeitura() &&
+                        <>
+                            <Row>
+                                <Divider style={{ margin: 0 }} />
+                                <Descriptions style={{ margin: 0 }}>
+                                    <Descriptions.Item label="Publisher">
+                                        {publisher()}
+                                    </Descriptions.Item>
+                                </Descriptions>
+                                <Divider style={{ margin: 0 }} />
+                            </Row>
+                            <Row>
+                                <Divider style={{ margin: 0 }} />
+                                <Descriptions style={{ margin: 0 }}>
+                                    <Descriptions.Item label="Language">
+                                        <Tag key={language()} className="tags">{language()}</Tag>
+                                    </Descriptions.Item>
+                                </Descriptions>
+                                <Divider style={{ margin: 0 }} />
+                            </Row>
+                        </>
+                    }
 
                     {
                         !isVisibleMidiaVideo() &&
                         <Row>
                             <Divider orientation="left">Synopsis</Divider>
-                            <Typography.Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }} style={{ textAlign: 'justify' }}>
+                            <Typography.Paragraph style={{ textAlign: 'justify' }}>
                                 {synopsis()}
+                            </Typography.Paragraph>
+                        </Row>
+                    }
+
+                    {
+                        !isVisibleMidiaVideo() &&
+                        <Row>
+                            <Divider orientation="left">Notes</Divider>
+                            <Typography.Paragraph style={{ textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
+                                {notes()}
                             </Typography.Paragraph>
                         </Row>
                     }
@@ -227,11 +265,46 @@ export const MidiaContent = () => {
                             </Descriptions>
                         </Row>
                     }
-
-                    
-
+                    {
+                        (isVisibleMidiaLeitura() && isNotNullStr(writes())) &&
+                        <Row>
+                            <Divider orientation="left">Authors</Divider>
+                            <Descriptions>
+                                <Descriptions.Item label="Write" span={23}>
+                                    {writes()}
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Perciler" style={{ whiteSpace: 'pre-wrap' }}>
+                                    {percilers()}
+                                </Descriptions.Item>
+                            </Descriptions>
+                        </Row>
+                    }
+                    {
+                        !isVisibleMidiaVideo() &&
+                        <Row>
+                            <Divider orientation="left">Control</Divider>
+                            <Row>
+                                <Descriptions>
+                                    <Descriptions.Item label="Watched">
+                                        {watchedOrRead()}
+                                    </Descriptions.Item>
+                                </Descriptions>
+                                <Divider style={{ margin: 0 }} />
+                            </Row>
+                            <Row>
+                                <Descriptions>
+                                    <Descriptions.Item label="Owned">
+                                        {owned()}
+                                    </Descriptions.Item>
+                                </Descriptions>
+                                <Divider style={{ margin: 0 }} />
+                            </Row>
+                        </Row>
+                    }
                 </Col>
+
                 <MidiaVideoContent midiaVideo={midia} isVisible={isVisibleMidiaVideo()} />
+                <MidiaLeituraContent midiaLeitura={midia} isVisible={isVisibleMidiaLeitura()} />
             </Row>
         </Row>
     );

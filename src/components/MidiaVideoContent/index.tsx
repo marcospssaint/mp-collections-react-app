@@ -117,28 +117,28 @@ export const MidiaVideoContent = ({ midiaVideo, isVisible }: MidiaVideoContentPr
             key: index + 1 + "",
             label: <div>
                 <Typography.Title level={4}
+                    className='text-font-beautiful'
                     style={{
                         fontWeight: 700,
-                        fontFamily: '"Source Sans Pro",Arial,sans-serif',
                         margin: 0
                     }}>
                     {title}
                 </Typography.Title>
 
                 <Typography.Title level={4}
+                    className='text-font-beautiful'
                     style={{
                         fontSize: 12,
                         fontWeight: 600,
-                        fontFamily: '"Source Sans Pro",Arial,sans-serif',
                         margin: 0
                     }}>
                     {mdVideo.year} {mdVideo.type !== TYPE_MOVIE ? `· ${nOfEpisodes} Episodes` : ''}
                 </Typography.Title>
                 <Typography.Title level={4}
+                    className='text-font-beautiful'
                     style={{
                         fontSize: 12,
                         fontWeight: 600,
-                        fontFamily: '"Source Sans Pro",Arial,sans-serif',
                         margin: 0
                     }}>
                     {mdVideo.originalTitle}
@@ -152,80 +152,72 @@ export const MidiaVideoContent = ({ midiaVideo, isVisible }: MidiaVideoContentPr
     return <>
         {
             isVisible && <Col>
-            <Row>
-                {
-                    isValidType &&
+                <Row>
+                    {
+                        isValidType &&
+                        <Row>
+                            <Divider style={{ margin: 0 }} />
+                            <Descriptions>
+                                <Descriptions.Item label="Types" span={23}>
+                                    <div>
+                                        {type?.map((item) => <Tag key={item} className="tags">{item}</Tag>)}
+                                    </div>
+                                </Descriptions.Item>
+                            </Descriptions>
+                        </Row>
+                    }
+
                     <Row>
                         <Divider style={{ margin: 0 }} />
-                        <Descriptions>
-                            <Descriptions.Item label="Types" span={23}>
-                                <div>
-                                    {
-                                        type?.map((item) => (
-                                            <Tag
-                                                key={item}
-                                                className="checkable-tag">
-                                                {item}
-                                            </Tag>
-                                        ))
-                                    }
-                                </div>
+                        <Descriptions style={{ margin: 0 }}>
+                            <Descriptions.Item label="No. of seasons">
+                                {nOfSeason()}
                             </Descriptions.Item>
                         </Descriptions>
+                        <Divider style={{ margin: 0 }} />
                     </Row>
-                }
-    
-                <Row>
-                    <Divider style={{ margin: 0 }} />
-                    <Descriptions style={{ margin: 0 }}>
-                        <Descriptions.Item label="No. of seasons">
-                            {nOfSeason()}
-                        </Descriptions.Item>
-                    </Descriptions>
-                    <Divider style={{ margin: 0 }} />
+
+                    <Row>
+                        <Descriptions style={{ margin: 0 }}>
+                            <Descriptions.Item label="No. of episodes">
+                                {nOfEpisodes()}
+                            </Descriptions.Item>
+                        </Descriptions>
+                        <Divider style={{ margin: 0 }} />
+                    </Row>
+
+                    <Row>
+                        <Divider style={{ margin: 0 }} />
+                        <Descriptions style={{ margin: 0 }}>
+                            <Descriptions.Item label="No. of movies">
+                                {nOfMovie()}
+                            </Descriptions.Item>
+                        </Descriptions>
+                        <Divider style={{ margin: 0 }} />
+                    </Row>
+
+                    <Collapse
+                        accordion
+                        defaultActiveKey={['1']}
+                        expandIconPosition="end"
+                        size="large"
+                        style={{ width: '100%' }}
+                        items={items} />
                 </Row>
-    
-                <Row>
-                    <Divider style={{ margin: 0 }} />
-                    <Descriptions style={{ margin: 0 }}>
-                        <Descriptions.Item label="No. of movies">
-                            {nOfMovie()}
-                        </Descriptions.Item>
-                    </Descriptions>
-                    <Divider style={{ margin: 0 }} />
-                </Row>
-    
-                <Row>
-                    <Descriptions style={{ margin: 0 }}>
-                        <Descriptions.Item label="No. of episodes">
-                            {nOfEpisodes()}
-                        </Descriptions.Item>
-                    </Descriptions>
-                    <Divider style={{ margin: 0 }} />
-                </Row>
-    
-                <Collapse
-                    accordion
-                    defaultActiveKey={['1']}
-                    expandIconPosition="end"
-                    size="large"
-                    style={{ width: '100%' }}
-                    items={items} />
-            </Row>
-            <Modal
-                title="Synopsis"
-                centered
-                closable={false}
-                open={isModalOpen}
-                onCancel={hideModal}
-                footer={[]}>
-                <Row>
-                    <Typography.Paragraph style={{ textAlign: 'justify' }}>
-                        {synopsis}
-                    </Typography.Paragraph>
-                </Row>
-            </Modal>
-        </Col>
+                <Modal
+                    title="Synopsis"
+                    centered
+                    closable={false}
+                    open={isModalOpen}
+                    onCancel={hideModal}
+                    footer={[]}>
+                    <Row style={{ padding: 15 }}>
+                        <Typography.Paragraph style={{ textAlign: 'justify' }}>
+                            {synopsis}
+                        </Typography.Paragraph>
+                    </Row>
+                </Modal>
+            </Col>
         }
     </>
 }
@@ -284,7 +276,7 @@ const NOfEpisodesWatchedComponent = ({ midiaVideo }: NOfEpisodesWatchedComponent
                         return <>
                             <Tag
                                 key={indexCurrent}
-                                className="checkable-tag"
+                                className="tags"
                                 color={conditionColor}>
                                 {indexCurrent}
                             </Tag>

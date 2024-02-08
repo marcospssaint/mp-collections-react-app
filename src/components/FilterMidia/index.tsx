@@ -97,7 +97,7 @@ export const FilterMidia = ({
                                             genres.map((item) => (
                                                 <CheckableTag
                                                     key={item}
-                                                    className="checkable-tag"
+                                                    className="tags"
                                                     checked={selectedGenres.includes(item)}
                                                     onChange={(checked) => handleChangeGenres(item, checked)}>
                                                     {item}
@@ -114,7 +114,7 @@ export const FilterMidia = ({
                                                     countries.map((item) => (
                                                         <CheckableTag
                                                             key={item}
-                                                            className="checkable-tag"
+                                                            className="tags"
                                                             checked={selectedCountries.includes(item)}
                                                             onChange={(checked) => handleChangeCountries(item, checked)}>
                                                             {item}

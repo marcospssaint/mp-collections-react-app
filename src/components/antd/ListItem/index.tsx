@@ -9,8 +9,8 @@ import { Image } from '..';
 
 import { Avatar, Card, List, Space } from "antd";
 import { IMidia } from "../../../entities";
-import { ANIMES, VIDEO } from '../../../entities/midia-video';
 import { TYPE_F_GENRE, isFilterByType } from '../../../entities/midia';
+import { VIDEO } from '../../../entities/midia-video';
 
 interface ListItemProps {
     id: number;
@@ -68,9 +68,6 @@ const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, 
     }
 
     const description = (midia: IMidia) => {
-        if (midia.typeMidiaVideo === ANIMES || !!midia.collection) {
-            return '';
-        }
         return midia.year;
     }
 

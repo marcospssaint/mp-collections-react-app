@@ -154,7 +154,7 @@ body {
     }
 }
 
-.checkable-tag {
+.tags {
     display: inline-flex;
     border: 1px solid #9e9e9e;
     border-radius: 14px;
@@ -168,4 +168,14 @@ body {
     background-color: rgba(var(1,180,228),1);
     color: #fff;
     border-color: rgba(var(1,180,228),1);
+}
+
+:where(.css-1b0bdye).ant-tag-checkable-checked:hover {
+    background-color: rgba(var(1,180,228),1);
+    color: #fff;
+    border-color: rgba(var(1,180,228),1);
+}
+
+.text-font-beautiful {
+    font-family: "Source Sans Pro",Arial,sans-serif;
 }

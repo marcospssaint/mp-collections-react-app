@@ -8,7 +8,7 @@ export const COMICS = 'COMICS';
 export const MANGAS = 'MANGAS';
 
 export interface IMidiaLeitura extends IMidia {
-    typeMidiaLeitura: string;
+    typeMidiaLeitura?: string;
     volume?: string;
     readVolume?: number;
     totalVolume?: number;
@@ -16,7 +16,7 @@ export interface IMidiaLeitura extends IMidia {
 
 export interface IMidiaLeituraKV {
     key: IMidiaLeitura,
-    value: IMidiaLeitura[];
+    value: IMidiaLeitura[] | undefined;
 }
 
 export function createIIMidiaLeitura(options?: Partial<IMidiaLeitura>): IMidiaLeitura {
@@ -114,3 +114,12 @@ export const createOptionsPublisher = (midiasLeituras: IMidiaLeitura[]) => {
         }
     ));
 }
+
+export const nOfEditions = (midiaLeituraK: IMidiaLeitura) => {
+    const editions = String(midiaLeituraK?.volume);
+    if (editions !== null && editions?.includes(' | ')) {
+        return Number(editions.substring(editions.indexOf('|') + 2));
+    }
+
+    return Number(editions);
+};

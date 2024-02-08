@@ -5,13 +5,14 @@ import { RangePickerProps } from 'antd/es/date-picker';
 import { BaseOptionType } from 'antd/es/select';
 import { useAuth } from '../../contexts/auth';
 import { ThemeContext } from '../../contexts/theme-context';
-import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, createByType, createOptions } from '../../entities/midia';
+import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_READ, TYPE_F_WATCHED, TYPE_F_YEAR, createByType, createOptions, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
 import { MANGAS, createMidiaLeituraKV } from '../../entities/midia-leitura';
 import { MOVIES, TV_SHOWS, VIDEO, createMidiaVideoKV } from '../../entities/midia-video';
 import { loadMidia } from '../../utils/load-midia';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidia } from '../ListMidia';
 import { ListMidiaSkeleton } from '../antd';
+import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
 
 interface MidiaComponentProps {
     title: string;
@@ -130,6 +131,39 @@ export const MidiaComponent = ({
         setVisibleCollection(value);
     };
 
+    const wasResearch = () => {
+        return isNotNullStr(search)
+            || isNotNullArray(selectedGenres)
+            || isNotNullArray(selectedCountries)
+            || searchRangeYear !== null
+            || isNotNull(searchWatcher) 
+            || isNotNull(searchRead)
+            || isNotNull(searchOwned)
+            || isNotNull(searchLanguage);
+    }
+
+    const filtered =
+        wasResearch() ?
+            midiaKVArray.filter((midiaKV) => {
+                    return isFilterSearch(search, midiaKV);
+                })
+                .filter((midiaKV) => {
+                    return isFilterMultipleSelect(selectedGenres, midiaKV, TYPE_F_GENRE);
+                }).filter((midiaKV) => {
+                    return isFilterMultipleSelect(selectedCountries, midiaKV, TYPE_F_COUNTRIES);
+                }).filter((midiaKV) => {
+                    return isFilterSingleSelect(searchRangeYear, midiaKV, TYPE_F_YEAR);
+                }).filter((midiaVideoKV) => {
+                    return isFilterSingleSelect(searchWatcher, midiaVideoKV, TYPE_F_WATCHED);
+                }).filter((midiaKV) => {
+                    return isFilterSingleSelect(searchRead, midiaKV, TYPE_F_READ);
+                }).filter((midiaVideoKV) => {
+                    return isFilterSingleSelect(searchOwned, midiaVideoKV, TYPE_F_OWNED);
+                }).filter((midiaKV) => {
+                    return isFilterSingleSelect(searchLanguage, midiaKV, TYPE_F_LANGUAGE);
+                })
+                : midiaKVArray;
+
     return (
         <Row className='responsive-two-columns'>
             <Col>
@@ -166,15 +200,7 @@ export const MidiaComponent = ({
                     !loading && 
                     <ListMidia
                         emptyMessage={`${title} not found 🤐`}
-                        data={midiaKVArray}
-                        search={search}
-                        searchGenres={selectedGenres}
-                        searchCountries={selectedCountries}
-                        searchRangeYear={searchRangeYear}
-                        searchLanguage={searchLanguage}
-                        searchWatcher={searchWatcher}
-                        searchRead={searchRead}
-                        searchOwned={searchOwned}
+                        data={filtered}
                         onClickMore={onClickMore} />
                 }
                 

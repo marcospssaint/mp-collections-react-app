@@ -256,6 +256,8 @@ export const titleByTYPE = (typeMidia: string, type: string) => {
         }
     }
 
+    console.log('titleByTYPE ', type, typeMidia)
+
     switch (type) {
         case COMICS: return 'Comics';
         case MANGAS: return 'Mangas';
