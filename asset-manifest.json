@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/mp-collections-react-app/static/css/main.8081c95d.css",
-    "main.js": "/mp-collections-react-app/static/js/main.3b95cd57.js",
+    "main.css": "/mp-collections-react-app/static/css/main.74446eab.css",
+    "main.js": "/mp-collections-react-app/static/js/main.7d5af152.js",
     "index.html": "/mp-collections-react-app/index.html",
-    "main.8081c95d.css.map": "/mp-collections-react-app/static/css/main.8081c95d.css.map",
-    "main.3b95cd57.js.map": "/mp-collections-react-app/static/js/main.3b95cd57.js.map"
+    "main.74446eab.css.map": "/mp-collections-react-app/static/css/main.74446eab.css.map",
+    "main.7d5af152.js.map": "/mp-collections-react-app/static/js/main.7d5af152.js.map"
   },
   "entrypoints": [
-    "static/css/main.8081c95d.css",
-    "static/js/main.3b95cd57.js"
+    "static/css/main.74446eab.css",
+    "static/js/main.7d5af152.js"
   ]
 }
