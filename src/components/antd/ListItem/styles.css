@@ -9,6 +9,12 @@
   left: 10px;
 }
 
+.bottom-right {
+  position: absolute;
+  bottom: -19px;
+  right: 10px;
+}
+
 /* Container holding the image and the text */
 .container {
   position: relative;

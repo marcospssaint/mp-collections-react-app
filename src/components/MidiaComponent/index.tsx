@@ -3,16 +3,18 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { Col, DatePickerProps, Row } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { BaseOptionType } from 'antd/es/select';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
 import { ThemeContext } from '../../contexts/theme-context';
-import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_READ, TYPE_F_WATCHED, TYPE_F_YEAR, createByType, createOptions, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
+import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_READ, TYPE_F_WATCHED, TYPE_F_YEAR, createByType, createOptions, isFilterAlphabets, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
 import { MANGAS, createMidiaLeituraKV } from '../../entities/midia-leitura';
 import { MOVIES, TV_SHOWS, VIDEO, createMidiaVideoKV } from '../../entities/midia-video';
+import { useQuery } from '../../utils';
 import { loadMidia } from '../../utils/load-midia';
+import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidia } from '../ListMidia';
 import { ListMidiaSkeleton } from '../antd';
-import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
 
 interface MidiaComponentProps {
     title: string;
@@ -29,8 +31,12 @@ export const MidiaComponent = ({
     isLanguage = true,
     onClickMore
 }: MidiaComponentProps) => {
-    
+
     const { user } = useAuth();
+    const navigate = useNavigate();
+    const query = useQuery();
+
+    const alphabetsCurrent = query.get("alphabets") !== undefined ? query.get("alphabets") : null;
 
     const [midiaKVArray, setMidiaKVArray] = useState<any[]>([]);
     const [optionsLanguage, setOptionsLanguage] = useState<BaseOptionType[]>([]);
@@ -39,6 +45,7 @@ export const MidiaComponent = ({
     const [countries, setCountries] = useState<string[]>([]);
 
     const [search, setSearch] = useState('');
+    const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
     const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
     const [searchRangeYear, setSearchRangeYear] = useState<[string, string] | string>();
@@ -56,7 +63,7 @@ export const MidiaComponent = ({
     const isFilterCountry = () => {
         if (isTypeMidiaVIDEO) return (type === TV_SHOWS) || (type === MOVIES)
         return type !== MANGAS;
-    } ;
+    };
 
     const { setCollapsed } = useContext(ThemeContext);
 
@@ -67,7 +74,9 @@ export const MidiaComponent = ({
 
         setCountries(createByType(midias, TYPE_F_COUNTRIES));
         setGenres(createByType(midias, TYPE_F_GENRE));
-    }, [typeMidia, type, user]);
+
+        if (alphabetsCurrent !== null) setSelectedAlphabets([alphabetsCurrent]);
+    }, [typeMidia, type, user, alphabetsCurrent]);
 
     useEffect(() => {
         setMidiaKVArray([]);
@@ -83,7 +92,16 @@ export const MidiaComponent = ({
         }
         setCollapsed(true);
         setTimeout(() => setLoading(false), 1000)
-    }, [midiaLoaded, setCollapsed, type, isTypeMidiaVIDEO, visibleCollection])
+    }, [midiaLoaded, setCollapsed, type, isTypeMidiaVIDEO, visibleCollection]);
+
+    const handleChangeAlphabets = (alphabet: string, checked: boolean) => {
+        const nextSelectedAlphabets = checked
+            ? [...selectedAlphabets, alphabet]
+            : selectedAlphabets.filter((a) => a !== alphabet);
+
+        navigate(checked ? `?alphabets=${alphabet}` : '');
+        setSelectedAlphabets(nextSelectedAlphabets);
+    };
 
     const handleChangeGenres = (genre: string, checked: boolean) => {
         const nextSelectedGenres = checked
@@ -133,10 +151,11 @@ export const MidiaComponent = ({
 
     const wasResearch = () => {
         return isNotNullStr(search)
+            || isNotNullArray(selectedAlphabets)
             || isNotNullArray(selectedGenres)
             || isNotNullArray(selectedCountries)
             || searchRangeYear !== null
-            || isNotNull(searchWatcher) 
+            || isNotNull(searchWatcher)
             || isNotNull(searchRead)
             || isNotNull(searchOwned)
             || isNotNull(searchLanguage);
@@ -145,9 +164,11 @@ export const MidiaComponent = ({
     const filtered =
         wasResearch() ?
             midiaKVArray.filter((midiaKV) => {
-                    return isFilterSearch(search, midiaKV);
-                })
+                return isFilterSearch(search, midiaKV);
+            })
                 .filter((midiaKV) => {
+                    return isFilterAlphabets(selectedAlphabets, midiaKV);
+                }).filter((midiaKV) => {
                     return isFilterMultipleSelect(selectedGenres, midiaKV, TYPE_F_GENRE);
                 }).filter((midiaKV) => {
                     return isFilterMultipleSelect(selectedCountries, midiaKV, TYPE_F_COUNTRIES);
@@ -162,7 +183,7 @@ export const MidiaComponent = ({
                 }).filter((midiaKV) => {
                     return isFilterSingleSelect(searchLanguage, midiaKV, TYPE_F_LANGUAGE);
                 })
-                : midiaKVArray;
+            : midiaKVArray;
 
     return (
         <Row className='responsive-two-columns'>
@@ -171,6 +192,7 @@ export const MidiaComponent = ({
                     genres={genres}
                     countries={countries}
 
+                    selectedAlphabets={selectedAlphabets}
                     selectedGenres={selectedGenres}
                     selectedCountries={selectedCountries}
 
@@ -182,6 +204,7 @@ export const MidiaComponent = ({
                     isFilterCountries={isFilterCountry()}
 
                     handleChangeSearch={handleChangeSearch}
+                    handleChangeAlphabets={handleChangeAlphabets}
                     handleChangeGenres={handleChangeGenres}
                     handleChangeCountries={handleChangeCountries}
                     handleChangeRangeYear={handleChangeRangeYear}
@@ -194,16 +217,16 @@ export const MidiaComponent = ({
 
             <Col>
                 {
-                    loading && <ListMidiaSkeleton/>
+                    loading && <ListMidiaSkeleton />
                 }
                 {
-                    !loading && 
+                    !loading &&
                     <ListMidia
                         emptyMessage={`${title} not found 🤐`}
                         data={filtered}
                         onClickMore={onClickMore} />
                 }
-                
+
             </Col>
         </Row>
     )

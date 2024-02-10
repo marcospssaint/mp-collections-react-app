@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { HashRouter, Route, Routes as Router } from 'react-router-dom';
-import { MidiaCollectionComponent, MidiaContent, MidiaLeituraSubComponent } from '../components';
+import { MidiaCollectionComponent, MidiaContent } from '../components';
 import {
   ErroPage,
   Home,
@@ -37,31 +37,33 @@ const Routes: React.FC = () => {
             <Route path="/movies/:id/collection" element={<MidiaCollectionComponent />} />
             <Route path="/movies/?page=:page" element={<MidiaContent />} />
             <Route path="/movies/:id" element={<MidiaContent />} />
-            <Route path="/movies" element={<MidiaTemplate title='Movies' typeMidia={VIDEO} type={MOVIES} />} />
+            <Route path="/movies" element={<MidiaTemplate typeMidia={VIDEO} type={MOVIES} />} />
 
             <Route path="/tv-shows/?page=:page" element={<MidiaContent />} />
             <Route path="/tv-shows/:id" element={<MidiaContent />} />
-            <Route path="/tv-shows" element={<MidiaTemplate title='TV Shows' typeMidia={VIDEO} type={TV_SHOWS} />} />
+            <Route path="/tv-shows" element={<MidiaTemplate typeMidia={VIDEO} type={TV_SHOWS} />} />
 
             <Route path="/tv-tokusatsus/?page=:page" element={<MidiaContent />} />
             <Route path="/tv-tokusatsus/:id" element={<MidiaContent />} />
-            <Route path="/tv-tokusatsus" element={<MidiaTemplate title='Tokusatsus' typeMidia={VIDEO} type={TV_TOKUSATSU} />} />
+            <Route path="/tv-tokusatsus" element={<MidiaTemplate typeMidia={VIDEO} type={TV_TOKUSATSU} />} />
 
             <Route path="/animes/?page=:page" element={<MidiaContent />} />
             <Route path="/animes/:id" element={<MidiaContent />} />
-            <Route path="/animes" element={<MidiaTemplate title='Animes' typeMidia={VIDEO} type={ANIMES} />} />
+            <Route path="/animes" element={<MidiaTemplate typeMidia={VIDEO} type={ANIMES} />} />
 
             <Route path="/mangas/?page=:page" element={<MidiaContent />} />
             <Route path="/mangas/:id" element={<MidiaContent />} />
-            <Route path="/mangas" element={<MidiaTemplate title='Mangas' typeMidia={LEITURA} type={MANGAS}/>} />
+            <Route path="/mangas" element={<MidiaTemplate typeMidia={LEITURA} type={MANGAS}/>} />
 
             <Route path="/comics/?page=:page" element={<MidiaContent />} />
             <Route path="/comics/:id/collection" element={<MidiaCollectionComponent />} />
             <Route path="/comics/:id" element={<MidiaContent />} />
-            <Route path="/comics" element={<MidiaTemplate title='Comics' typeMidia={LEITURA} type={COMICS}/>} />
+            <Route path="/comics" element={<MidiaTemplate typeMidia={LEITURA} type={COMICS}/>} />
 
-            <Route path="/books/:id" element={<MidiaLeituraSubComponent />} />
-            <Route path="/books" element={<MidiaTemplate title='Books' typeMidia={LEITURA} type={BOOKS} />} />
+            <Route path="/books/?page=:page" element={<MidiaContent />} />
+            <Route path="/books/:id/collection" element={<MidiaCollectionComponent />} />
+            <Route path="/books/:id" element={<MidiaContent />} />
+            <Route path="/books" element={<MidiaTemplate typeMidia={LEITURA} type={BOOKS} />} />
           </Route>
         </Router>
       </HashRouter>

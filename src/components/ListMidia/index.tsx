@@ -27,7 +27,16 @@ export const ListMidia = ({
 
     const paginate = (e: any) => {
         const pageNumber = Number(e)
-        navigate(`?page=${pageNumber}`);
+        const URL = window.location.hash.replace('#', '').split('?');
+        const queryPage = URL.at(1)?.includes('page') ? URL.at(1)?.split("&") : null;
+
+        if (URL !== undefined && URL.at(1)?.includes('alphabets') && queryPage?.at(1) != null) {
+            navigate(URL?.at(0) + '?'+ queryPage?.at(0) + '&page='+pageNumber);
+        } else if (URL !== undefined && URL.at(1)?.includes('alphabets')) {
+            navigate(URL?.at(0) + '?'+ URL?.at(1) + '&page='+pageNumber);
+        } else {
+            navigate(`?page=${pageNumber}`);
+        }
 
         pageTopRef.current?.scrollIntoView();
     };

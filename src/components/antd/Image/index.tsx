@@ -8,14 +8,16 @@ interface ImageProps {
     height?: number;
     preview?: boolean;
     prefixCls?: string;
+    handlerClick: () => void;
 }
 
-export const Image = ({ src = IMG_DEFAULT, witdh, height = 200, preview = false, prefixCls }: ImageProps) => (
+export const Image = ({ src = IMG_DEFAULT, witdh, height = 200, preview = false, prefixCls, handlerClick }: ImageProps) => (
     <ImageAntd
         width={witdh}
         height={height}
         src={src}
         preview={preview}
         style={{ width: '100%' }}
+        onClick={handlerClick}
         prefixCls={prefixCls} />
 );

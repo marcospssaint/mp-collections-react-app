@@ -1,5 +1,5 @@
 
-import { Col, Collapse, DatePickerProps, Divider, Input, Row, Typography } from "antd";
+import { Col, Collapse, CollapseProps, DatePickerProps, Divider, Input, Row, Typography } from "antd";
 
 import { optionsOwned, optionsRead, optionsVisibleCollection, optionsWatched } from "../../entities/options";
 import { Select } from "../antd";
@@ -8,6 +8,7 @@ import { DatePicker } from 'antd';
 import { RangePickerProps } from "antd/es/date-picker";
 import { BaseOptionType } from "antd/es/select";
 import CheckableTag from "antd/es/tag/CheckableTag";
+import { DEFAULT_CHAR_INDEX } from "../../utils";
 
 const { RangePicker } = DatePicker;
 
@@ -15,21 +16,20 @@ interface FilterMidiaProps {
     genres?: string[];
     countries?: string[];
 
+    selectedAlphabets: string[];
     selectedGenres?: string[];
     selectedCountries?: string[];
-
     optionsLanguage: BaseOptionType[];
 
-    isPublisher?: boolean;
-    isCountries?: boolean;
-    isLanguage?: boolean;
     isWatcher?: boolean;
     isRead?: boolean;
+    isLanguage?: boolean;
     isFilterCountries?: boolean;
     isVisibleCollection?: boolean;
     defaultValueCollection?: boolean;
-
+    
     handleChangeSearch: (value: any) => void;
+    handleChangeAlphabets: (value: string, checked: boolean) => void;
     handleChangeGenres: (genre: string, checked: boolean) => void;
     handleChangeCountries: (country: string, checked: boolean) => void;
     handleChangeRangeYear?: (
@@ -44,22 +44,23 @@ interface FilterMidiaProps {
 }
 
 export const FilterMidia = ({
-    selectedGenres = [],
-    selectedCountries = [],
-
     genres = [],
     countries = [],
+    
+    selectedAlphabets = [],
+    selectedGenres = [],
+    selectedCountries = [],
     optionsLanguage = [],
-
-    isLanguage = true,
 
     isWatcher = false,
     isRead = false,
+    isLanguage = true,
     isFilterCountries = false,
     isVisibleCollection = false,
     defaultValueCollection = false,
 
     handleChangeSearch,
+    handleChangeAlphabets,
     handleChangeGenres,
     handleChangeCountries,
     handleChangeRangeYear,
@@ -69,6 +70,28 @@ export const FilterMidia = ({
     handleChangeOwned,
     handleChangeVisibleCollection,
 }: FilterMidiaProps) => {
+
+    const items: CollapseProps['items'] = [
+        {
+            key: '1',
+            label: 'Alphabets',
+            children: <Col>
+                {
+                    DEFAULT_CHAR_INDEX.map((item) => (
+                        <CheckableTag
+                            key={item}
+                            checked={selectedAlphabets.includes(item)}
+                            onChange={(checked) => handleChangeAlphabets(item, checked)}
+                            className="tags">
+                            {item}
+                        </CheckableTag>
+                    ))
+                }
+                <Divider />
+            </Col>,
+        }
+    ];
+
     return (
         <Row>
             <Collapse
@@ -91,6 +114,12 @@ export const FilterMidia = ({
                                         />
                                     </div>
                                     <Divider />
+
+                                    <div>
+                                        <Collapse ghost items={items} />
+                                    </div>
+                                    <Divider />
+
                                     <div>
                                         <Typography.Title level={5}>Genres</Typography.Title>
                                         {

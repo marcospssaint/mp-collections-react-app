@@ -59,7 +59,7 @@ export interface IMidiaKV {
 export const isFilterAlphabets = (alphabets: any[], midiaKV: IMidiaKV) => {
     if (!isNotNullArray(alphabets)) return true;
 
-    const firstLetter = midiaKV.key?.title.charAt(0);
+    const firstLetter = midiaKV?.key?.title?.charAt(0);
     return alphabets.some((alphabet) => {
         if (alphabet === '0-9') {
             return DEFAULT_NUMBER_INDEX.some((num) => num === firstLetter);
@@ -133,6 +133,10 @@ export const isFilterSingleSelect = (value: any | undefined, midiaKV: IMidiaKV, 
 
 export const isFilterIMidiaSingleSelect = (value: any | undefined, midia: IMidia, type: string) => {
     return isFilterByType(value, midia, type);
+}
+
+export const isFiltersByType = (value: any[], midia: IMidia, type: string) => {
+    return value.some((v) => isFilterByType(v, midia, type));
 }
 
 export const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
@@ -246,22 +250,16 @@ export const titleByMidia = (midia: any) => {
 }
 
 export const titleByTYPE = (typeMidia: string, type: string) => {
-    if (typeMidia === VIDEO) {
-        switch (type) {
-            case MOVIES: return 'Movies';
-            case TV_SHOWS: return 'TV Shows';
-            case TV_TOKUSATSU: return 'TV Tokusatsu';
-            case ANIMES: return 'Animes';
-            default: return '';
-        }
-    }
-
-    console.log('titleByTYPE ', type, typeMidia)
-
+    let title = '';
     switch (type) {
-        case COMICS: return 'Comics';
-        case MANGAS: return 'Mangas';
-        case BOOKS: return 'Books';
-        default: return '';
+        case MOVIES: title = 'Movies'; break;
+        case TV_SHOWS: title = 'TV Shows'; break;
+        case TV_TOKUSATSU: title = 'TV Tokusatsu'; break;
+        case ANIMES: title = 'Animes'; break;
+        case COMICS: title = 'Comics'; break;
+        case MANGAS: title = 'Mangas'; break;
+        case BOOKS: title = 'Books'; break;
+        default: title = ''; break;
     }
+    return title;
 }

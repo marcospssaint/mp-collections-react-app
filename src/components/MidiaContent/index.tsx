@@ -36,9 +36,12 @@ export const MidiaContent = () => {
         return false;
     }
 
+    const isMidiaLeitura = () => {
+        return midia?.key?.typeMidia === LEITURA;
+    }
+
     const isVisibleMidiaLeitura = () => {
-        console.log(midia?.key?.typeMidia === LEITURA && nOfEditions(midia?.key) > 1)
-        return midia?.key?.typeMidia === LEITURA && nOfEditions(midia?.key) > 1;
+        return isMidiaLeitura() && nOfEditions(midia?.key) > 1;
     }
 
     const image = () => {
@@ -114,8 +117,12 @@ export const MidiaContent = () => {
         return stars?.at(1)?.replaceAll('*', '') ?? '-';
     }
 
+    const authors = () => {
+        return midia?.key?.authors;
+    }
+
     const writes = () => {
-        const writes = midia?.key?.authors?.replaceAll(',', ' · ')
+        const writes = authors()?.replaceAll(',', ' · ')
             .split('*');
 
         return writes?.at(0)?.replaceAll('<<!>>', '')
@@ -124,7 +131,7 @@ export const MidiaContent = () => {
     }
 
     const percilers = () => {
-        const percilers = midia?.key?.authors?.replaceAll(',', ' · ')
+        const percilers = authors()?.replaceAll(',', ' · ')
             .split('*');
 
         return percilers?.at(1)?.replaceAll('*', '') ?? '-';
@@ -140,8 +147,8 @@ export const MidiaContent = () => {
         return !!midia?.key?.owned ? 'YES' : 'NO';
     }
 
-    return (
-        <Row ref={pageTopRef}>
+    return (<>
+        <Row>
             <Breadcrumb
                 items={[
                     {
@@ -152,13 +159,16 @@ export const MidiaContent = () => {
                     },
                 ]}
             />
+        </Row>
+        <Row ref={pageTopRef}>
             <Row className='responsive-two-columns'>
                 <Col>
                     <Row>
-                        <Typography.Title level={2} className="text-font-beautiful">{title()}</Typography.Title>
+                        <Typography.Title level={2}
+                            className="text-font-beautiful"
+                            style={{ margin: 0 }}>{title()}</Typography.Title>
                     </Row>
                     <Image src={image()} height={440} />
-
                 </Col>
 
                 <Col style={{ maxWidth: 1000 }}>
@@ -208,7 +218,7 @@ export const MidiaContent = () => {
                         </Descriptions>
                     </Row>
                     {
-                        isVisibleMidiaLeitura() &&
+                        isMidiaLeitura() &&
                         <>
                             <Row>
                                 <Divider style={{ margin: 0 }} />
@@ -242,7 +252,7 @@ export const MidiaContent = () => {
                     }
 
                     {
-                        !isVisibleMidiaVideo() &&
+                        (!isVisibleMidiaVideo() && isNotNullStr(notes())) &&
                         <Row>
                             <Divider orientation="left">Notes</Divider>
                             <Typography.Paragraph style={{ textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
@@ -266,7 +276,7 @@ export const MidiaContent = () => {
                         </Row>
                     }
                     {
-                        (isVisibleMidiaLeitura() && isNotNullStr(writes())) &&
+                        (isMidiaLeitura() && isNotNullStr(authors())) &&
                         <Row>
                             <Divider orientation="left">Authors</Divider>
                             <Descriptions>
@@ -285,7 +295,7 @@ export const MidiaContent = () => {
                             <Divider orientation="left">Control</Divider>
                             <Row>
                                 <Descriptions>
-                                    <Descriptions.Item label="Watched">
+                                    <Descriptions.Item label={isMidiaLeitura() ? 'Read' : 'Watched'}>
                                         {watchedOrRead()}
                                     </Descriptions.Item>
                                 </Descriptions>
@@ -301,11 +311,11 @@ export const MidiaContent = () => {
                             </Row>
                         </Row>
                     }
-                </Col>
 
-                <MidiaVideoContent midiaVideo={midia} isVisible={isVisibleMidiaVideo()} />
+                    <MidiaVideoContent midiaVideo={midia} isVisible={isVisibleMidiaVideo()} />
+                </Col>
                 <MidiaLeituraContent midiaLeitura={midia} isVisible={isVisibleMidiaLeitura()} />
             </Row>
         </Row>
-    );
+    </>);
 }

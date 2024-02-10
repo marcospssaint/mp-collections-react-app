@@ -34,10 +34,6 @@ export const MidiaVideoContent = ({ midiaVideo, isVisible }: MidiaVideoContentPr
         setIsModalOpen(true);
     };
 
-    const hideModal = () => {
-        setIsModalOpen(false);
-    };
-
     const isMidiaTypeSeasons = (typeMidiaVideo: string | null | undefined) => {
         return typeMidiaVideo !== TYPE_MOVIE;
     }
@@ -92,6 +88,8 @@ export const MidiaVideoContent = ({ midiaVideo, isVisible }: MidiaVideoContentPr
                         onClick={(event) => {
                             setSynopsis(md.synopsis ?? '');
                             showModal();
+                            //setIsModalOpen(true);
+                            console.log('isModalOpen: ', isModalOpen);
                             event.stopPropagation();
                         }}
                     />
@@ -204,19 +202,21 @@ export const MidiaVideoContent = ({ midiaVideo, isVisible }: MidiaVideoContentPr
                         style={{ width: '100%' }}
                         items={items} />
                 </Row>
+
                 <Modal
                     title="Synopsis"
                     centered
-                    closable={false}
+                    closable={true}
                     open={isModalOpen}
-                    onCancel={hideModal}
-                    footer={[]}>
-                    <Row style={{ padding: 15 }}>
-                        <Typography.Paragraph style={{ textAlign: 'justify' }}>
-                            {synopsis}
-                        </Typography.Paragraph>
-                    </Row>
-                </Modal>
+                    onCancel={() => setIsModalOpen(false)}
+                    footer={[]}
+                    children={
+                        <Row style={{ padding: 15 }}>
+                            <Typography.Paragraph style={{ textAlign: 'justify' }}>
+                                {synopsis}
+                            </Typography.Paragraph>
+                        </Row>
+                    } />
             </Col>
         }
     </>
