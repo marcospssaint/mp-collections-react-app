@@ -66,6 +66,10 @@ export const MidiaContent = () => {
         return midia?.key?.originalTitle;
     }
 
+    const subtitle = () => {
+        return midia?.key?.subtitle;
+    }
+
     const year = () => {
         return midia?.key?.year;
     }
@@ -181,6 +185,14 @@ export const MidiaContent = () => {
                                 <Descriptions>
                                     <Descriptions.Item label="Original title">
                                         {originalTitle()}
+                                    </Descriptions.Item>
+                                </Descriptions>
+                                <Divider style={{ margin: 0 }} />
+                            </Row>
+                            <Row>
+                                <Descriptions>
+                                    <Descriptions.Item label="Also Known As (AKA)">
+                                        {subtitle()}
                                     </Descriptions.Item>
                                 </Descriptions>
                                 <Divider style={{ margin: 0 }} />
