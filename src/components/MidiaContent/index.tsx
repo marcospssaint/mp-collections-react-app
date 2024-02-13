@@ -63,11 +63,11 @@ export const MidiaContent = () => {
     }
 
     const originalTitle = () => {
-        return midia?.key?.originalTitle;
+        return midia?.key?.originalTitle ?? '-';
     }
 
     const subtitle = () => {
-        return midia?.key?.subtitle;
+        return midia?.key?.subtitle ?? '-';
     }
 
     const year = () => {

@@ -78,7 +78,7 @@ const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, 
     return (
         <Card hoverable
             key={`${id}_card`}
-            style={{ height: 360, width: '90%' }}
+            style={{ height: 360, width: '95%' }}
             cover={<>
                 <div className='container'>
                     <Image
