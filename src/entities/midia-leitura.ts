@@ -9,6 +9,8 @@ export const MANGAS = 'MANGAS';
 
 export interface IMidiaLeitura extends IMidia {
     typeMidiaLeitura?: string;
+    idPhase?: number;
+    phase?: string;
     volume?: string;
     readVolume?: number;
     totalVolume?: number;
@@ -16,7 +18,11 @@ export interface IMidiaLeitura extends IMidia {
 
 export interface IMidiaLeituraKV {
     key: IMidiaLeitura,
-    value: IMidiaLeitura[] | undefined;
+    value: IMidiaLeituraKV[] | IMidiaLeitura[] | undefined;
+}
+
+export function instanceOfKV(object: any): object is IMidiaLeituraKV {
+    return object.key?.typeMidia === LEITURA;
 }
 
 export function createIIMidiaLeitura(options?: Partial<IMidiaLeitura>): IMidiaLeitura {
@@ -48,6 +54,67 @@ export function createIMidiaLeituraKV(options?: Partial<IMidiaLeituraKV>): IMidi
         ...options,
     };
 }
+
+export const createMidiaLeiturav2KV = (data: IMidiaLeitura[], type: string) => {
+    data.forEach((d) => {
+        d.typeMidiaLeitura = type;
+        d.typeMidia = LEITURA;
+    });
+
+    const midiaLeituraGrouped = groupByToMap(data, (d) => d.title);
+
+    const midiaLeituraCollections = [] as IMidiaLeitura[];
+    const midiaLeituraKVArray = [] as IMidiaLeituraKV[];
+    let valueMidiaLeituraCollections: any[] = [];
+
+    for (let key of midiaLeituraGrouped.keys()) {
+        const firstObject = midiaLeituraGrouped.get(key)?.[0] ?? {} as IMidiaLeitura;
+        midiaLeituraCollections.push(firstObject);
+    }
+
+    for (let midiaLeituraCollection of midiaLeituraCollections) {
+        valueMidiaLeituraCollections = [];
+        const valuesMidiasLeituraGrouped = midiaLeituraGrouped.get(midiaLeituraCollection.title);
+     
+        if (valuesMidiasLeituraGrouped !== undefined && valuesMidiasLeituraGrouped.length > 1) { 
+            if (valuesMidiasLeituraGrouped.some((v) => v.phase !== undefined)) {
+                const midiaLeituraGroupedPhases = groupByToMap(valuesMidiasLeituraGrouped, (d) => d.phase);
+                let midiaLeituraByPhases = [] as IMidiaLeitura[];
+                let midiaLeituraByPhasesKV = [] as IMidiaLeituraKV[];
+
+                for (let key of midiaLeituraGroupedPhases.keys()) { 
+                    const firstObjectPhase = midiaLeituraGroupedPhases.get(key)?.filter((m) => !!m.collection)[0] ?? {} as IMidiaLeitura;
+                    midiaLeituraByPhases.push(firstObjectPhase);
+                }
+
+                for (let midiaLeituraPhase of midiaLeituraByPhases) {
+                    const valuesMidiaLeituraByPhases = midiaLeituraGroupedPhases.get(midiaLeituraPhase?.phase ?? '')?.filter((m) => !m.collection);
+                    midiaLeituraByPhasesKV.push(
+                        createIMidiaLeituraKV({
+                            key: midiaLeituraPhase,
+                            value: valuesMidiaLeituraByPhases
+                        }),
+                    )
+                }
+
+                valueMidiaLeituraCollections = midiaLeituraByPhasesKV;
+            } else {
+                valueMidiaLeituraCollections = valuesMidiasLeituraGrouped.filter((m) => !m.collection);
+            }
+        }
+
+        midiaLeituraKVArray.push(
+            createIMidiaLeituraKV({
+                key: midiaLeituraCollection,
+                value: valueMidiaLeituraCollections
+            }),
+        )
+    }
+
+    return midiaLeituraKVArray
+        .sort((a, b) => a.key.title?.localeCompare(b.key?.title));
+}
+
 
 export const createMidiaLeituraKV = (data: IMidiaLeitura[], type: string) => {
     data.forEach((d) => d.typeMidia = LEITURA);

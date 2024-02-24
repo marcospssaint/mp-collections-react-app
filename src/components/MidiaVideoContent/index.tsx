@@ -88,8 +88,6 @@ export const MidiaVideoContent = ({ midiaVideo, isVisible }: MidiaVideoContentPr
                         onClick={(event) => {
                             setSynopsis(md.synopsis ?? '');
                             showModal();
-                            //setIsModalOpen(true);
-                            console.log('isModalOpen: ', isModalOpen);
                             event.stopPropagation();
                         }}
                     />

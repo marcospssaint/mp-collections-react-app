@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { HashRouter, Route, Routes as Router } from 'react-router-dom';
-import { MidiaCollectionComponent, MidiaContent } from '../components';
+import { MidiaCollectionComponent, MidiaContent, MidiaLeituraCollectionComponent } from '../components';
 import {
   ErroPage,
   Home,
@@ -52,16 +52,17 @@ const Routes: React.FC = () => {
             <Route path="/animes" element={<MidiaTemplate typeMidia={VIDEO} type={ANIMES} />} />
 
             <Route path="/mangas/?page=:page" element={<MidiaContent />} />
+            <Route path="/mangas/:id/collection" element={<MidiaLeituraCollectionComponent />} />
             <Route path="/mangas/:id" element={<MidiaContent />} />
             <Route path="/mangas" element={<MidiaTemplate typeMidia={LEITURA} type={MANGAS}/>} />
 
             <Route path="/comics/?page=:page" element={<MidiaContent />} />
-            <Route path="/comics/:id/collection" element={<MidiaCollectionComponent />} />
+            <Route path="/comics/:id/collection" element={<MidiaLeituraCollectionComponent />} />
             <Route path="/comics/:id" element={<MidiaContent />} />
             <Route path="/comics" element={<MidiaTemplate typeMidia={LEITURA} type={COMICS}/>} />
 
             <Route path="/books/?page=:page" element={<MidiaContent />} />
-            <Route path="/books/:id/collection" element={<MidiaCollectionComponent />} />
+            <Route path="/books/:id/collection" element={<MidiaLeituraCollectionComponent />} />
             <Route path="/books/:id" element={<MidiaContent />} />
             <Route path="/books" element={<MidiaTemplate typeMidia={LEITURA} type={BOOKS} />} />
           </Route>

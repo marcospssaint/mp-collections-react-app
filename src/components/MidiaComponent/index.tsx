@@ -7,14 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
 import { ThemeContext } from '../../contexts/theme-context';
 import { TYPE_F_COUNTRIES, TYPE_F_GENRE, TYPE_F_LANGUAGE, TYPE_F_OWNED, TYPE_F_READ, TYPE_F_WATCHED, TYPE_F_YEAR, createByType, createOptions, isFilterAlphabets, isFilterMultipleSelect, isFilterSearch, isFilterSingleSelect } from '../../entities/midia';
-import { MANGAS, createMidiaLeituraKV } from '../../entities/midia-leitura';
+import { LEITURA, MANGAS, createMidiaLeiturav2KV } from '../../entities/midia-leitura';
 import { MOVIES, TV_SHOWS, VIDEO, createMidiaVideoKV } from '../../entities/midia-video';
 import { useQuery } from '../../utils';
 import { loadMidia } from '../../utils/load-midia';
 import { isNotNull, isNotNullArray, isNotNullStr } from '../../utils/utils';
 import { FilterMidia } from '../FilterMidia';
 import { ListMidia } from '../ListMidia';
-import { ListMidiaSkeleton } from '../antd';
 
 interface MidiaComponentProps {
     title: string;
@@ -80,6 +79,9 @@ export const MidiaComponent = ({
 
     useEffect(() => {
         setMidiaKVArray([]);
+        setSelectedAlphabets([]);
+        setSelectedGenres([]);
+        setCountries([]);
         setLoading(true);
         handleLoad();
     }, [handleLoad]);
@@ -88,8 +90,9 @@ export const MidiaComponent = ({
         if (isTypeMidiaVIDEO) {
             setMidiaKVArray(createMidiaVideoKV(midiaLoaded, type, visibleCollection));
         } else {
-            setMidiaKVArray(createMidiaLeituraKV(midiaLoaded, type));
+            setMidiaKVArray(createMidiaLeiturav2KV(midiaLoaded, type));
         }
+
         setCollapsed(true);
         setTimeout(() => setLoading(false), 1000)
     }, [midiaLoaded, setCollapsed, type, isTypeMidiaVIDEO, visibleCollection]);
@@ -216,17 +219,12 @@ export const MidiaComponent = ({
             </Col>
 
             <Col>
-                {
-                    loading && <ListMidiaSkeleton />
-                }
-                {
-                    !loading &&
-                    <ListMidia
-                        emptyMessage={`${title} not found 🤐`}
-                        data={filtered}
-                        onClickMore={onClickMore} />
-                }
-
+                <ListMidia
+                    loading={loading}
+                    emptyMessage={`${title} not found 🤐`}
+                    data={filtered}
+                    leitura={typeMidia === LEITURA}
+                    onClickMore={onClickMore} />
             </Col>
         </Row>
     )

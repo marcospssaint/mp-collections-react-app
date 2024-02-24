@@ -147,10 +147,10 @@ body {
 /* tablet breakpoint */
 @media (min-width:768px) {
     .responsive-two-columns > *:nth-child(1) {
-        width: 25%;
+        width: 30%;
     }
     .responsive-two-columns > *:nth-child(2) {
-        width: 75%;
+        width: 70%;
     }
 }
 

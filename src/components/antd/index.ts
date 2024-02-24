@@ -1,9 +1,10 @@
 export { BadgeRibbon } from './BadgeRibbon';
 export { Breadcrumb } from './Breadcrumb';
 export { Image } from './Image';
-export { ListItem } from './ListItem';
+export { ListItemCard } from './ListItemCard';
+export { ListItemVertical } from './ListItemVertical';
 export { Menu } from './Menu';
 export { Select, SelectMultiple } from './Select';
-export { ListMidiaSkeleton } from './Skeleton';
+export { ListMidiaCardSkeleton, ListMidiaVerticalSkeleton } from './Skeleton';
 export { Tag, TagConditional } from './Tag';
 

@@ -56,7 +56,9 @@ export const MidiaCollectionComponent = () => {
             </Col>
             <Divider style={{ margin: 0 }} />
             <ListMidia
+                loading={false}
                 data={midiasKV}
+                leitura={false}
                 onClickMore={onClickMore} />
         </Row>
     )

@@ -14,7 +14,7 @@ import { IMidia } from "../../../entities";
 import { TYPE_F_GENRE, isFiltersByType } from '../../../entities/midia';
 import { VIDEO } from '../../../entities/midia-video';
 
-interface ListItemProps {
+interface ListItemCardProps {
     id: number;
     midia: IMidia;
     read?: boolean;
@@ -26,7 +26,7 @@ interface ListItemProps {
     handlerClick: () => void;
 }
 
-export const ListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, children, handlerClick }: ListItemProps) => {
+export const ListItemCard = ({ id, midia, read, inProcess, watched, notStarted, owned, children, handlerClick }: ListItemCardProps) => {
     return (
         <List.Item className="list-item" key={`${id}_listitem`}>
             <CardListItem
@@ -57,14 +57,14 @@ interface CardListItemProps {
 
 const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, handlerClick, children }: CardListItemProps) => {
 
-    const image = midia.img;
+    const image = midia?.img;
     let imageModified = image?.slice(1, -1);
 
     const imageMultipleArr = image?.split('", "') ?? [];
     const isFilterBy18Years = isFiltersByType(['Adult', 'Erotic'], midia, TYPE_F_GENRE);
 
     if (imageMultipleArr?.length > 1) {
-        if (!!midia.collection) {
+        if (!!midia?.collection) {
             imageModified = image?.split('", "')[0]?.slice(1);
         } else {
             imageModified = image?.split('", "')[1]?.slice(0, -1);
@@ -72,7 +72,7 @@ const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, 
     }
 
     const description = (midia: IMidia) => {
-        return midia.year;
+        return midia?.year;
     }
 
     return (
@@ -98,7 +98,7 @@ const CardListItem = ({ id, midia, read, inProcess, watched, notStarted, owned, 
                 </div>
             </>}>
             <Meta
-                title={midia.collectionTitle ? midia.subtitle : midia.title}
+                title={midia?.collectionTitle ? midia?.subtitle : midia?.title}
                 description={description(midia)} />
             {children}
         </Card>
@@ -128,14 +128,14 @@ const IconsComponent = ({ midia, read, inProcess, watched, notStarted, owned }: 
                 <Space wrap>
                     <>
                         {
-                            (midia.typeMidia === VIDEO && notStarted && watched && !inProcess) &&
+                            (midia?.typeMidia === VIDEO && notStarted && watched && !inProcess) &&
                             <Avatar
                                 size={30}
                                 style={{ backgroundColor: '#faad14' }}
                             />
                         }
                         {
-                            (midia.typeMidia === VIDEO && inProcess) &&
+                            (midia?.typeMidia === VIDEO && inProcess) &&
                             <Avatar
                                 size={30}
                                 style={{ backgroundColor: '#1677ff' }}

@@ -1,6 +1,6 @@
 import { Card, List, Skeleton } from 'antd';
 
-export const ListMidiaSkeleton = () => {
+export const ListMidiaCardSkeleton = () => {
     const listData = Array.from({ length: 30 }).map((_, i) => ({
         id: i,
         title: `midia ${i + 1}`,
@@ -35,6 +35,32 @@ export const ListMidiaSkeleton = () => {
                             </div>
                         </>}>
                     </Card>
+                </List.Item>
+            )}
+        />
+    </>)
+}
+
+export const ListMidiaVerticalSkeleton = () => {
+    const listData = Array.from({ length: 30 }).map((_, i) => ({
+        id: i,
+        title: `midia ${i + 1}`,
+    }));
+
+    return (<>
+        <List
+            itemLayout='vertical'
+            size="default"
+            dataSource={listData}
+            rowKey={(item) => item.id}
+            renderItem={(item) => (
+                <List.Item
+                    key={`${item.id}_listitem`}
+                    extra={
+                        <Skeleton.Image active={true} style={{ height: 160, width: 120 }} />
+                    }
+                    className="list-item">
+                    <List.Item.Meta avatar={<Skeleton.Avatar active={true} />} />
                 </List.Item>
             )}
         />

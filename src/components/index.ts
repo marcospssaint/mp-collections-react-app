@@ -4,6 +4,7 @@ export { BadgeRibbon, Breadcrumb, Image, Menu, SelectMultiple, Tag, TagCondition
 export { ListMidia } from './ListMidia';
 
 export { MidiaCollectionComponent } from './MidiaCollectionComponent';
+export { MidiaLeituraCollectionComponent } from './MidiaLeituraCollectionComponent';
 export { MidiaContent } from './MidiaContent';
 export { MidiaLeituraContent } from './MidiaLeituraContent';
 export { MidiaVideoContent } from './MidiaVideoContent';

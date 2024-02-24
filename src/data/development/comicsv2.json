@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "title": "Thor",
+        "publisher": "Marvel Comics",
+        "year": 1962,
+        "genre": "Superhero",
+        "notes": "Thor - Contos de Asgard (Marvel, 97-113)",
+        "countries": "USA",
+        "img": "\"https://res.cloudinary.com/dwvqty6kx/image/upload/v1708371845/data-imagens/comics/T/Thor.jpg\"",
+        "collection": true
+    },
+    {
+        "id": 2,
+        "title": "Thor",
+        "phase": "Minissérie",
+        "notes": "01. Loki (Marvel, 1-4, 2004)\n02. Thor - Por Asgard (Marvel, 1-6, 2010)\n03; Thor - Tempestade Divina\n04. Thor - Vikings",
+        "countries": "USA",
+        "owned": false,
+        "collection": true
+    },
+    {
+        "id": 3,
+        "title": "Thor",
+        "publicationTitle": "Loki",
+        "publisher": "Panini Comics",
+        "year": 2007,
+        "language": "Portugues",
+        "idPhase": 1,
+        "phase": "Minissérie",
+        "volume": 1,
+        "notes": "(Marvel, 1-4, 2004)",
+        "read": "NOTR",
+        "owned": true,
+        "collection": false
+    },
+    {
+        "id": 16,
+        "title": "A Fortaleza Móvel e o Mundo Subterrâneo",
+        "publisher": "Pipoca & Nanquim",
+        "year": 2020,
+        "language": "Portugues",
+        "genre": "Fantasy, Sci-Fi",
+        "authors": "<>Ricardo Barreiro\n\n*Enrique Alcatena",
+        "synopsis": "Uma verdadeira obra de arte de espada e feitiçaria, resultado da união de dois mestres dos quadrinhos argentinos, Ricardo Barreiro e Enrique Alcatena, A Fortaleza Móvel e O Mundo Subterrâneo traz a épica saga do aventureiro Bass de Avregaut, ambientada em um mundo pitoresco inspirado por Robert E. Howard e H.P. Lovecraft, na íntegra, com arte de capa exclusiva para a edição brasileira!\r\n\r\nFoi na segunda metade dos anos 1980 que a afiada escrita de Barreiro se combinou aos magníficos desenhos de Alcatena, para dar origem a esta maravilha da nona arte, publicada de maneira serializada na lendária revista argentina Skorpio, e agora apresentada ao público brasileiro pela primeira vez, em uma edição definitiva. São duas aventuras ao melhor estilo pulp de Conan, o Bárbaro, que, juntas, formam uma grande trama. Na primeira, o mercenário Bass de Avregaut se vê jogado no meio de uma guerra entre dois impérios, a bordo de um castelo colossal capaz de se deslocar sobre rodas graças a uma misteriosa forma de energia. Na segunda, ele vai parar em um reino construído debaixo da terra, é escravizado por um povo albino e forçado a participar de um selvagem torneio de gladiadores",
+        "volume": 1,
+        "notes": "Este volume da editora Pipoca & Nanquim tem 140 páginas em preto e branco, impressas em papel pólen de alta gramatura, com capa dura com verniz localizado, um prefácio de Chuck Dixon (A Queda do Morcego), posfácio do próprio Alcatena e biografias dos autores.",
+        "originalTitle": "La Fortaleza Móvil + El Mundo Subterráne",
+        "countries": "Argentina",
+        "read": "NOTR",
+        "owned": true,
+        "collection": false
+    }
+]

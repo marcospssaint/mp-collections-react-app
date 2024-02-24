@@ -83,7 +83,7 @@ const NOfEditionsComponent = ({ midiaLeitura, isVisibledTable = false }: NOfEdit
         if (isVisibledTable) {
             const total = midiaLeitura?.value?.length ?? 0;
             setTotal(total);
-            midiaLeitura?.value?.forEach((v, index) => { if (v.owned) numerosCurrent.push(index + 1) })
+            midiaLeitura?.value?.forEach((v: any, index) => { if (v?.owned) numerosCurrent.push(index + 1) })
             setNumeros([...numerosCurrent]);
         } else {
             const volume = String(midiaLeituraK?.volume);

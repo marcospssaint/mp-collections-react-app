@@ -1,11 +1,12 @@
 import { DEFAULT_NUMBER_INDEX, isNotNull } from "../utils";
 import { isNotNullArray, isNotNullStr } from "../utils/utils";
-import { BOOKS, COMICS, MANGAS } from "./midia-leitura";
+import { BOOKS, COMICS, LEITURA, MANGAS } from "./midia-leitura";
 import { ANIMES, MOVIES, TV_SHOWS, TV_TOKUSATSU, VIDEO } from "./midia-video";
 
 export const TYPE_F_TITLE = 'T_TITLE';
 export const TYPE_F_SUBTITLE = 'T_SUBTITLE';
 export const TYPE_F_ORIGINAL_TITLE = 'T_ORIGINAL_TITLE';
+export const TYPE_F_PUBLICATION_TITLE = 'TYPE_F_PUBLICATION_TITLE';
 export const TYPE_F_AUTHOR = 'T_AUTHOR';
 export const TYPE_F_GENRE = 'T_GENRE';
 export const TYPE_F_YEAR = 'TYPE_YEAR';
@@ -17,7 +18,7 @@ export const TYPE_F_WATCHED = 'T_WATCHED';
 export const TYPE_F_CAST = 'T_CAST';
 export const TYPE_F_OWNED = 'T_OWNED';
 
-const TYPES_F_LEITURA = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_ORIGINAL_TITLE,TYPE_F_AUTHOR, TYPE_F_PUBLISHER];
+const TYPES_F_LEITURA = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_PUBLICATION_TITLE, TYPE_F_ORIGINAL_TITLE,TYPE_F_AUTHOR, TYPE_F_PUBLISHER];
 
 const TYPES_F_VIDEO = [TYPE_F_TITLE, TYPE_F_SUBTITLE, TYPE_F_ORIGINAL_TITLE, TYPE_F_CAST];
 
@@ -27,7 +28,7 @@ export interface IMidia {
     originalTitle?: string | null;
     subtitle?: string | null;
     year: number;
-    owned: boolean;
+    owned?: boolean;
     typeMidia: string;
 
     countries?: string;
@@ -38,6 +39,7 @@ export interface IMidia {
     img?: string | null;
 
     // leitura
+    publicationTitle?: string;
     authors?: string;
     publisher?: string;
     read?: string | null;
@@ -93,29 +95,33 @@ const replaceAlphabets = (alphabet : string) => {
        ;
 }
 
-export const isFilterSearch = (value: any | undefined , midiaKV: IMidiaKV) => {
+export const isFilterSearch = (value: any | undefined , midiaKV: any) => {
     if (!isNotNullStr(value)) return true;
 
-    const midiaK = midiaKV.key;
-    const midiaV = midiaKV.value;
+    const midiaK = midiaKV?.key;
+    const midiaV = midiaKV?.value;
 
-    if (midiaV === undefined || midiaV?.length === 0) {
+    if (midiaK === undefined) {
+        return isFilterByTypeMidia(value, midiaKV);
+    } else if (midiaV === undefined || midiaV?.length === 0 || midiaKV.key?.typeMidia === LEITURA) {
         return isFilterByTypeMidia(value, midiaK);
     }
 
-    return midiaV?.some((midiaLV) => isFilterByTypeMidia(value, midiaLV));
+    return midiaV?.some((midiaLV: any) => isFilterByTypeMidia(value, midiaLV));
 }
 
-export const isFilterMultipleSelect = (values: any[] | undefined, midiaKV: IMidiaKV, type: string) => {
+export const isFilterMultipleSelect = (values: any[] | undefined, midiaKV: any, type: string) => {
     if (!isNotNullArray(values)) return true;
 
     const midiaV = midiaKV.value;
 
-    if (midiaV !== undefined && midiaV?.length === 0) {
+    if (midiaKV.key === undefined) {
+        return values?.some((value) => isFilterByType(value, midiaKV, type));
+    } else if ((midiaV !== undefined && midiaV?.length === 0) || midiaKV.key?.typeMidia === LEITURA) {
         return values?.some((value) => isFilterByType(value, midiaKV.key, type));
     }
 
-    return midiaV?.some((midiaLV) => values?.some((value) => isFilterByType(value, midiaLV, type)));
+    return midiaV?.some((midiaLV: any) => values?.some((value) => isFilterByType(value, midiaLV, type)));
 }
 
 export const isFilterSingleSelect = (value: any | undefined, midiaKV: IMidiaKV, type: string) => {
@@ -123,7 +129,6 @@ export const isFilterSingleSelect = (value: any | undefined, midiaKV: IMidiaKV, 
     else if (type !== TYPE_F_YEAR && !isNotNull(value)) return true;
 
     const midiaV = midiaKV.value;
-
     if (midiaV === undefined || midiaV?.length === 0) {
         return isFilterIMidiaSingleSelect(value, midiaKV.key, type);
     }
@@ -139,44 +144,75 @@ export const isFiltersByType = (value: any[], midia: IMidia, type: string) => {
     return value.some((v) => isFilterByType(v, midia, type));
 }
 
-export const isFilterByType = (value: any | any[], midia: IMidia, type: string) => {
+export const isFilterByType = (value: any | any[], midia: any, type: string) => {
     if (type === TYPE_F_READ) return midia?.read === value;
     else if (type === TYPE_F_GENRE) {
-        const genres = midia?.genre?.split(', ');
-        return genres?.some((genre) => genre === value);
+        let genres : string[] = [];
+        if (midia?.key === undefined) {
+            genres = midia?.genre?.split(', ');
+        } else if (midia?.key !== undefined) {
+            genres = midia.key?.genre?.split(', ');
+        }
+        
+        return genres?.some((genre: string) => genre === value);
     } else if (type === TYPE_F_COUNTRIES) {
-        const countries = midia?.countries?.split(', ');
-        return countries?.some((country) => country === value);
+        let countries : string[] = [];
+        if (midia?.key === undefined) {
+            countries = midia?.countries?.split(', ');
+        } else if (midia?.key !== undefined) {
+            countries = midia.key?.countries?.split(', ');
+        }
+        return countries?.some((country: string) => country === value);
     } else if (type === TYPE_F_YEAR) {
         const yearOne = Number(value[0]);
         const yearTwo = Number(value[1]);
 
         if (yearOne !== 0 && !Number.isNaN(yearOne)) {
-            const year = Number(midia?.year);
-            return (year >= yearOne && year <= yearTwo);
-        }
+            if (midia?.key === undefined) {
+                return validationYear(yearOne, yearTwo, midia);
+            } else if (midia?.key !== undefined) {
+                return midia?.value?.some((v: IMidia) => validationYear(yearOne, yearTwo, v));
+            }
+        }        
         return true;
     }
-    else if (type === TYPE_F_LANGUAGE) return midia?.language === value;
+    else if (type === TYPE_F_LANGUAGE) {
+        if (midia?.key !== undefined) {
+            return midia?.value?.some((v: IMidia) => v?.language === value);
+        }
+        return midia?.language === value;
+    }
     else if (type === TYPE_F_WATCHED) return midia?.watched === value;
-    else if (type === TYPE_F_OWNED) return midia?.owned === value;
+    else if (type === TYPE_F_OWNED) {
+        if (midia?.key !== undefined) {
+            return midia?.value?.some((v: IMidia) => v?.owned === value);
+        }
+        return midia?.owned === value
+    };
     return false;
 }
 
+const validationYear = (yearOne: number, yearTwo: number, midia: IMidia) => {
+    const year = Number(midia?.year);
+    return (year >= yearOne && year <= yearTwo);
+}
+
 const isFilterByTypeMidia = (value: any, midia: IMidia) => {
-    if (midia.typeMidia === VIDEO) {
+    if (midia?.typeMidia === VIDEO) {
         return TYPES_F_VIDEO.some(t => isFilterSearchByType(value, midia, t));
     }
 
     return TYPES_F_LEITURA.some(t => isFilterSearchByType(value, midia, t));
 }
 
-const isFilterSearchByType = (value: any, midia: IMidia, type: string) => {
+const isFilterSearchByType = (value: any, midia: any, type: string) => {
+    if (midia === undefined) return true;
     let valueSearch;
 
     if (type === TYPE_F_TITLE) valueSearch = midia.title;
     else if (type === TYPE_F_SUBTITLE) valueSearch = midia.subtitle;
     else if (type === TYPE_F_ORIGINAL_TITLE) valueSearch = midia.originalTitle;
+    else if (type === TYPE_F_PUBLICATION_TITLE) valueSearch = midia.publicationTitle;
     else if (type === TYPE_F_AUTHOR) valueSearch = midia.authors;
     else if (type === TYPE_F_PUBLISHER) valueSearch = midia.publisher;
     else if (type === TYPE_F_CAST) valueSearch = midia.cast;
