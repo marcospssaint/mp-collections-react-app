@@ -132,7 +132,7 @@ export const ListItemVertical = ({ id, midia, read, inProcess, watched, notStart
                 description={year(midia)}
             />
             <Space>
-                <Tag key={`${midia.key?.id}_tag_publisher`} className="tags">{publisher(midia)}</Tag>
+                {publisher(midia) && <Tag key={`${midia.key?.id}_tag_publisher`} className="tags">{publisher(midia)}</Tag>}
                 {language(midia) && <Tag key={`${midia.key?.id}_tag_language`} className="tags">{language(midia)}</Tag>}
                 {
                     isMidiaKV(midia) && <>

@@ -4,8 +4,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Col, Collapse, Divider, Input, Row, Typography } from "antd";
 import { IMidiaLeituraKV } from "../../entities";
 import { isFilterSearch } from "../../entities/midia";
-import { createIMidiaLeituraKV, instanceOfKV } from "../../entities/midia-leitura";
-import { isNotNullStr } from "../../utils/utils";
+import { IMidiaLeitura, createIMidiaLeituraKV, instanceOfKV } from "../../entities/midia-leitura";
+import { isNotNullArray, isNotNullStr } from "../../utils/utils";
 import { ListMidia } from "../ListMidia";
 
 export const MidiaLeituraCollectionComponent = () => {
@@ -57,7 +57,19 @@ export const MidiaLeituraCollectionComponent = () => {
         setSearch(value);
     };
 
-    const createMidiaLeitura = (midia_: any) => ({ ...midia_, title: midia_?.publicationTitle, countries: midia?.key?.countries, genre: midia?.key?.genre })
+    const createMidiaLeitura = (midia_: any) => {
+        let countries = (midia_ as IMidiaLeitura)?.countries;
+        if (countries === undefined) {
+            countries = midia?.key?.countries;
+        }
+
+        let gerne = (midia_ as IMidiaLeitura)?.genre;
+        if (gerne === undefined) {
+            gerne = midia?.key?.genre;
+        }
+
+        return ({ ...midia_, title: midia_?.publicationTitle, countries: countries, genre: gerne })
+    }
 
     const wasResearch = () => {
         return isNotNullStr(search);
@@ -146,12 +158,15 @@ export const MidiaLeituraCollectionComponent = () => {
                                         </Typography.Paragraph>
                                     </Col>
                                     <Divider style={{ margin: 0 }} />
-                                    <ListMidia
-                                        loading={false}
-                                        collection={true}
-                                        data={newMidiaPhaseValue as IMidiaLeituraKV[]}
-                                        leitura={true}
-                                        onClickMore={onClickMore} />
+                                    {
+                                        isNotNullArray(newMidiaPhaseValue) &&
+                                        <ListMidia
+                                            loading={false}
+                                            collection={true}
+                                            data={newMidiaPhaseValue as IMidiaLeituraKV[]}
+                                            leitura={true}
+                                            onClickMore={onClickMore} />
+                                    }
                                 </>
                             )
                         }
