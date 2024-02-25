@@ -13,7 +13,7 @@ import { IMidiaLeitura } from '../../../entities';
 import { instanceOfKV } from '../../../entities/midia-leitura';
 import { isNotNullStr } from "../../../utils/utils";
 
-import { TYPE_F_OWNED, TYPE_F_READ, isFilterMultipleSelect } from "../../../entities/midia";
+import { TYPE_F_GENRE, TYPE_F_OWNED, TYPE_F_READ, isFilterMultipleSelect, isFiltersByType } from "../../../entities/midia";
 
 interface ListItemVerticalProps {
     id: number;
@@ -84,6 +84,8 @@ export const ListItemVertical = ({ id, midia, read, inProcess, watched, notStart
         return synopsis;
     }
 
+    const isFilterBy18Years = () => isFiltersByType(['Adult', 'Erotic'], midia, TYPE_F_GENRE);
+
     const actions = (midia: any) => {
         let listActions: any[] = [];
 
@@ -118,6 +120,7 @@ export const ListItemVertical = ({ id, midia, read, inProcess, watched, notStart
             extra={
                 <Image
                     src={getImage(midia)}
+                    prefixCls={`${isFilterBy18Years() ? 'image-adult' : ''}`}
                     height={160}
                     witdh={120}
                     handlerClick={handlerClick} />
@@ -266,6 +269,7 @@ const getIconFlag = (countries: string | undefined) => {
             case 'Italy': imageFlag = 'flag-of-italian.png'; break;
             case 'Japan': imageFlag = 'flag-of-japan.png'; break;
             case 'Philippines': imageFlag = 'flag-of-philippines.png'; break;
+            case 'Singapore': imageFlag = 'flag-of-singapore.png'; break;
             case 'South Korea': imageFlag = 'flag-of-south-korea.png'; break;
             case 'Spain': imageFlag = 'flag-of-spain.png'; break;
             case 'USA': imageFlag = 'flag-of-usa.png'; break;
