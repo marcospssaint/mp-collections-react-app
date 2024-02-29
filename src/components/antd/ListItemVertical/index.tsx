@@ -273,6 +273,7 @@ const getIconFlag = (countries: string | undefined) => {
             case 'Singapore': imageFlag = 'flag-of-singapore.png'; break;
             case 'South Korea': imageFlag = 'flag-of-south-korea.png'; break;
             case 'Spain': imageFlag = 'flag-of-spain.png'; break;
+            case 'Switzerland': imageFlag = 'flag-of-switzerland.png'; break;
             case 'USA': imageFlag = 'flag-of-usa.png'; break;
             default: imageFlag = '';
         }
