@@ -131,25 +131,26 @@ export const ListItemVertical = ({ id, midia, read, inProcess, watched, notStart
                 title={title(midia)}
                 description={year(midia)}
             />
-            <Space>
-                {publisher(midia) && <Tag key={`${midia.key?.id}_tag_publisher`} className="tags">{publisher(midia)}</Tag>}
-                {language(midia) && <Tag key={`${midia.key?.id}_tag_language`} className="tags">{language(midia)}</Tag>}
+            <Row>
+                <Col span={24}>
+                    {publisher(midia) && <Tag key={`${midia.key?.id}_tag_publisher`} className="tags">{publisher(midia)}</Tag>}
+                    {language(midia) && <Tag key={`${midia.key?.id}_tag_language`} className="tags">{language(midia)}</Tag>}
+                </Col>
                 {
-                    isMidiaKV(midia) && <>
-                        <Col span={24}>
-                            <Space>
-                                {midia?.value?.map((midiaV: any) => {
-                                    const phase = midiaV?.key?.phase;
-                                    if (phase !== undefined) {
-                                        return <Tag key={phase} className="tags">{phase}</Tag>
-                                    }
-                                    return <></>
-                                })}
-                            </Space>
-                        </Col>
-                    </>
+                    isMidiaKV(midia) &&
+                    <Col span={18}>
+                        <Space wrap>
+                            {midia?.value?.map((midiaV: any) => {
+                                const phase = midiaV?.key?.phase;
+                                if (phase !== undefined) {
+                                    return <Tag key={phase} className="tags">{phase}</Tag>
+                                }
+                                return <></>
+                            })}
+                        </Space>
+                    </Col>
                 }
-            </Space>
+            </Row>
         </List.Item>
     );
 }
