@@ -3,46 +3,95 @@ import { DownloadOutlined } from '@ant-design/icons';
 
 import { useEffect, useState } from "react";
 
-import { Col, Collapse, CollapseProps, Flex, Row, Space, Tag, Typography } from "antd";
-import { IMidia, IMidiaLeitura, IMidiaLeituraKV } from '../../entities';
+import { Avatar, Col, Collapse, CollapseProps, Flex, Row, Space, Tag, Typography } from "antd";
+import { IMidiaLeitura, IMidiaLeituraKV } from '../../entities';
 import { TYPE_F_OWNED, isFilterIMidiaSingleSelect } from "../../entities/midia";
-import { nOfEditions } from "../../entities/midia-leitura";
+import { nOfEdition } from "../../entities/midia-leitura";
 import { range, rangeBySeparator } from "../../utils/utils";
+import { IconFlagLanguage } from '../antd';
 
 interface MidiaLeituraContentPros {
     midiaLeitura: IMidiaLeituraKV;
     isVisible: boolean;
 }
 
-const genExtra = (md: IMidia) => {
+const genExtra = (md: any, isMoreLanguage: boolean, language: any, volume: any) => {
     return <Row style={{ marginTop: 5 }}>
         <Flex wrap="wrap" gap="small" >
+            <Avatar src={IconFlagLanguage(language)} size={'small'} />
             {
-                isFilterIMidiaSingleSelect(true, md, TYPE_F_OWNED) && <DownloadOutlined />
+                (isMoreLanguage && volume?.includes(' | ')) && <></>
+            }
+            {
+                (isMoreLanguage && !volume?.includes(' | ')) && <DownloadOutlined />
+            }
+            {
+                (!isMoreLanguage && isFilterIMidiaSingleSelect(true, md, TYPE_F_OWNED)) && <DownloadOutlined />
             }
         </Flex>
     </Row>
 };
 
 export const MidiaLeituraContent = ({ midiaLeitura, isVisible }: MidiaLeituraContentPros) => {
-    const items: CollapseProps['items'] = [midiaLeitura?.key]?.map((value, index) => {
-        const mdLeitura = value as IMidiaLeitura;
-        const editions = nOfEditions(mdLeitura);
+
+    const itemsMidia = () => {
+        const mdLeituraK = midiaLeitura?.key;
+        const lengthLanguage = mdLeituraK?.language?.split(', ')?.length ?? 0;
+
+        if (lengthLanguage > 1) {
+            const list = Array.from({ length: lengthLanguage }).map((l, index) => {
+                const languageCurrent = mdLeituraK?.language?.split(',').at(index);
+                const volumeCurrent_ = mdLeituraK?.volume?.split(';').at(index);
+                const readVolumeCurrent_ = mdLeituraK?.readVolume?.split(';').at(index);
+                const editions = nOfEdition(volumeCurrent_?.trim());
+
+                return ({
+                    i: index,
+                    language: languageCurrent?.trim(),
+                    volumeCurrent: String(volumeCurrent_),
+                    volume: editions,
+                    readVolume: Number(readVolumeCurrent_),
+                    text: 'N° of editions (' + editions + ')',
+                    isMoreLanguage: true
+                });
+            })
+            return list;
+        }
+
+        return [
+            ({
+                index: 1,
+                language: mdLeituraK?.language,
+                volumeCurrent: String(mdLeituraK?.volume),
+                volume: nOfEdition(mdLeituraK?.volume),
+                readVolume: Number(mdLeituraK?.readVolume),
+                text: 'N° of editions (' + nOfEdition(mdLeituraK?.volume) + ')',
+                isMoreLanguage: false
+            })
+        ];
+    }
+
+    const items: CollapseProps['items'] = itemsMidia()?.map((value, index) => {
+        const mdLeitura = midiaLeitura?.key as IMidiaLeitura;
 
         return ({
-            key: index + 1 + "",
-            label: <div>
+            key: index + "",
+            label: <Row>
                 <Typography.Title level={4}
                     className='text-font-beautiful'
                     style={{
                         fontWeight: 700,
                         margin: 0
                     }}>
-                    N° of editions ({editions})
+
+                    {value?.text}
                 </Typography.Title>
-            </div>,
-            children: <NOfEditionsComponent midiaLeitura={midiaLeitura} />,
-            extra: genExtra(mdLeitura),
+            </Row>,
+            children: <NOfEditionsComponent
+                isMoreLanguage={value.isMoreLanguage}
+                volumeCurrent={value.volumeCurrent}
+                readVolumeCurrent={value.readVolume} />,
+            extra: genExtra(mdLeitura, value.isMoreLanguage, value.language, value.volumeCurrent),
         })
     });
 
@@ -53,7 +102,7 @@ export const MidiaLeituraContent = ({ midiaLeitura, isVisible }: MidiaLeituraCon
                     <Row>
                         <Collapse
                             accordion
-                            defaultActiveKey={['1']}
+                            defaultActiveKey={['0']}
                             expandIconPosition="end"
                             size="large"
                             style={{ width: '100%' }}
@@ -66,46 +115,37 @@ export const MidiaLeituraContent = ({ midiaLeitura, isVisible }: MidiaLeituraCon
 }
 
 interface NOfEditionsComponentProps {
-    midiaLeitura: IMidiaLeituraKV;
-    isVisibledTable?: boolean;
+    isMoreLanguage: boolean;
+    volumeCurrent?: string,
+    readVolumeCurrent?: number,
 }
 
-const NOfEditionsComponent = ({ midiaLeitura, isVisibledTable = false }: NOfEditionsComponentProps) => {
+const NOfEditionsComponent = ({ isMoreLanguage, volumeCurrent, readVolumeCurrent }: NOfEditionsComponentProps) => {
 
     const [total, setTotal] = useState<number>(0);
     const [numeros, setNumeros] = useState<(number | number[])[]>([0]);
     const [reads, setReads] = useState<(number | number[])[]>([0]);
 
     useEffect(() => {
-        const midiaLeituraK = midiaLeitura.key;
         var numerosCurrent: (number | number[])[] = [];
 
-        if (isVisibledTable) {
-            const total = midiaLeitura?.value?.length ?? 0;
-            setTotal(total);
-            midiaLeitura?.value?.forEach((v: any, index) => { if (v?.owned) numerosCurrent.push(index + 1) })
+        if (volumeCurrent?.includes('|') || volumeCurrent?.includes(',')) {
+            setTotal(Number(volumeCurrent.substring(volumeCurrent.indexOf('|') + 2)));
+
+            var edicoes = volumeCurrent.substring(0, volumeCurrent.indexOf('|')); //'1-5, 6-7, 9';
+            var edicoesSplit = edicoes.split(',');
+            edicoesSplit.forEach((e) => numerosCurrent.push(...rangeBySeparator(String(e), '-')));
             setNumeros([...numerosCurrent]);
         } else {
-            const volume = String(midiaLeituraK?.volume);
-
-            if (volume?.includes('|') || volume?.includes(',')) {
-                setTotal(Number(volume.substring(volume.indexOf('|') + 2)));
-
-                var edicoes = volume.substring(0, volume.indexOf('|')); //'1-5, 6-7, 9';
-                var edicoesSplit = edicoes.split(',');
-                edicoesSplit.forEach((e) => numerosCurrent.push(...rangeBySeparator(String(e), '-')));
-                setNumeros([...numerosCurrent]);
-            } else {
-                const total = Number(volume);
-                setTotal(total);
-                setNumeros([...range(1, total)]);
-            }
+            const total = Number(volumeCurrent);
+            setTotal(total);
+            setNumeros([...range(1, total)]);
         }
 
-        if (midiaLeituraK?.readVolume !== undefined) {
-            setReads([...range(0, midiaLeituraK?.readVolume)]);
+        if (readVolumeCurrent !== undefined && !Number.isNaN(readVolumeCurrent)) {
+            setReads([...range(0, readVolumeCurrent)]);
         }
-    }, [isVisibledTable, midiaLeitura.key, midiaLeitura.value]);
+    }, [isMoreLanguage, readVolumeCurrent, volumeCurrent]);
 
     return (
         <Space direction="vertical">

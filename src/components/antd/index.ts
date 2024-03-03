@@ -1,6 +1,7 @@
 export { BadgeRibbon } from './BadgeRibbon';
 export { Breadcrumb } from './Breadcrumb';
 export { Image } from './Image';
+export { IconFlagCountries, IconFlagLanguage } from './Icon';
 export { ListItemCard } from './ListItemCard';
 export { ListItemVertical } from './ListItemVertical';
 export { Menu } from './Menu';

@@ -41,7 +41,16 @@ export const MidiaContent = () => {
     }
 
     const isVisibleMidiaLeitura = () => {
-        return isMidiaLeitura() && nOfEditions(midia?.key) > 1;
+        return isMidiaLeitura() && (nOfEditions(midia?.key) > 1 || isMoreLanguage());
+    }
+
+    const isVisibleControl = () => {
+        if (midia?.key?.typeMidia === VIDEO) {
+            return midia?.key?.typeMidiaVideo !== MOVIES;
+        }
+        if (midia?.key?.typeMidia === LEITURA) {
+            return isVisibleMidiaLeitura();
+        }
     }
 
     const image = () => {
@@ -100,6 +109,14 @@ export const MidiaContent = () => {
 
     const language = () => {
         return midia?.key?.language;
+    }
+
+    const isMoreLanguage = () => {
+        return (language()?.split(', ')?.length??0) > 1;
+    }
+
+    const moreLanguage = () => {
+        return language()?.split(', ');
     }
 
     const countries = () => {
@@ -245,7 +262,14 @@ export const MidiaContent = () => {
                                 <Divider style={{ margin: 0 }} />
                                 <Descriptions style={{ margin: 0 }}>
                                     <Descriptions.Item label="Language">
-                                        <Tag key={language()} className="tags">{language()}</Tag>
+                                        {
+                                            isMoreLanguage()
+                                            && moreLanguage()?.map((l) => <Tag key={l} className="tags">{l}</Tag>)
+                                        }
+                                        {
+                                            !isMoreLanguage()
+                                            && <Tag key={language()} className="tags">{language()}</Tag>
+                                        }
                                     </Descriptions.Item>
                                 </Descriptions>
                                 <Divider style={{ margin: 0 }} />
@@ -302,7 +326,7 @@ export const MidiaContent = () => {
                         </Row>
                     }
                     {
-                        !isVisibleMidiaVideo() &&
+                        !isVisibleControl() &&
                         <Row>
                             <Divider orientation="left">Control</Divider>
                             <Row>

@@ -14,6 +14,7 @@ import { instanceOfKV } from '../../../entities/midia-leitura';
 import { isNotNullStr } from "../../../utils/utils";
 
 import { TYPE_F_GENRE, TYPE_F_OWNED, TYPE_F_READ, isFilterMultipleSelect, isFiltersByType } from "../../../entities/midia";
+import { IconFlagCountries } from "../Icon";
 
 interface ListItemVerticalProps {
     id: number;
@@ -65,7 +66,12 @@ export const ListItemVertical = ({ id, midia, read, inProcess, watched, notStart
         if (language === undefined) {
             return (midia as IMidiaLeitura)?.language;
         }
+
         return language;
+    }
+
+    const isMoreLanguage = (language: any) => {
+        return (language?.split(', ')?.length??0) > 0;
     }
 
     const countries = (midia: any) => {
@@ -127,14 +133,21 @@ export const ListItemVertical = ({ id, midia, read, inProcess, watched, notStart
             }
             className="list-item" >
             <List.Item.Meta
-                avatar={<Avatar src={getIconFlag(countries(midia))} />}
+                avatar={<Avatar src={IconFlagCountries(countries(midia))} />}
                 title={title(midia)}
                 description={year(midia)}
             />
             <Row>
                 <Col span={24}>
                     {publisher(midia) && <Tag key={`${midia.key?.id}_tag_publisher`} className="tags">{publisher(midia)}</Tag>}
-                    {language(midia) && <Tag key={`${midia.key?.id}_tag_language`} className="tags">{language(midia)}</Tag>}
+                    {
+                        isMoreLanguage(language(midia))
+                        && language(midia)?.split(', ').map((l: any) => <Tag key={`${l}_tag_language`} className="tags">{l}</Tag>) 
+                    }
+                    {
+                        (!isMoreLanguage(language(midia)) && midia?.value?.length === 1)
+                        && <Tag key={`${midia.key?.id}_tag_language`} className="tags">{language(midia)}</Tag>
+                    }
                 </Col>
                 {
                     isMidiaKV(midia) &&
@@ -253,34 +266,6 @@ const SynopsisActionsComponent = ({ midia }: IconsComponentProps) => {
                 </Row>
             } />
     </>
-}
-
-const getIconFlag = (countries: string | undefined) => {
-    const path = process.env.PUBLIC_URL;
-
-    if (countries !== undefined) {
-        let imageFlag;
-        switch (countries) {
-            case 'Argentina': imageFlag = 'flag-of-argentina.png'; break;
-            case 'Belgium': imageFlag = 'flag-of-belgium.png'; break;
-            case 'Brazil': imageFlag = 'flag-of-brazil.png'; break;
-            case 'China': imageFlag = 'flag-of-china.png'; break;
-            case 'France': imageFlag = 'flag-of-france.png'; break;
-            case 'Germany': imageFlag = 'flag-of-germany.png'; break;
-            case 'Italy': imageFlag = 'flag-of-italian.png'; break;
-            case 'Japan': imageFlag = 'flag-of-japan.png'; break;
-            case 'Philippines': imageFlag = 'flag-of-philippines.png'; break;
-            case 'Singapore': imageFlag = 'flag-of-singapore.png'; break;
-            case 'South Korea': imageFlag = 'flag-of-south-korea.png'; break;
-            case 'Spain': imageFlag = 'flag-of-spain.png'; break;
-            case 'Switzerland': imageFlag = 'flag-of-switzerland.png'; break;
-            case 'USA': imageFlag = 'flag-of-usa.png'; break;
-            default: imageFlag = '';
-        }
-
-        return path + '/imagens/flags/' + imageFlag;
-    }
-    return '';
 }
 
 const getImage = (midia: any) => {

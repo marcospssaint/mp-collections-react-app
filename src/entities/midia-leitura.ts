@@ -12,7 +12,7 @@ export interface IMidiaLeitura extends IMidia {
     idPhase?: number;
     phase?: string;
     volume?: string;
-    readVolume?: number;
+    readVolume?: string;
     totalVolume?: number;
 }
 
@@ -190,3 +190,16 @@ export const nOfEditions = (midiaLeituraK: IMidiaLeitura) => {
 
     return Number(editions);
 };
+
+export const nOfEdition = (volume: any | undefined) => {
+    if (volume === undefined || volume === null) {
+        return 0;
+    }
+
+    const editions = String(volume);
+    if (editions?.includes(' | ')) {
+        return Number(editions.substring(editions.indexOf('|') + 2));
+    }
+
+    return Number(editions);
+}
