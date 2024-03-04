@@ -13,6 +13,7 @@ export const IconFlagCountries = (countries: string | undefined) => {
             case 'Italy': imageFlag = 'flag-of-italian.png'; break;
             case 'Japan': imageFlag = 'flag-of-japan.png'; break;
             case 'Philippines': imageFlag = 'flag-of-philippines.png'; break;
+            case 'Portugal': imageFlag = 'flag-of-portugal.png'; break;
             case 'Singapore': imageFlag = 'flag-of-singapore.png'; break;
             case 'South Korea': imageFlag = 'flag-of-south-korea.png'; break;
             case 'Spain': imageFlag = 'flag-of-spain.png'; break;
@@ -31,19 +32,20 @@ export const IconFlagLanguage = (language: string | undefined) => {
         let imageFlag;
         switch (language) {
             case 'Argentina': imageFlag = 'flag-of-argentina.png'; break;
-            case 'Belgium': imageFlag = 'flag-of-belgium.png'; break;
+            case 'Belgian': imageFlag = 'flag-of-belgium.png'; break;
+            case 'Portugues-pt': imageFlag = 'flag-of-portugal.png'; break;
             case 'Portugues': imageFlag = 'flag-of-brazil.png'; break;
-            case 'China': imageFlag = 'flag-of-china.png'; break;
-            case 'France': imageFlag = 'flag-of-france.png'; break;
+            case 'Chinese': imageFlag = 'flag-of-china.png'; break;
+            case 'French': imageFlag = 'flag-of-france.png'; break;
             case 'Germany': imageFlag = 'flag-of-germany.png'; break;
-            case 'Italy': imageFlag = 'flag-of-italian.png'; break;
-            case 'Japan': imageFlag = 'flag-of-japan.png'; break;
+            case 'Italian': imageFlag = 'flag-of-italian.png'; break;
+            case 'Japanese': imageFlag = 'flag-of-japan.png'; break;
             case 'Philippines': imageFlag = 'flag-of-philippines.png'; break;
             case 'Singapore': imageFlag = 'flag-of-singapore.png'; break;
             case 'South Korea': imageFlag = 'flag-of-south-korea.png'; break;
-            case 'Spain': imageFlag = 'flag-of-spain.png'; break;
+            case 'Spanish': imageFlag = 'flag-of-spain.png'; break;
             case 'Switzerland': imageFlag = 'flag-of-switzerland.png'; break;
-            case 'USA': imageFlag = 'flag-of-usa.png'; break;
+            case 'English': imageFlag = 'flag-of-usa.png'; break;
             default: imageFlag = '';
         }
 

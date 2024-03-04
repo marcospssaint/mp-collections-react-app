@@ -127,8 +127,8 @@ export const ListItemVertical = ({ id, midia, read, inProcess, watched, notStart
                 <Image
                     src={getImage(midia)}
                     prefixCls={`${isFilterBy18Years() ? 'image-adult' : ''}`}
-                    height={160}
-                    witdh={120}
+                    height={200}
+                    witdh={140}
                     handlerClick={handlerClick} />
             }
             className="list-item" >

@@ -76,7 +76,7 @@ export const MidiaContent = () => {
     }
 
     const subtitle = () => {
-        return midia?.key?.subtitle ?? '-';
+        return midia?.key?.subtitle;
     }
 
     const year = () => {
@@ -206,14 +206,17 @@ export const MidiaContent = () => {
                                 </Descriptions>
                                 <Divider style={{ margin: 0 }} />
                             </Row>
-                            <Row>
-                                <Descriptions>
-                                    <Descriptions.Item label="Also Known As (AKA)">
-                                        {subtitle()}
-                                    </Descriptions.Item>
-                                </Descriptions>
-                                <Divider style={{ margin: 0 }} />
-                            </Row>
+                            {
+                                isNotNullStr(subtitle()) &&
+                                <Row>
+                                    <Descriptions>
+                                        <Descriptions.Item label="Also Known As (AKA)">
+                                            {subtitle()}
+                                        </Descriptions.Item>
+                                    </Descriptions>
+                                    <Divider style={{ margin: 0 }} />
+                                </Row>
+                            }
                             <Row>
                                 <Descriptions>
                                     <Descriptions.Item label="Year">

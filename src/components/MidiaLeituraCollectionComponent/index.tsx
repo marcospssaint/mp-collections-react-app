@@ -35,6 +35,10 @@ export const MidiaLeituraCollectionComponent = () => {
         return midia?.key?.title;
     }
 
+    const notes = () => {
+        return midia?.key?.notes;
+    }
+
     const onClickMore = (midiaSelection: any) => {
         const URL = window.location.hash.split('/');
 
@@ -132,6 +136,16 @@ export const MidiaLeituraCollectionComponent = () => {
                     </Typography.Title>
                 </Col>
                 <Divider style={{ margin: 0 }} />
+
+                {
+                    isNotNullStr(notes()) &&
+                        <Col span={24}>
+                            <Typography.Paragraph style={{ textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
+                                {notes()}
+                            </Typography.Paragraph>
+                        </Col>
+                }
+                
 
                 {
 
